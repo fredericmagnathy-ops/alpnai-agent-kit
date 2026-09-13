@@ -1,0 +1,48 @@
+name: AlpNAI source monitor
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */6 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: alpnai-source-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    if: github.repository == 'fredericmagnathy-ops/alpnai-agent-kit'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7, verified 2026-09-14
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7, verified 2026-09-14
+        with:
+          python-version: '3.13'
+      - name: Check sources without publishing new claims
+        id: probe
+        continue-on-error: true
+        env:
+          ALPNAI_BASE_URL: ${{ vars.ALPNAI_BASE_URL || vars.ALPNAl_BASE_URL || 'https://alpnai.frederic150452.chatgpt.site' }}
+          ALPNAI_MONITOR_TOKEN: ${{ secrets.ALPNAI_MONITOR_TOKEN }}
+          ALPNAI_SITES_BYPASS: ${{ secrets.ALPNAI_SITES_BYPASS }}
+        run: python scripts/check_cloud.py sources --report reports/source-monitor.json
+      - name: Write sanitized job summary
+        if: always()
+        run: python scripts/check_cloud.py summary --report reports/source-monitor.json
+      - name: Preserve minimal report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7, verified 2026-09-14
+        with:
+          name: source-monitor-${{ github.run_id }}
+          path: reports/source-monitor.json
+          retention-days: 7
+          if-no-files-found: error
+      - name: Fail the run when review or configuration is required
+        if: always() && steps.probe.outcome != 'success'
+        run: exit 1

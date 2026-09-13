@@ -1,0 +1,216 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AlpNAI Sandbox API",
+    "version": "0.1.0",
+    "description": "Dated source evidence for authorized agents. No real cryptocurrency settlement. Private Sites also require platform access.",
+    "contact": {
+      "email": "frederic@alpnor.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://alpnai.frederic150452.chatgpt.site"
+    }
+  ],
+  "paths": {
+    "/api/v1/snapshot": {
+      "get": {
+        "operationId": "purchase_snapshot",
+        "summary": "Sandbox purchase. No real settlement.",
+        "security": [
+          {
+            "AgentKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-AlpNAI-Mode",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "sandbox"
+              ]
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{8,100}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sandbox receipt and evidence"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Unauthorized agent"
+          },
+          "403": {
+            "description": "Budget exhausted"
+          },
+          "409": {
+            "description": "Idempotency conflict"
+          },
+          "503": {
+            "description": "Service or live payment unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/changes": {
+      "get": {
+        "operationId": "purchase_changes",
+        "summary": "Sandbox purchase. No real settlement.",
+        "security": [
+          {
+            "AgentKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-AlpNAI-Mode",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "sandbox"
+              ]
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{8,100}$"
+            }
+          },
+          {
+            "in": "query",
+            "name": "since",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sandbox receipt and evidence"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Unauthorized agent"
+          },
+          "403": {
+            "description": "Budget exhausted"
+          },
+          "409": {
+            "description": "Idempotency conflict"
+          },
+          "503": {
+            "description": "Service or live payment unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/evidence": {
+      "get": {
+        "operationId": "purchase_evidence",
+        "summary": "Sandbox purchase. No real settlement.",
+        "security": [
+          {
+            "AgentKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-AlpNAI-Mode",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "sandbox"
+              ]
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{8,100}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sandbox receipt and evidence"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Unauthorized agent"
+          },
+          "403": {
+            "description": "Budget exhausted"
+          },
+          "409": {
+            "description": "Idempotency conflict"
+          },
+          "503": {
+            "description": "Service or live payment unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/catalog": {
+      "get": {
+        "operationId": "get_catalog",
+        "summary": "Free catalog",
+        "responses": {
+          "200": {
+            "description": "JSON data"
+          }
+        }
+      }
+    },
+    "/api/v1/sample": {
+      "get": {
+        "operationId": "get_sample",
+        "summary": "Free sample",
+        "responses": {
+          "200": {
+            "description": "JSON data"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "AgentKey": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "alp_test"
+      }
+    }
+  }
+}

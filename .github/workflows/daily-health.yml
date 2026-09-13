@@ -1,0 +1,61 @@
+name: AlpNAI daily public health
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '43 7 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: alpnai-daily-health
+  cancel-in-progress: false
+
+jobs:
+  health:
+    if: github.repository == 'fredericmagnathy-ops/alpnai-agent-kit'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7, verified 2026-09-14
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7, verified 2026-09-14
+        with:
+          python-version: '3.13'
+      - name: Check catalog sample and MCP without purchases
+        id: probe
+        continue-on-error: true
+        env:
+          ALPNAI_BASE_URL: ${{ vars.ALPNAI_BASE_URL || vars.ALPNAl_BASE_URL || 'https://alpnai.frederic150452.chatgpt.site' }}
+          ALPNAI_SITES_BYPASS: ${{ secrets.ALPNAI_SITES_BYPASS }}
+        run: python scripts/check_cloud.py health --report reports/daily-health.json
+      - name: Write sanitized job summary
+        if: always()
+        run: python scripts/check_cloud.py summary --report reports/daily-health.json
+      - name: Record aggregate growth diagnosis without changing offers
+        id: growth
+        if: always()
+        continue-on-error: true
+        env:
+          ALPNAI_BASE_URL: ${{ vars.ALPNAI_BASE_URL || vars.ALPNAl_BASE_URL || 'https://alpnai.frederic150452.chatgpt.site' }}
+          ALPNAI_MONITOR_TOKEN: ${{ secrets.ALPNAI_MONITOR_TOKEN }}
+          ALPNAI_SITES_BYPASS: ${{ secrets.ALPNAI_SITES_BYPASS }}
+        run: python scripts/check_cloud.py growth --report reports/growth-review.json
+      - name: Write aggregate growth summary
+        if: always()
+        run: python scripts/check_cloud.py summary --report reports/growth-review.json
+      - name: Preserve minimal report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7, verified 2026-09-14
+        with:
+          name: daily-health-${{ github.run_id }}
+          path: |
+            reports/daily-health.json
+            reports/growth-review.json
+          retention-days: 7
+          if-no-files-found: error
+      - name: Fail the run when an endpoint needs attention
+        if: always() && (steps.probe.outcome != 'success' || steps.growth.outcome != 'success')
+        run: exit 1

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.fredericmagnathy-ops/alpnai",
+  "title": "AlpNAI Sandbox",
+  "description": "Inspect dated IPO evidence and test authorized agent purchases with simulated budgets. No real cryptocurrency settlement. Public deployment and a verified publisher namespace are required before registry publication.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/fredericmagnathy-ops/alpnai-agent-kit",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://alpnai.frederic150452.chatgpt.site/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "For purchase tools: Bearer followed by an operator-issued sandbox agent key. Obtain and store it securely in your MCP host.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

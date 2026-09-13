@@ -1,0 +1,23 @@
+# Local keys, environment configuration, purchase state and receipts
+.env
+.env.*
+!.env.example
+.alpnai/
+reports/
+*.pem
+*.key
+*.p12
+*.pfx
+*credentials*.json
+*secret*.json
+*wallet*.json
+*.lock
+*.tmp-*
+# Python / editor artifacts
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+.idea/
+.vscode/
