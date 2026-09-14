@@ -1,10 +1,18 @@
 # ALPNAI payment operations
 
-This page describes the implemented recovery and reporting controls. Publishing documentation or running a monitor does not enable commercial payments or prove a real purchase. Availability depends on the deployed service configuration and verified operation of the payment path.
+This page describes the prepared quotation, recovery and reporting controls. Commercial payment gates remain off. No billing review has been issued, and a review-approval workflow is not available. Publishing documentation or running a monitor does not enable commercial payments or prove a real purchase. Availability depends on the deployed service configuration and verified operation of the payment path.
+
+## Before a payable quotation
+
+The prepared purchase path requires an active purchasing mandate and a current approved billing-review record tied to the owner's profile revision and terms version. A self-declared address or tax identifier is not that review. Missing or invalid billing review returns HTTP `503` with `error: "billing_review_required"` and `payment_required: false`, before a facilitator operation or x402 challenge. With commercial gates off, `commercial_activation_pending` is returned instead. Neither response asks the customer to pay.
+
+Before a payable challenge can be returned, the service stores an immutable billing snapshot alongside the result and technical payment requirements. It contains seller and customer details, terms, reviewed pricing and an integrity hash. Internal review references stay server-side. Agent and SDK responses receive monetary and terms summaries without the customer's billing details. See [billing quotations](billing-quotations.md) for private viewing and export.
+
+The prepared arithmetic keeps the catalog amount as the total; a configured tax component is included in that amount rather than added to it. This calculation does not decide which tax treatment applies. The exact total must match the x402 request and reserved budget.
 
 ## One order, one payment attempt
 
-The service freezes a commercial result before issuing its payment challenge. A quote is not revenue. A verified authorization can reserve its permitted budget; only one worker can claim the settlement attempt. Repeating the same accepted purchase follows the existing order. It must not create a second payment attempt.
+The service freezes the commercial result and billing snapshot before issuing its payment challenge. The saved snapshot and approved review are checked again before further provider operations, and the reviewed context is checked when budget is reserved and settlement is claimed. A quote is not revenue or a pending transfer. A verified authorization can reserve its permitted budget; only one worker can claim the settlement attempt. Repeating the same accepted purchase follows the existing order. It must not create a second payment attempt.
 
 If a provider times out or confirmation is uncertain, the order remains under review. Keep the original order and idempotency identifier. Do not send another payment or replace the identifier to bypass a pending result.
 
@@ -22,11 +30,13 @@ The initial proof decoder supports direct USDC authorization calls. It verifies 
 
 The confirmed settlement must be recorded successfully before the purchased result and payment receipt are delivered. A payment challenge or unresolved response does not include the commercial payload. An unresolved lookup returns HTTP `202`; cancellation before submission returns `409`. Database or malformed-record failures do not become a fabricated success.
 
+A read-only quotation lookup returns HTTP `200` with `status: "quoted"`, `settled: false` and `payment_required: false`. Viewing or downloading that document does not submit a payment. After confirmed settlement, the payment receipt can include the frozen quotation; the account owner sees the customer copy while the agent sees its limited summary. The receipt records the ledger confirmation time separately from order creation. It is a payment receipt, not a tax invoice. No invoice-issuance workflow is implemented by this feature.
+
 Agents can check their own order through `GET /api/v1/orders/{id}` with their agent authentication. Signed-in customers can use `GET /api/account/orders/{id}`; ownership comes from the authenticated account, not a submitted customer identifier. The account's commercial receipt view is restricted to Base mainnet orders with a matching mandate and agent. Responses are private and not cacheable.
 
 ## What the dashboard counts
 
-Commercial aggregates count only settled Base mainnet orders. Pending orders, quotes, Sepolia tests and sandbox purchases do not increase real revenue. Paying customers are distinct authenticated account owners, not transaction counts or unique wallet addresses. Commercial order lists expose a small set of metadata; the transaction hash is shown only after settlement.
+Commercial aggregates count only settled Base mainnet orders. Pending orders, quotes, Sepolia tests and sandbox purchases do not increase real revenue. The account lists quotations separately from pending and completed payments. Paying customers are distinct authenticated account owners, not transaction counts or unique wallet addresses. Commercial order lists expose a small set of metadata; the transaction hash is shown only after settlement.
 
 USDC totals are gross settled receipts. They are not net profit, a bank balance, a fiat conversion or recurring subscription revenue. Fees, refunds, taxes and bank conversion require their own accounting. A statistics read failure must appear as unavailable rather than a new zero balance.
 

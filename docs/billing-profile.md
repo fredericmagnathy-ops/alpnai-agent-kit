@@ -2,7 +2,7 @@
 
 An ALPNAI account owner can optionally save contact details for future billing documents. Open the [customer account](https://alpnai.com/account), sign in through ChatGPT, and expand **Billing profile**. The form is available in French, English and German. Free tools do not require a billing profile.
 
-This feature stores a current, editable profile. It does not place an order, authorize payment, issue an invoice, verify identity or decide tax treatment. No billing-profile snapshot is attached to an order yet. The API reports `tax_status: "not_verified"` and `commercial_use: "not_enabled"` when reading or saving a profile.
+This feature stores a current, editable profile. It does not place an order, authorize payment, issue an invoice, verify identity or decide tax treatment. The prepared commercial quotation path can preserve a dated copy of this profile with a quotation, but real purchases remain disabled and no billing review has been issued. Saving the profile alone cannot create a payable quotation. The API reports `tax_status: "not_verified"` and `commercial_use: "not_enabled"` when reading or saving a profile.
 
 ## Private access
 
@@ -97,8 +97,8 @@ Replace the example with the server-returned revision. A successful deletion ret
 
 The current application database row contains the account identifier, profile, revision and modification timestamp. It can be viewed, corrected or deleted. Deletion removes that row; it does not promise immediate erasure from provider backups or logs. There is no automatic inactivity purge.
 
-The form does not send billing details to the blockchain, the payment facilitator or journey measurement, and does not authorize marketing. Future order and accounting records need their own dated snapshots and applicable retention rules; editing a current profile must not rewrite historical records. That order-snapshot integration is not implemented by this feature.
+The form does not send billing details to the blockchain, the payment facilitator or journey measurement, and does not authorize marketing. The prepared [commercial quotation feature](billing-quotations.md) stores its own dated copy of the profile. Editing or deleting the current profile does not edit or delete copies already attached to quotations or orders. These records are distinct from the current profile and are not subject to its delete operation. No automatic retention purge for those records is implemented by this form.
 
-See the [billing-profile privacy notice](https://alpnai.com/fr/legal/privacy#billing-profile). The current legal-document bundle is [service-2026-09-14-v3](https://alpnai.com/legal/versions/service-2026-09-14-v3.json); the [v2 archive](https://alpnai.com/legal/versions/service-2026-09-14-v2.json) remains a separate historical document and does not contain this new section.
+See the current [billing-profile privacy notice](https://alpnai.com/fr/legal/privacy#billing-profile). Each prepared quotation records its applicable terms version, content hash and archive URL. Earlier [v2](https://alpnai.com/legal/versions/service-2026-09-14-v2.json) and [v3](https://alpnai.com/legal/versions/service-2026-09-14-v3.json) bundles remain separate dated archives; an update does not overwrite their content.
 
 [Back to documentation](README.md)
