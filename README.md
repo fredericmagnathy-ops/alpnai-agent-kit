@@ -8,7 +8,7 @@ Connect an authorized agent to **Spend Proof**, ALPNAI’s free audit of cost pe
 
 ## Documentation library
 
-[Website documentation](https://alpnai.com/en/docs) · [Ten practical guides](docs/en/README.md)
+[Website documentation](https://alpnai.com/en/docs) · [Ten practical guides](docs/en/README.md) · [Payment recovery and receipts](docs/payment-operations.md)
 
 [FR](https://alpnai.com/fr/docs) · [EN](https://alpnai.com/en/docs) · [DE](https://alpnai.com/de/docs)
 

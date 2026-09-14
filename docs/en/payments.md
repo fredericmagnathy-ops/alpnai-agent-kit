@@ -41,3 +41,11 @@ This route does not depend on Coinbase Business. The conversion provider must ac
 ---
 
 [Previous: Connect an agent with MCP](mcp.md) · [Next: Data and access](security.md)
+
+## Recover an order and its receipt
+
+A pending order keeps the same identifier. Reconciliation searches finalized blocks for payment evidence in bounded pages with a persisted resume position. An outage or delay never triggers another settlement attempt.
+
+A reservation abandoned before any attempt is released when the quote expires. Once an attempt has begun, it remains under review: elapsed time alone never releases its budget.
+
+After confirmation, the owner can retrieve the receipt and result from their customer workspace. Revenue counters include only confirmed USDC settlements on Base; sandbox purchases and testnet payments are excluded.

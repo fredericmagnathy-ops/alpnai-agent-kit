@@ -41,3 +41,11 @@ Ce parcours ne repose pas sur Coinbase Business. Le prestataire de conversion do
 ---
 
 [Précédent: Connecter un agent avec MCP](mcp.md) · [Suivant: Données et accès](security.md)
+
+## Retrouver une commande et son reçu
+
+Une commande en attente conserve le même identifiant. Le rapprochement cherche la preuve du paiement dans les blocs finalisés, par pages limitées avec une position de reprise conservée. Une panne ou un retard ne déclenche jamais une nouvelle tentative de règlement.
+
+Une réservation abandonnée avant toute tentative est libérée à expiration du devis. Dès qu’une tentative a commencé, elle reste en vérification : le budget n’est pas libéré sur la seule base d’un délai.
+
+Après confirmation, le titulaire retrouve le reçu et le résultat dans son espace client. Les compteurs de recettes incluent uniquement les règlements confirmés en USDC sur Base ; les essais et les paiements sur réseau de test restent exclus.

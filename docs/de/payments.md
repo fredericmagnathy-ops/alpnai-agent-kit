@@ -41,3 +41,11 @@ Dieser Ablauf setzt Coinbase Business nicht voraus. Der Umtauschdienstleister mu
 ---
 
 [Zurück: Einen Agenten über MCP verbinden](mcp.md) · [Weiter: Daten und Zugänge](security.md)
+
+## Bestellung und Beleg wiederfinden
+
+Eine ausstehende Bestellung behält dieselbe Kennung. Der Abgleich sucht in finalisierten Blöcken nach Zahlungsnachweisen, in begrenzten Abschnitten mit gespeichertem Fortschritt. Ein Ausfall oder eine Verzögerung löst niemals einen weiteren Zahlungsversuch aus.
+
+Eine vor jedem Zahlungsversuch aufgegebene Reservierung wird nach Ablauf des Angebots freigegeben. Sobald ein Versuch begonnen hat, bleibt sie in Prüfung: Zeitablauf allein gibt das Budget nicht frei.
+
+Nach der Bestätigung kann der Inhaber Beleg und Ergebnis im Kundenbereich abrufen. Die Umsatzanzeige zählt nur bestätigte USDC-Zahlungen auf Base; Sandbox-Käufe und Testnetz-Zahlungen sind ausgeschlossen.
