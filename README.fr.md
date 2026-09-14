@@ -10,7 +10,7 @@ Connectez un agent autorisé à **Spend Proof**, l’audit gratuit ALPNAI du co�
 
 ## ALPNAI Projects
 
-Conservez et comparez les résultats de vos agents dans un espace privé. [Ouvrez Projects](https://alpnai.com/projects) avec **la connexion ChatGPT** : 3 rapports enregistrés gratuits, sans carte. Les offres payantes coûtent **19 CHF ou 19 EUR par mois** pour 100 nouveaux rapports par période mensuelle payée, ou **190 CHF ou 190 EUR par an** pour 1 200 par période annuelle payée ; 10 projets. Stripe gère cet abonnement distinct sur le site. Sa disponibilité est indiquée dans Projects et l’accès nécessite un paiement confirmé. Le kit ne souscrit aucun abonnement et ne déplace aucune cryptomonnaie.
+Conservez et comparez les résultats de vos agents dans un espace privé. [Ouvrez Projects](https://alpnai.com/projects) avec **la connexion ChatGPT** : 3 rapports enregistrés gratuits, sans carte. Les offres payantes coûtent **19 CHF, 19 EUR, 19 USD ou 19 GBP par mois** pour 100 nouveaux rapports par période mensuelle payée, ou **190 CHF, 190 EUR, 190 USD ou 190 GBP par an** pour 1 200 par période annuelle payée ; 10 projets. Il s’agit de tarifs locaux fixes, sans conversion de devises. Stripe gère cet abonnement distinct sur le site. Sa disponibilité est indiquée dans Projects et l’accès nécessite un paiement confirmé. Le kit ne souscrit aucun abonnement et ne déplace aucune cryptomonnaie.
 
 [Guide Projects](docs/fr/projects.md) · [Conditions](https://alpnai.com/fr/legal/projects) · [Confidentialité](https://alpnai.com/fr/legal/privacy)
 

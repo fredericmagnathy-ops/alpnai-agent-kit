@@ -13,10 +13,10 @@ Sign in with ChatGPT. Projects belongs to the authenticated account holder; an a
 | Plan | Price | New saved reports |
 |---|---|---|
 | Free access | No card | 3 for the lifetime of the account |
-| Monthly | 19 CHF or 19 EUR per month | 100 per paid monthly period |
-| Annual | 190 CHF or 190 EUR per year | 1,200 per paid annual period |
+| Monthly | 19 CHF, 19 EUR, 19 USD or 19 GBP per month | 100 per paid monthly period |
+| Annual | 190 CHF, 190 EUR, 190 USD or 190 GBP per year | 1,200 per paid annual period |
 
-Projects supports 10 projects and at most 2,400 stored reports. Deleting a report does not restore quota; there is no overage billing. CHF and EUR are separate local prices, not exchange-rate conversions. Stripe displays the tax-inclusive total before confirmation. Subscription availability is shown in Projects.
+Projects supports 10 projects and at most 2,400 stored reports. Deleting a report does not restore quota; there is no overage billing. CHF, EUR, USD and GBP are separate fixed local prices, not exchange-rate conversions. Stripe displays the tax-inclusive total before confirmation. Subscription availability is shown in Projects.
 
 ## Start with your own measurements
 

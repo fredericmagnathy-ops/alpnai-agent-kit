@@ -10,7 +10,7 @@ Verbinden Sie einen autorisierten Agenten mit **Spend Proof**, dem kostenlosen A
 
 ## ALPNAI Projects
 
-Ergebnisse Ihrer Agenten privat speichern und vergleichen. [Projects öffnen](https://alpnai.com/projects), **mit ChatGPT anmelden**: 3 gespeicherte Berichte kostenlos, ohne Karte. Kostenpflichtige Angebote: **19 CHF oder 19 EUR monatlich** für 100 neue Berichte je bezahlter Monatsperiode oder **190 CHF oder 190 EUR jährlich** für 1.200 je bezahlter Jahresperiode; 10 Projekte. Stripe verwaltet das separate Website-Abonnement. Seine Verfügbarkeit wird in Projects angezeigt; Zugang setzt bestätigte Zahlung voraus. Das Kit schließt keine Abonnements ab und überträgt keine Kryptowährung.
+Ergebnisse Ihrer Agenten privat speichern und vergleichen. [Projects öffnen](https://alpnai.com/projects), **mit ChatGPT anmelden**: 3 gespeicherte Berichte kostenlos, ohne Karte. Kostenpflichtige Angebote: **19 CHF, 19 EUR, 19 USD oder 19 GBP monatlich** für 100 neue Berichte je bezahlter Monatsperiode oder **190 CHF, 190 EUR, 190 USD oder 190 GBP jährlich** für 1.200 je bezahlter Jahresperiode; 10 Projekte. Dies sind feste lokale Preise ohne Währungsumrechnung. Stripe verwaltet das separate Website-Abonnement. Seine Verfügbarkeit wird in Projects angezeigt; Zugang setzt bestätigte Zahlung voraus. Das Kit schließt keine Abonnements ab und überträgt keine Kryptowährung.
 
 [Projects-Leitfaden](docs/de/projects.md) · [Bedingungen](https://alpnai.com/de/legal/projects) · [Datenschutz](https://alpnai.com/de/legal/privacy)
 

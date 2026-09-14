@@ -13,10 +13,10 @@ Melden Sie sich mit ChatGPT an. Projects ist dem authentifizierten Kontoinhaber 
 | Angebot | Preis | Neu gespeicherte Berichte |
 |---|---|---|
 | Kostenloser Zugang | Ohne Karte | 3 für die Lebensdauer des Kontos |
-| Monatlich | 19 CHF oder 19 EUR pro Monat | 100 je bezahlter Monatsperiode |
-| Jährlich | 190 CHF oder 190 EUR pro Jahr | 1.200 je bezahlter Jahresperiode |
+| Monatlich | 19 CHF, 19 EUR, 19 USD oder 19 GBP pro Monat | 100 je bezahlter Monatsperiode |
+| Jährlich | 190 CHF, 190 EUR, 190 USD oder 190 GBP pro Jahr | 1.200 je bezahlter Jahresperiode |
 
-Projects unterstützt 10 Projekte und höchstens 2.400 gespeicherte Berichte. Löschen stellt kein Kontingent wieder her; es gibt keine Mehrverbrauchsabrechnung. CHF und EUR sind getrennte lokale Preise ohne Währungsumrechnung. Stripe zeigt vor Bestätigung den Gesamtpreis einschließlich Steuern. Die Verfügbarkeit von Abonnements wird in Projects angezeigt.
+Projects unterstützt 10 Projekte und höchstens 2.400 gespeicherte Berichte. Löschen stellt kein Kontingent wieder her; es gibt keine Mehrverbrauchsabrechnung. CHF, EUR, USD und GBP sind getrennte feste lokale Preise ohne Währungsumrechnung. Stripe zeigt vor Bestätigung den Gesamtpreis einschließlich Steuern. Die Verfügbarkeit von Abonnements wird in Projects angezeigt.
 
 ## Mit eigenen Messwerten beginnen
 

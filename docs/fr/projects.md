@@ -13,10 +13,10 @@ Connectez-vous avec ChatGPT. Projects est réservé au titulaire authentifié ; 
 | Offre | Prix | Nouveaux rapports enregistrés |
 |---|---|---|
 | Accès gratuit | Sans carte | 3 à vie par compte |
-| Mensuelle | 19 CHF ou 19 EUR par mois | 100 par période mensuelle payée |
-| Annuelle | 190 CHF ou 190 EUR par an | 1 200 par période annuelle payée |
+| Mensuelle | 19 CHF, 19 EUR, 19 USD ou 19 GBP par mois | 100 par période mensuelle payée |
+| Annuelle | 190 CHF, 190 EUR, 190 USD ou 190 GBP par an | 1 200 par période annuelle payée |
 
-Projects permet 10 projets et au maximum 2 400 rapports conservés. Supprimer un rapport ne restitue pas le quota ; aucun dépassement n’est facturé. CHF et EUR sont des tarifs locaux distincts, sans conversion de devises. Stripe affiche le total taxes incluses avant confirmation. La disponibilité des abonnements est indiquée dans Projects.
+Projects permet 10 projets et au maximum 2 400 rapports conservés. Supprimer un rapport ne restitue pas le quota ; aucun dépassement n’est facturé. CHF, EUR, USD et GBP sont des tarifs locaux fixes et distincts, sans conversion de devises. Stripe affiche le total taxes incluses avant confirmation. La disponibilité des abonnements est indiquée dans Projects.
 
 ## Commencer avec vos mesures
 

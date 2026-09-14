@@ -10,7 +10,7 @@ Connect an authorized agent to **Spend Proof**, ALPNAI’s free audit of cost pe
 
 ## ALPNAI Projects
 
-Save and compare your agent results in a private workspace. [Open Projects](https://alpnai.com/projects) with **Sign in with ChatGPT**: 3 saved reports free, no card. Paid plans are **19 CHF or 19 EUR monthly** for 100 new reports per paid monthly period, or **190 CHF or 190 EUR annually** for 1,200 per paid annual period; 10 projects. Stripe handles the separate website subscription. Its availability is shown in Projects, and access requires confirmed payment. The kit does not start subscriptions or move cryptocurrency.
+Save and compare your agent results in a private workspace. [Open Projects](https://alpnai.com/projects) with **Sign in with ChatGPT**: 3 saved reports free, no card. Paid plans are **19 CHF, 19 EUR, 19 USD or 19 GBP monthly** for 100 new reports per paid monthly period, or **190 CHF, 190 EUR, 190 USD or 190 GBP annually** for 1,200 per paid annual period; 10 projects. These are fixed local prices, not exchange-rate conversions. Stripe handles the separate website subscription. Its availability is shown in Projects, and access requires confirmed payment. The kit does not start subscriptions or move cryptocurrency.
 
 [Projects guide](docs/en/projects.md) · [Terms](https://alpnai.com/en/legal/projects) · [Privacy](https://alpnai.com/en/legal/privacy)
 
