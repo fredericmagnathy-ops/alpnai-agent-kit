@@ -10,4 +10,7 @@ Use the same matched task records to inspect cost per successful task, recorded 
 
 The Evidence pilot uses simulated purchases. No directory publication, real payment, customer savings or bank conversion is established by the presence of this documentation. PayAI/x402 mainnet settlement remains under validation.
 
+- [Source monitoring and evidence freshness](source-monitoring.md)
+- [Payment operations and recovery](payment-operations.md)
+
 [Back to the integration kit](../README.md)
