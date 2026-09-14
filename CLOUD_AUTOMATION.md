@@ -12,7 +12,7 @@ Prepared for `fredericmagnathy-ops/alpnai-agent-kit` on 14 September 2026. These
 
 All three support `workflow_dispatch`. The source endpoint records monitoring results in the service database. It returns `claims_auto_updated: false`: a changed source triggers review, rather than rewriting evidence. Source states `review_required` and `unavailable` fail the run; `baseline` and `unchanged` pass. Configuration, access, network and response-contract errors also fail the run.
 
-The public health check is tied to the prepared **sandbox** contract. It checks three product IDs, a populated evidence sample and eight expected MCP tools, including `audit_agent_costs`, `analyze_agent_latency` and `check_agent_quality`, with version `2026-07-28`. It makes no `tools/call` request. If the service later enables real payments or changes the contract, review this probe before changing its expectations. A green check establishes only these bounded responses, not source accuracy, coverage, revenue or overall uptime.
+The public health check is tied to the prepared **sandbox** contract. It checks three product IDs, a populated evidence sample and nine expected MCP tools, including `audit_agent_costs`, `analyze_agent_latency` `check_agent_quality` and `save_project_report`, with version `2026-07-28`. It makes no `tools/call` request. If the service later enables real payments or changes the contract, review this probe before changing its expectations. A green check establishes only these bounded responses, not source accuracy, coverage, revenue or overall uptime.
 
 The separate growth step records the service's aggregate 30-day diagnosis. It retains only numeric totals for sessions, registrations, activated pilots and zero sandbox revenue, plus one allowed decision: `collect_more_evidence`, `improve_activation` or `review_repeat_usage`. A valid diagnosis passes even when more evidence is needed; it is not a business-performance guarantee. Malformed data, unexpected real revenue or access failures fail the run. The endpoint records its diagnosis but does not automatically change prices or publish content.
 
@@ -53,7 +53,7 @@ An always-run step writes a sanitized GitHub job summary, and another attempts t
 python3 -m unittest discover -s tests -v
 ```
 
-The mock and loopback tests check redirects, secret exclusion, failure signaling, all eight MCP tools, protocol metadata and lack of purchases. Reconciliation tests cover fixed origin and action, empty and partial batches, malformed responses, no retry after timeout, aggregate output and the workflow's scope. They do not contact the hosted service or GitHub. Once configured and authorized, the same probe can be run from the operator's own environment using its secret store:
+The mock and loopback tests check redirects, secret exclusion, failure signaling, all nine MCP tools, protocol metadata and lack of purchases. Reconciliation tests cover fixed origin and action, empty and partial batches, malformed responses, no retry after timeout, aggregate output and the workflow's scope. They do not contact the hosted service or GitHub. Once configured and authorized, the same probe can be run from the operator's own environment using its secret store:
 
 ```sh
 python3 scripts/check_cloud.py health --report reports/daily-health.json

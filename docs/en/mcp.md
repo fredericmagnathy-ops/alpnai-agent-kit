@@ -2,7 +2,7 @@
 
 Discover tools and call audit_agent_costs with your records.
 
-[Documentation library](README.md) · [Website documentation](https://alpnai.com/en/docs)
+[Documentation library](README.md) · [ALPNAI](https://alpnai.com/en/docs)
 
 [Français](../fr/mcp.md) · [English](../en/mcp.md) · [Deutsch](../de/mcp.md)
 
@@ -20,7 +20,9 @@ Each request includes protocol version, client information and capabilities in p
 
 get_catalog and get_free_sample discover the pilot. audit_agent_costs, analyze_agent_latency and check_agent_quality run Spend Proof, Latency Lab and Quality Gate respectively, free with an active key. All three accept runs and config.
 
-purchase_snapshot, purchase_changes and purchase_evidence simulate Evidence purchases and use a fictitious budget. They require idempotency_key; purchase_changes also accepts since as YYYY-MM-DD. The server therefore exposes eight tools.
+purchase_snapshot, purchase_changes and purchase_evidence simulate Evidence purchases and use a fictitious budget. They require idempotency_key; purchase_changes also accepts since as YYYY-MM-DD. The server therefore exposes nine tools.
+
+save_project_report calculates and saves a report in the project explicitly authorized by its owner, using the existing Projects allowance. It requires request_id, title and input. Guide: https://alpnai.com/en/docs/projects-automation.
 
 ## Discover, then call the audit
 
@@ -76,4 +78,4 @@ Keep action execution separate from report reading. An ALPNAI key and trial reco
 
 ---
 
-[Previous: HTTP API](api.md) · [Next: Payments and test mode](payments.md)
+[HTTP API](api.md) · [Automate report delivery](projects-automation.md)

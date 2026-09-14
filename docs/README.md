@@ -1,6 +1,6 @@
 # ALPNAI documentation
 
-Choose a language for ten practical guides, the three free analysis APIs and eight MCP tools.
+Choose a language for twelve practical guides, the three free analysis APIs and nine MCP tools.
 
 - [Français](fr/README.md) · [Documentation sur le site](https://alpnai.com/fr/docs)
 - [English](en/README.md) · [Website documentation](https://alpnai.com/en/docs)

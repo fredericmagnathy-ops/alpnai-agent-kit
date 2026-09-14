@@ -2,7 +2,7 @@
 
 Repérez les tâches lentes et quantifiez les tentatives supplémentaires sur les mêmes traces.
 
-[Bibliothèque de documentation](README.md) · [Documentation sur le site](https://alpnai.com/fr/docs)
+[Bibliothèque de documentation](README.md) · [ALPNAI](https://alpnai.com/fr/docs)
 
 [Français](../fr/latency.md) · [English](../en/latency.md) · [Deutsch](../de/latency.md)
 
@@ -38,4 +38,4 @@ Le format n’impose ni horodatage ni ordre des tentatives. Il ne permet pas d�
 
 ---
 
-[Précédent: Spend Proof : coût par succès](spend-proof.md) · [Suivant: Quality Gate : comparer avant de changer](quality-gate.md)
+[Spend Proof : coût par succès](spend-proof.md) · [Quality Gate : comparer avant de changer](quality-gate.md)

@@ -2,7 +2,7 @@
 
 Inspect success, cost and latency before adopting a candidate.
 
-[Documentation library](README.md) · [Website documentation](https://alpnai.com/en/docs)
+[Documentation library](README.md) · [ALPNAI](https://alpnai.com/en/docs)
 
 [Français](../fr/quality-gate.md) · [English](../en/quality-gate.md) · [Deutsch](../de/quality-gate.md)
 
@@ -48,4 +48,4 @@ experimental_bias_control remains unknown: shared identifiers do not prove rando
 
 ---
 
-[Previous: Latency Lab: duration and retries](latency.md) · [Next: Reports and exports](reports.md)
+[Latency Lab: duration and retries](latency.md) · [Reports and exports](reports.md)

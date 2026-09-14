@@ -18,7 +18,7 @@ MAX_BODY = 2 * 1024 * 1024
 MCP_VERSION = "2026-07-28"
 SOURCE_STATUSES = {"baseline", "unchanged", "review_required", "unavailable"}
 TOOLS = {"get_catalog", "get_free_sample", "purchase_snapshot", "purchase_changes", "purchase_evidence",
-         "audit_agent_costs", "analyze_agent_latency", "check_agent_quality"}
+         "audit_agent_costs", "analyze_agent_latency", "check_agent_quality", "save_project_report"}
 GROWTH_DECISIONS = {"collect_more_evidence", "improve_activation", "review_repeat_usage"}
 RECONCILE_PATH = "/api/operator/payments/reconcile"
 MAX_RECONCILE_ORDERS = 5

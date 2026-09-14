@@ -2,7 +2,7 @@
 
 Comparez vos agents sur le coût, les temps enregistrés et la réussite des mêmes tâches.
 
-[Bibliothèque de documentation](README.md) · [Documentation sur le site](https://alpnai.com/fr/docs)
+[Bibliothèque de documentation](README.md) · [ALPNAI](https://alpnai.com/fr/docs)
 
 [Français](../fr/introduction.md) · [English](../en/introduction.md) · [Deutsch](../de/introduction.md)
 
@@ -24,6 +24,8 @@ Préparez les mêmes identifiants de tâches pour les deux versions. Importez le
 
 Le calcul dans le navigateur ne demande pas de compte. L’API et MCP demandent une clé ALPNAI active ; l’audit reste gratuit.
 
+Projects ajoute un historique privé et la comparaison de rapports enregistrés. Connectez-vous avec ChatGPT pour utiliser les trois rapports gratuits ou choisir un abonnement Stripe. Cet espace est distinct des API/MCP gratuites et des achats crypto en test.
+
 ## Ce que la mesure signifie
 
 Les résultats décrivent les données fournies. ALPNAI ne remplace pas votre définition d’un bon résultat et ne modifie pas vos agents. Un candidat intéressant doit encore être éprouvé dans votre environnement.
@@ -32,4 +34,4 @@ Les services Evidence sur l’IPO OpenAI constituent un pilote distinct. Leurs a
 
 ---
 
-[Suivant: Votre premier audit](quickstart.md)
+[Votre premier audit](quickstart.md)

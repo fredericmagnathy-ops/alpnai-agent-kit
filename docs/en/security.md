@@ -2,7 +2,7 @@
 
 Prepare minimal records and choose where the calculation runs.
 
-[Documentation library](README.md) · [Website documentation](https://alpnai.com/en/docs)
+[Documentation library](README.md) · [ALPNAI](https://alpnai.com/en/docs)
 
 [Français](../fr/security.md) · [English](../en/security.md) · [Deutsch](../de/security.md)
 
@@ -32,4 +32,4 @@ Replace a lost key through the supported flow; the old key is revoked and previo
 
 ---
 
-[Previous: Payments and test mode](payments.md)
+[Projects, payments and test mode](payments.md)

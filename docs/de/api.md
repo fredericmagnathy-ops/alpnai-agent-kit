@@ -2,7 +2,7 @@
 
 Senden Sie Aufzeichnungen per Skript und erhalten Sie dieselbe strukturierte Berechnung.
 
-[Dokumentationsbibliothek](README.md) · [Dokumentation auf der Website](https://alpnai.com/de/docs)
+[Dokumentationsbibliothek](README.md) · [ALPNAI](https://alpnai.com/de/docs)
 
 [Français](../fr/api.md) · [English](../en/api.md) · [Deutsch](../de/api.md)
 
@@ -47,4 +47,4 @@ Die latency-API liefert groups mit unter anderem p50_ms, p95_ms, max_ms und retr
 
 ---
 
-[Zurück: Berichte und Exporte](reports.md) · [Weiter: Einen Agenten über MCP verbinden](mcp.md)
+[Berichte und Exporte](reports.md) · [Einen Agenten über MCP verbinden](mcp.md)

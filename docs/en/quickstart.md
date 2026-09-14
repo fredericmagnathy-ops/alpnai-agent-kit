@@ -2,7 +2,7 @@
 
 Generate a complete example, run the calculation and retrieve an explained result.
 
-[Documentation library](README.md) · [Website documentation](https://alpnai.com/en/docs)
+[Documentation library](README.md) · [ALPNAI](https://alpnai.com/en/docs)
 
 [Français](../fr/quickstart.md) · [English](../en/quickstart.md) · [Deutsch](../de/quickstart.md)
 
@@ -56,4 +56,4 @@ Repeat with complete costs and success criteria defined before the test. The API
 
 ---
 
-[Previous: Understand ALPNAI](introduction.md) · [Next: Spend Proof: cost per success](spend-proof.md)
+[Understand ALPNAI](introduction.md) · [Projects: private reports and subscriptions](projects.md)

@@ -1,9 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "ALPNAI Sandbox API",
+    "title": "ALPNAI Agent API",
     "version": "0.1.0",
-    "description": "Dated source evidence for authorized agents. No real cryptocurrency settlement. Private Sites also require platform access.",
+    "description": "Analyze supplied AI-agent measurements and save aggregate reports with an explicit Projects owner grant. Free analysis endpoints do not persist reports. Evidence purchase endpoints remain sandbox-only. No cryptocurrency settlement through this contract.",
     "contact": {
       "email": "frederic@alpnor.com"
     }
@@ -281,6 +281,299 @@
           },
           "413": {
             "description": "512000-byte request limit exceeded"
+          }
+        }
+      }
+    },
+    "/api/v1/latency": {
+      "post": {
+        "summary": "Analyze recorded task durations, P50, P95 and retries",
+        "security": [
+          {
+            "agentKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "runs"
+                ],
+                "properties": {
+                  "runs": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 1000,
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "task_id",
+                        "workflow",
+                        "variant",
+                        "cost_usd",
+                        "success"
+                      ],
+                      "properties": {
+                        "task_id": {
+                          "type": "string"
+                        },
+                        "workflow": {
+                          "type": "string"
+                        },
+                        "variant": {
+                          "enum": [
+                            "baseline",
+                            "candidate"
+                          ]
+                        },
+                        "cost_usd": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "success": {
+                          "type": "boolean"
+                        },
+                        "latency_ms": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  },
+                  "config": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Analysis computed from supplied traces; no payment, no application storage.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Active test agent key required"
+          },
+          "413": {
+            "description": "512000-byte request limit exceeded"
+          }
+        },
+        "operationId": "analyzeLatency"
+      }
+    },
+    "/api/v1/quality-gate": {
+      "post": {
+        "summary": "Check quality, cost and recorded latency thresholds",
+        "security": [
+          {
+            "agentKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "runs"
+                ],
+                "properties": {
+                  "runs": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 1000,
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "task_id",
+                        "workflow",
+                        "variant",
+                        "cost_usd",
+                        "success"
+                      ],
+                      "properties": {
+                        "task_id": {
+                          "type": "string"
+                        },
+                        "workflow": {
+                          "type": "string"
+                        },
+                        "variant": {
+                          "enum": [
+                            "baseline",
+                            "candidate"
+                          ]
+                        },
+                        "cost_usd": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "success": {
+                          "type": "boolean"
+                        },
+                        "latency_ms": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  },
+                  "config": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Analysis computed from supplied traces; no payment, no application storage.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Active test agent key required"
+          },
+          "413": {
+            "description": "512000-byte request limit exceeded"
+          }
+        },
+        "operationId": "checkQuality"
+      }
+    },
+    "/api/v1/project-reports": {
+      "post": {
+        "operationId": "save_project_report",
+        "summary": "Calculate and save one report in the owner-authorized project",
+        "description": "Compute and save an aggregate performance report in the fixed Projects destination authorized by the account owner. Uses the existing free or paid report allowance. Requires an active agent key and explicit owner write permission. Reuse request_id with identical content to retry within the same permission grant. No report reading, deletion, subscription or payment authorization. Send measurements without secrets. A repeated identical request consumes no additional report quota. Changing or re-enabling the grant creates a new request namespace. No automatic paid upgrade or overage. The successful response contains no private report history.",
+        "security": [
+          {
+            "AgentKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "request_id": {
+                    "type": "string",
+                    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "input": {
+                    "type": "object",
+                    "properties": {
+                      "runs": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 1000,
+                        "items": {
+                          "type": "object"
+                        }
+                      },
+                      "config": {
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "runs"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "request_id",
+                  "title",
+                  "input"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved or replayed report identifier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "replayed": {
+                      "type": "boolean"
+                    },
+                    "saved": {
+                      "const": true
+                    },
+                    "persistence": {
+                      "const": "computed_summary"
+                    },
+                    "payment_authorized": {
+                      "const": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "replayed",
+                    "saved",
+                    "persistence",
+                    "payment_authorized"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid measurements or request"
+          },
+          "401": {
+            "description": "Missing or revoked agent key"
+          },
+          "403": {
+            "description": "Owner grant missing or revoked"
+          },
+          "409": {
+            "description": "Report quota exhausted, replay conflict or deleted report"
+          },
+          "413": {
+            "description": "Request too large"
+          },
+          "503": {
+            "description": "Service temporarily unavailable; retry with the same request ID and content"
           }
         }
       }

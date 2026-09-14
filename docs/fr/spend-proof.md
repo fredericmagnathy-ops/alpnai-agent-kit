@@ -2,7 +2,7 @@
 
 Incluez les échecs et les reprises pour comparer le vrai coût des résultats enregistrés.
 
-[Bibliothèque de documentation](README.md) · [Documentation sur le site](https://alpnai.com/fr/docs)
+[Bibliothèque de documentation](README.md) · [ALPNAI](https://alpnai.com/fr/docs)
 
 [Français](../fr/spend-proof.md) · [English](../en/spend-proof.md) · [Deutsch](../de/spend-proof.md)
 
@@ -61,4 +61,4 @@ Les doublons comptent comme des tentatives supplémentaires. Dédupliquez donc v
 
 ---
 
-[Précédent: Votre premier audit](quickstart.md) · [Suivant: Latency Lab : temps et reprises](latency.md)
+[Projects : rapports privés et abonnements](projects.md) · [Latency Lab : temps et reprises](latency.md)

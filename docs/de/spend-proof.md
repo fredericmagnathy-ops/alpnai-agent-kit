@@ -2,7 +2,7 @@
 
 Berücksichtigen Sie Fehler und Wiederholungen beim Kostenvergleich erfasster Ergebnisse.
 
-[Dokumentationsbibliothek](README.md) · [Dokumentation auf der Website](https://alpnai.com/de/docs)
+[Dokumentationsbibliothek](README.md) · [ALPNAI](https://alpnai.com/de/docs)
 
 [Français](../fr/spend-proof.md) · [English](../en/spend-proof.md) · [Deutsch](../de/spend-proof.md)
 
@@ -61,4 +61,4 @@ Doppelte Zeilen zählen als weitere Versuche. Entfernen Sie Telemetrieduplikate 
 
 ---
 
-[Zurück: Ihr erstes Audit](quickstart.md) · [Weiter: Latency Lab: Zeiten und Wiederholungen](latency.md)
+[Projects: private Berichte und Abonnements](projects.md) · [Latency Lab: Zeiten und Wiederholungen](latency.md)

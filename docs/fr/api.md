@@ -2,7 +2,7 @@
 
 Envoyez vos traces depuis un script et récupérez le même calcul structuré.
 
-[Bibliothèque de documentation](README.md) · [Documentation sur le site](https://alpnai.com/fr/docs)
+[Bibliothèque de documentation](README.md) · [ALPNAI](https://alpnai.com/fr/docs)
 
 [Français](../fr/api.md) · [English](../en/api.md) · [Deutsch](../de/api.md)
 
@@ -47,4 +47,4 @@ L’API latency renvoie groups avec notamment p50_ms, p95_ms, max_ms et retry_at
 
 ---
 
-[Précédent: Rapports et exports](reports.md) · [Suivant: Connecter un agent avec MCP](mcp.md)
+[Rapports et exports](reports.md) · [Connecter un agent avec MCP](mcp.md)

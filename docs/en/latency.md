@@ -2,7 +2,7 @@
 
 Identify slow tasks and quantify additional attempts using the same records.
 
-[Documentation library](README.md) · [Website documentation](https://alpnai.com/en/docs)
+[Documentation library](README.md) · [ALPNAI](https://alpnai.com/en/docs)
 
 [Français](../fr/latency.md) · [English](../en/latency.md) · [Deutsch](../de/latency.md)
 
@@ -38,4 +38,4 @@ The format does not require timestamps or attempt ordering. It cannot identify t
 
 ---
 
-[Previous: Spend Proof: cost per success](spend-proof.md) · [Next: Quality Gate: compare before changing](quality-gate.md)
+[Spend Proof: cost per success](spend-proof.md) · [Quality Gate: compare before changing](quality-gate.md)

@@ -2,7 +2,7 @@
 
 Préparez des traces minimales et choisissez où le calcul doit être effectué.
 
-[Bibliothèque de documentation](README.md) · [Documentation sur le site](https://alpnai.com/fr/docs)
+[Bibliothèque de documentation](README.md) · [ALPNAI](https://alpnai.com/fr/docs)
 
 [Français](../fr/security.md) · [English](../en/security.md) · [Deutsch](../de/security.md)
 
@@ -32,4 +32,4 @@ Vous pouvez remplacer une clé perdue depuis le parcours prévu ; l’ancienne e
 
 ---
 
-[Précédent: Paiements et mode de test](payments.md)
+[Projects, paiements et mode de test](payments.md)

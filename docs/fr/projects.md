@@ -6,6 +6,10 @@ Comparez le coût, le taux de réussite et la latence de deux versions avant de 
 
 [Ouvrir Projects](https://alpnai.com/projects) · [Conditions](https://alpnai.com/fr/legal/projects) · [Confidentialité](https://alpnai.com/fr/legal/privacy)
 
+[Bibliothèque de documentation](README.md) · [ALPNAI](https://alpnai.com/fr/docs)
+
+[Français](../fr/projects.md) · [English](../en/projects.md) · [Deutsch](../de/projects.md)
+
 ## Accès et offres
 
 Connectez-vous avec ChatGPT. Projects est réservé au titulaire authentifié ; une clé API d’agent n’ouvre ni ses rapports ni sa facturation. Aucun portefeuille crypto n’est nécessaire.
@@ -31,3 +35,15 @@ Choisissez la devise et la période, acceptez les conditions Projects, puis pass
 Les achats API/MCP de ce kit restent **exclusivement en sandbox**. Les abonnements Projects sont un service distinct du site ; le kit ne les souscrit ni ne les renouvelle et ne transfère aucune cryptomonnaie.
 
 Assistance : [frederic@alpnor.com](mailto:frederic@alpnor.com).
+
+## Automatiser la livraison de rapports
+
+Une agence qui teste plusieurs agents peut perdre du temps à réunir ses résultats. Ajoutez un appel ALPNAI à la fin de votre propre pipeline : le serveur calcule les coûts, la latence et les contrôles de qualité, puis conserve le résultat dans Projects.
+
+save_project_report calcule et enregistre un rapport dans le projet autorisé explicitement par son titulaire, avec le quota Projects existant. Il attend request_id, title et input. Guide : https://alpnai.com/fr/docs/projects-automation.
+
+Les dépôts automatiques et manuels utilisent ensemble les trois rapports gratuits à vie, ou les 100 rapports de la période mensuelle payée, ou les 1 200 rapports de la période annuelle payée. Il n’y a aucun dépassement facturé et aucun passage automatique à une offre payante.
+
+---
+
+[Votre premier audit](quickstart.md) · [Spend Proof : coût par succès](spend-proof.md)

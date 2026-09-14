@@ -2,7 +2,7 @@
 
 Ein lesbarer Bericht für Ihr Team und strukturiertes JSON für Ihre Werkzeuge.
 
-[Dokumentationsbibliothek](README.md) · [Dokumentation auf der Website](https://alpnai.com/de/docs)
+[Dokumentationsbibliothek](README.md) · [ALPNAI](https://alpnai.com/de/docs)
 
 [Français](../fr/reports.md) · [English](../en/reports.md) · [Deutsch](../de/reports.md)
 
@@ -10,7 +10,7 @@ Ein lesbarer Bericht für Ihr Team und strukturiertes JSON für Ihre Werkzeuge.
 
 JSON bewahrt Kennzahlen, Prüfungen, Entscheidungen und Einstellungen in einem wiederverwendbaren Format. HTML stellt Ergebnisse zum Lesen, Teilen oder Drucken dar.
 
-Die Dateien werden lokal aus denselben Berechnungen erzeugt. Für den Bericht ist kein Schreibdienst eines Sprachmodells erforderlich.
+In den kostenlosen Browserwerkzeugen werden Dateien lokal aus denselben Berechnungen erzeugt. Projects ermöglicht zusätzlich den Download aggregierter Ergebnisse aus Ihrem Konto. Für diese Berichte ist kein Schreibdienst eines Sprachmodells erforderlich.
 
 ## Analyse herunterladen
 
@@ -43,8 +43,14 @@ Path("audit-report.json").write_text(json.dumps(report, indent=2), encoding="utf
 
 Bewahren Sie Datenherkunft und Testschwellen auf. Fiktive Beispiele müssen auch nach dem Export gekennzeichnet bleiben. Schützen Sie Berichte, wenn Kennungen Geschäftsinformationen erkennen lassen.
 
-Lokale Exporte sind weder Rechnungen noch Zahlungsnachweise. Die Seite bietet keinen Cloud-Verlauf der Audits. Speichern Sie den Bericht vor dem Schließen.
+Lokale Exporte sind weder Rechnungen noch Zahlungsnachweise. Die kostenlosen Browserwerkzeuge speichern keinen Cloud-Verlauf: Laden Sie den Bericht vor dem Schliessen der Seite herunter. Um Analysen bewusst online zu speichern, nutzen Sie Projects mit Ihrem ChatGPT-Konto.
+
+## Berichte in Projects speichern
+
+Projects speichert aggregierte Ergebnisse, Projekt-/Versionsnamen und erforderliche Kennungen zur Nachverfolgung. Beim Speichern werden Messwerte zur Berechnung an den Server übertragen; Rohversuche und Prompts werden nicht in der Datenbank gespeichert. Eine lokale Analyse oder ein Aufruf einer kostenlosen Analyse-API erstellt nicht automatisch einen Projects-Bericht.
+
+Der angemeldete Kontoinhaber kann bis zu zwei Berichte vergleichen und deren JSON oder einen druckbaren Bericht herunterladen. Bestehende Berichte bleiben nach Ablauf eines Abonnements herunterladbar. Löschen entfernt Inhalt und Bezeichnungen, ohne Kontingent wiederherzustellen; ein Fingerabdruck und technische Daten zur Nachverfolgung bleiben erhalten.
 
 ---
 
-[Zurück: Quality Gate: vor Änderungen vergleichen](quality-gate.md) · [Weiter: HTTP-API](api.md)
+[Quality Gate: vor Änderungen vergleichen](quality-gate.md) · [HTTP-API](api.md)

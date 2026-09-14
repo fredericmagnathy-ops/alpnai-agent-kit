@@ -2,7 +2,7 @@
 
 Prüfen Sie Erfolg, Kosten und Latenz, bevor Sie eine Variante übernehmen.
 
-[Dokumentationsbibliothek](README.md) · [Dokumentation auf der Website](https://alpnai.com/de/docs)
+[Dokumentationsbibliothek](README.md) · [ALPNAI](https://alpnai.com/de/docs)
 
 [Français](../fr/quality-gate.md) · [English](../en/quality-gate.md) · [Deutsch](../de/quality-gate.md)
 
@@ -48,4 +48,4 @@ experimental_bias_control bleibt unknown: Gemeinsame Kennungen beweisen keine Ra
 
 ---
 
-[Zurück: Latency Lab: Zeiten und Wiederholungen](latency.md) · [Weiter: Berichte und Exporte](reports.md)
+[Latency Lab: Zeiten und Wiederholungen](latency.md) · [Berichte und Exporte](reports.md)

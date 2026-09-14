@@ -2,7 +2,7 @@
 
 Bereiten Sie minimale Aufzeichnungen vor und wählen Sie den Berechnungsort.
 
-[Dokumentationsbibliothek](README.md) · [Dokumentation auf der Website](https://alpnai.com/de/docs)
+[Dokumentationsbibliothek](README.md) · [ALPNAI](https://alpnai.com/de/docs)
 
 [Français](../fr/security.md) · [English](../en/security.md) · [Deutsch](../de/security.md)
 
@@ -32,4 +32,4 @@ Ein verlorener Schlüssel kann über den vorgesehenen Ablauf ersetzt werden. Der
 
 ---
 
-[Zurück: Zahlungen und Testmodus](payments.md)
+[Projects, Zahlungen und Testmodus](payments.md)

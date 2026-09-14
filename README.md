@@ -10,13 +10,15 @@ Connect an authorized agent to **Spend Proof**, ALPNAI’s free audit of cost pe
 
 ## ALPNAI Projects
 
+After the owner grants access in Projects, an agent can deliver reports automatically with `save_project_report` (MCP) or the Python client `examples/save_project.py`. Manual and automatic saves share the same allowance. [Setup](docs/en/projects-automation.md).
+
 Save and compare your agent results in a private workspace. [Open Projects](https://alpnai.com/projects) with **Sign in with ChatGPT**: 3 saved reports free, no card. Paid plans are **19 CHF, 19 EUR, 19 USD or 19 GBP monthly** for 100 new reports per paid monthly period, or **190 CHF, 190 EUR, 190 USD or 190 GBP annually** for 1,200 per paid annual period; 10 projects. These are fixed local prices, not exchange-rate conversions. Stripe handles the separate website subscription. Its availability is shown in Projects, and access requires confirmed payment. The kit does not start subscriptions or move cryptocurrency.
 
 [Projects guide](docs/en/projects.md) · [Terms](https://alpnai.com/en/legal/projects) · [Privacy](https://alpnai.com/en/legal/privacy)
 
 ## Documentation library
 
-[Website documentation](https://alpnai.com/en/docs) · [Ten practical guides](docs/en/README.md) · [Payment recovery and receipts](docs/payment-operations.md)
+[Website documentation](https://alpnai.com/en/docs) · [Twelve practical guides](docs/en/README.md) · [Payment recovery and receipts](docs/payment-operations.md)
 
 [FR](https://alpnai.com/fr/docs) · [EN](https://alpnai.com/en/docs) · [DE](https://alpnai.com/de/docs)
 
@@ -30,7 +32,7 @@ All three tools accept the same records. Browser calculation and HTML/JSON expor
 | Latency Lab | `POST /api/v1/latency` | `analyze_agent_latency` |
 | Quality Gate | `POST /api/v1/quality-gate` | `check_agent_quality` |
 
-[Eight MCP tools](docs/en/mcp.md): `get_catalog`, `get_free_sample`, `audit_agent_costs`, `analyze_agent_latency`, `check_agent_quality`, `purchase_snapshot`, `purchase_changes`, `purchase_evidence`.
+[Nine MCP tools](docs/en/mcp.md): `get_catalog`, `get_free_sample`, `audit_agent_costs`, `analyze_agent_latency`, `check_agent_quality`, `save_project_report`, `purchase_snapshot`, `purchase_changes`, `purchase_evidence`.
 
 MCP purchase examples remain in sandbox mode. PayAI/x402 is under validation; this repository proves no mainnet settlement. This kit executes no subscriptions, commissions or automatic bank transfers.
 
@@ -102,7 +104,7 @@ The initial collection is dated 14 September 2026 and concerns OpenAI's confiden
 
 The public repository is [fredericmagnathy-ops/alpnai-agent-kit](https://github.com/fredericmagnathy-ops/alpnai-agent-kit), with MCP namespace `io.github.fredericmagnathy-ops/alpnai`. This revision is validated offline; inspect GitHub Actions for the latest cloud results.
 
-Three prepared GitHub Actions workflows check sources every six hours at minute 17 UTC, catalog/sample/eight MCP tools daily at 07:43 UTC, and reconcile existing payment records at minutes 06, 16, 26, 36, 46 and 56 of every hour. Reconciliation reads the chain and may update existing ledger records; it never submits a payment, settlement or bank transfer. It exports only checked/confirmed/not-confirmed counts for at most five orders. Each can also be run manually after deployment. The source check records monitoring results, preserves factual claims and fails when review is required or a source is unavailable. Health checks use MCP `server/discover` and `tools/list` with version `2026-07-28`; they never call purchase tools.
+Three prepared GitHub Actions workflows check sources every six hours at minute 17 UTC, catalog/sample/nine MCP tools daily at 07:43 UTC, and reconcile existing payment records at minutes 06, 16, 26, 36, 46 and 56 of every hour. Reconciliation reads the chain and may update existing ledger records; it never submits a payment, settlement or bank transfer. It exports only checked/confirmed/not-confirmed counts for at most five orders. Each can also be run manually after deployment. The source check records monitoring results, preserves factual claims and fails when review is required or a source is unavailable. Health checks use MCP `server/discover` and `tools/list` with version `2026-07-28`; they never call purchase tools.
 
 Configure the endpoint and authorized secrets, deploy the API and place the workflows on the repository's default branch before activation. Reports contain only statuses and counts, are retained for seven days and produce a job summary. A failed run can trigger GitHub notifications according to account settings. Schedules can be delayed and do not constitute a continuous-service guarantee. Setup, exact variables, permissions and limitations: [Cloud automation](CLOUD_AUTOMATION.md).
 

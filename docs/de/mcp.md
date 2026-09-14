@@ -2,7 +2,7 @@
 
 Entdecken Sie Werkzeuge und rufen Sie audit_agent_costs mit Ihren Aufzeichnungen auf.
 
-[Dokumentationsbibliothek](README.md) · [Dokumentation auf der Website](https://alpnai.com/de/docs)
+[Dokumentationsbibliothek](README.md) · [ALPNAI](https://alpnai.com/de/docs)
 
 [Français](../fr/mcp.md) · [English](../en/mcp.md) · [Deutsch](../de/mcp.md)
 
@@ -20,7 +20,9 @@ Clients von 2025 verwenden initialize, notifications/initialized, dann tools/lis
 
 get_catalog und get_free_sample dienen zur Erkundung des Piloten. audit_agent_costs, analyze_agent_latency und check_agent_quality führen Spend Proof, Latency Lab beziehungsweise Quality Gate mit aktivem Schlüssel kostenlos aus. Alle drei akzeptieren runs und config.
 
-purchase_snapshot, purchase_changes und purchase_evidence simulieren Evidence-Käufe mit fiktivem Budget. Sie benötigen idempotency_key; purchase_changes akzeptiert zusätzlich since im Format YYYY-MM-DD. Der Server stellt damit acht Werkzeuge bereit.
+purchase_snapshot, purchase_changes und purchase_evidence simulieren Evidence-Käufe mit fiktivem Budget. Sie benötigen idempotency_key; purchase_changes akzeptiert zusätzlich since im Format YYYY-MM-DD. Der Server stellt damit neun Werkzeuge bereit.
+
+save_project_report berechnet und speichert einen Bericht im ausdrücklich vom Inhaber freigegebenen Projekt mit dem bestehenden Projects-Kontingent. Es benötigt request_id, title und input. Anleitung: https://alpnai.com/de/docs/projects-automation.
 
 ## Erkennen und das Audit aufrufen
 
@@ -76,4 +78,4 @@ Trennen Sie Aktionen vom Lesen des Berichts. Ein ALPNAI-Schlüssel und eine Vers
 
 ---
 
-[Zurück: HTTP-API](api.md) · [Weiter: Zahlungen und Testmodus](payments.md)
+[HTTP-API](api.md) · [Berichte automatisch zustellen](projects-automation.md)

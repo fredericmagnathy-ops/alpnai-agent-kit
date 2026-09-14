@@ -1,12 +1,24 @@
-# Zahlungen und Testmodus
+# Projects, Zahlungen und Testmodus
 
-Unterscheiden Sie kostenlose Audits, simulierte Käufe und x402-Zahlungen in der Validierung.
+Unterscheiden Sie Projects-Kartenabonnements, kostenlose Analysen und USDC-Käufe im Testmodus.
+
+[Dokumentationsbibliothek](README.md) · [ALPNAI](https://alpnai.com/de/docs)
+
+[Français](../fr/payments.md) · [English](../en/payments.md) · [Deutsch](../de/payments.md)
 
 ## Was heute genutzt werden kann
 
-Spend Proof und lokale Berechnungen erfordern keine Zahlung. Im Evidence-Piloten lassen sich Käufe mit Schlüssel und fiktivem Budget testen.
+Spend Proof, Latency Lab und Quality Gate bieten kostenlose Berechnungen. Projects ist ein privater Bereich mit ChatGPT-Anmeldung, drei dauerhaft kostenlosen gespeicherten Berichten und auf der Website freigegebenen Stripe-Abonnements. Im Evidence-Piloten lassen sich API-/MCP-Käufe mit Schlüssel und fiktivem Budget testen.
 
-Eine x402-Integration mit PayAI wird für USDC auf Base vorbereitet; der Mainnet-Zahlungsablauf wird noch validiert. Vorhandener Code belegt weder einen echten Verkauf noch einen vollständig ausgeführten Zahlungsvorgang.
+Echte USDC-Käufe auf Base bleiben deaktiviert. Die x402-Integration mit PayAI ist vorbereitet; vorhandener Code belegt weder einen echten Verkauf noch eine abgeschlossene Zahlung. Die Freigabe von Projects-Abonnements verändert den Testmodus der Kryptokäufe nicht.
+
+## Projects abonnieren und Rechnungen verwalten
+
+Entsprechend den in Projects angebotenen Währungen wählt der angemeldete Kontoinhaber 19 CHF, 19 EUR, 19 USD oder 19 GBP monatlich für 100 neue Berichte je bezahlter Monatsperiode oder 190 CHF, 190 EUR, 190 USD oder 190 GBP jährlich für 1.200 je bezahlter Jahresperiode. Die Angebote umfassen 10 Projekte. Dies sind getrennte lokale Preise mit Steuern im von Stripe angezeigten Gesamtbetrag; eine Wechselkursumrechnung wird nicht zugesagt.
+
+Der Kontoinhaber akzeptiert die Projects-Bedingungen vor Stripe Checkout. Das Abonnement verlängert sich im gewählten Intervall bis zur Kündigung. Abonnement und Rechnungen öffnet das Portal, um die nächste Verlängerung zu stoppen und Rechnungen zu verwalten. Kostenloser Zugang wird nicht automatisch kostenpflichtig. Eine fehlgeschlagene Zahlung gewährt keine neue Periode.
+
+Der Server prüft eine gültige Zahlung, bevor eine bezahlte Periode freigegeben wird. Die Rückkehr von Stripe, das Erstellen einer Checkout-Sitzung oder ein Benachrichtigungstest sind keine Verkäufe. MCP-Werkzeuge und die Python-Clients des Kits schliessen dieses Abonnement nicht ab; ein Agentenschlüssel gewährt keinen Zugang zum privaten Portal.
 
 ## Ohne Geldtransfer testen
 
@@ -24,7 +36,7 @@ curl --fail-with-body --silent --show-error \
 
 ## Den geplanten x402-Ablauf verstehen
 
-Vor einer 402-Anforderung verlangt der vorbereitete Ablauf ein gültiges Profil und eine Rechnungsprüfung zu den akzeptierten Bedingungen. Das Angebot hält dann den Gesamtbetrag und die verwendeten Angaben fest. Ein Profil ist keine Steuerprüfung; ein Verfahren zur Erteilung der Freigabe ist noch nicht eröffnet.
+Vor einer 402-Anforderung verlangt der vorbereitete Ablauf ein gültiges Profil und eine Rechnungsprüfung zu den akzeptierten Bedingungen. Das Angebot hält dann den Gesamtbetrag und die verwendeten Angaben fest. In der privaten Konsole kann der Betreiber eine begründete Entscheidung, ihre Gültigkeit und ihren Widerruf erfassen. Kunden und ihre Agenten können ihren eigenen Fall nicht freigeben. Korrekte Eingabeformate allein bestätigen keinen Steuerstatus; echte USDC-Zahlungen bleiben deaktiviert.
 
 Der Server erstellt eine Bestellung und übermittelt Zahlungsbedingungen mit einer 402-Antwort. Ein autorisierter Käuferagent kann die passende Autorisierung erstellen. Vor der Abwicklung prüft der Dienst Betrag, Netzwerk, Empfänger und Auftrag.
 
@@ -44,7 +56,7 @@ Im Kundenbereich bietet eine bestätigte Bestellung „Beleg und Ergebnis“ als
 
 Der Beleg behält die Angaben und Beträge des zugehörigen Angebots bei, auch nach Profiländerungen. Er zeigt die in UTC erfasste Bestätigung, die Transaktion und Dokument-Hashes. Eine ältere Bestellung ohne festgehaltene Rechnungsangaben bleibt ein minimaler Beleg. Das Dokument ersetzt keine Steuerrechnung.
 
-Nur das zugehörige Konto kann dieses private Dokument öffnen. Für unbestätigte Bestellungen wird kein druckbarer Beleg erstellt. Die Ansicht kontaktiert keinen Zahlungsdienst und löst keine Zahlung aus. Echte Käufe bleiben deaktiviert.
+Nur das zugehörige Konto kann dieses private Dokument öffnen. Für unbestätigte Bestellungen wird kein druckbarer Beleg erstellt. Die Ansicht kontaktiert keinen Zahlungsdienst und löst keine Zahlung aus. Echte USDC-Käufe bleiben deaktiviert.
 
 ```http
 GET /api/account/orders/{order_id}/receipt?lang=de
@@ -56,4 +68,6 @@ Vorgesehen ist USDC auf Base an die über MetaMask zugängliche Wallet des Anbie
 
 Dieser Ablauf setzt Coinbase Business nicht voraus. Der Umtauschdienstleister muss Tätigkeit und Bankkonto akzeptieren; seine Kurse, Gebühren und Fristen gelten. Der Kunde kauft eine Dienstleistung, keine Anlage, Rendite oder IPO-Zuteilung.
 
-[ALPNAI documentation](https://alpnai.com/de/docs/payments)
+---
+
+[Berichte automatisch zustellen](projects-automation.md) · [Daten und Zugänge](security.md)

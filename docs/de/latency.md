@@ -2,7 +2,7 @@
 
 Erkennen Sie langsame Aufgaben und messen Sie zusätzliche Versuche anhand derselben Aufzeichnungen.
 
-[Dokumentationsbibliothek](README.md) · [Dokumentation auf der Website](https://alpnai.com/de/docs)
+[Dokumentationsbibliothek](README.md) · [ALPNAI](https://alpnai.com/de/docs)
 
 [Français](../fr/latency.md) · [English](../en/latency.md) · [Deutsch](../de/latency.md)
 
@@ -38,4 +38,4 @@ Das Format verlangt weder Zeitstempel noch eine Reihenfolge. Es kann den ersten 
 
 ---
 
-[Zurück: Spend Proof: Kosten pro Erfolg](spend-proof.md) · [Weiter: Quality Gate: vor Änderungen vergleichen](quality-gate.md)
+[Spend Proof: Kosten pro Erfolg](spend-proof.md) · [Quality Gate: vor Änderungen vergleichen](quality-gate.md)

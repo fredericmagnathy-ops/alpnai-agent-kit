@@ -2,7 +2,7 @@
 
 Vergleichen Sie Agenten anhand von Kosten, erfassten Zeiten und Erfolg bei denselben Aufgaben.
 
-[Dokumentationsbibliothek](README.md) · [Dokumentation auf der Website](https://alpnai.com/de/docs)
+[Dokumentationsbibliothek](README.md) · [ALPNAI](https://alpnai.com/de/docs)
 
 [Français](../fr/introduction.md) · [English](../en/introduction.md) · [Deutsch](../de/introduction.md)
 
@@ -24,6 +24,8 @@ Verwenden Sie dieselben Aufgabenkennungen für beide Versionen. Importieren Sie 
 
 Die Browserberechnung benötigt kein Konto. API und MCP benötigen einen aktiven ALPNAI-Schlüssel; das Audit bleibt kostenlos.
 
+Projects ergänzt einen privaten Verlauf und Vergleiche gespeicherter Berichte. Melden Sie sich mit ChatGPT an, um drei kostenlose Berichte zu nutzen oder ein Stripe-Abonnement zu wählen. Dieser Bereich ist von den kostenlosen APIs/MCP und Kryptokäufen im Testmodus getrennt.
+
 ## Was die Messung aussagt
 
 Ergebnisse beschreiben die bereitgestellten Daten. ALPNAI ersetzt weder Ihre Definition eines guten Ergebnisses noch verändert es Ihre Agenten. Eine geeignete Variante muss in Ihrer Umgebung erprobt werden.
@@ -32,4 +34,4 @@ Die Evidence-Dienste zum OpenAI-Börsengang sind ein gesonderter Pilot. Testkäu
 
 ---
 
-[Weiter: Ihr erstes Audit](quickstart.md)
+[Ihr erstes Audit](quickstart.md)

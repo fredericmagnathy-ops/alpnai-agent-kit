@@ -2,7 +2,7 @@
 
 Submit records from a script and retrieve the same structured calculation.
 
-[Documentation library](README.md) · [Website documentation](https://alpnai.com/en/docs)
+[Documentation library](README.md) · [ALPNAI](https://alpnai.com/en/docs)
 
 [Français](../fr/api.md) · [English](../en/api.md) · [Deutsch](../de/api.md)
 
@@ -47,4 +47,4 @@ The latency API returns groups including p50_ms, p95_ms, max_ms and retry_attemp
 
 ---
 
-[Previous: Reports and exports](reports.md) · [Next: Connect an agent with MCP](mcp.md)
+[Reports and exports](reports.md) · [Connect an agent with MCP](mcp.md)

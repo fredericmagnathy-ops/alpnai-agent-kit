@@ -2,7 +2,7 @@
 
 Include failures and retries to compare the cost of recorded outcomes.
 
-[Documentation library](README.md) · [Website documentation](https://alpnai.com/en/docs)
+[Documentation library](README.md) · [ALPNAI](https://alpnai.com/en/docs)
 
 [Français](../fr/spend-proof.md) · [English](../en/spend-proof.md) · [Deutsch](../de/spend-proof.md)
 
@@ -61,4 +61,4 @@ Duplicate rows count as additional attempts. Deduplicate telemetry upstream. The
 
 ---
 
-[Previous: Your first audit](quickstart.md) · [Next: Latency Lab: duration and retries](latency.md)
+[Projects: private reports and subscriptions](projects.md) · [Latency Lab: duration and retries](latency.md)

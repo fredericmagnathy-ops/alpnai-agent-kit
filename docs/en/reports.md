@@ -2,7 +2,7 @@
 
 A readable report for your team and structured JSON for your tools.
 
-[Documentation library](README.md) · [Website documentation](https://alpnai.com/en/docs)
+[Documentation library](README.md) · [ALPNAI](https://alpnai.com/en/docs)
 
 [Français](../fr/reports.md) · [English](../en/reports.md) · [Deutsch](../de/reports.md)
 
@@ -10,7 +10,7 @@ A readable report for your team and structured JSON for your tools.
 
 JSON preserves metrics, checks, decisions and settings in a reusable format. HTML presents results for reading, sharing or printing.
 
-Files are generated locally from the same calculations. No language-model writing service is needed to generate the report.
+In the free browser tools, files are generated locally from the same calculations. Projects also lets you download aggregate results saved to your account. No language-model writing service is needed to generate these reports.
 
 ## Download your analysis
 
@@ -43,8 +43,14 @@ Path("audit-report.json").write_text(json.dumps(report, indent=2), encoding="utf
 
 Keep the dataset provenance and test thresholds. Synthetic examples must remain labeled after export. Protect reports when identifiers reveal information about your business.
 
-Local exports are not invoices or payment evidence. The page does not provide a cloud audit history: save the report before closing your session.
+Local exports are not invoices or payment evidence. The free browser tools retain no cloud history: download their report before closing the page. To deliberately save analyses online, use Projects with your ChatGPT account.
+
+## Save reports in Projects
+
+Projects stores aggregate results, project/version names and identifiers needed for tracking. Saving a report sends measurements to the server for calculation; raw attempts and prompts are not stored in the database. Local analysis or a free analysis API call does not automatically create a Projects report.
+
+The signed-in account holder can compare up to two reports and download their JSON or a printable report. Existing reports remain downloadable after a subscription ends. Deletion removes content and labels without restoring quota; a fingerprint and technical tracking data remain.
 
 ---
 
-[Previous: Quality Gate: compare before changing](quality-gate.md) · [Next: HTTP API](api.md)
+[Quality Gate: compare before changing](quality-gate.md) · [HTTP API](api.md)

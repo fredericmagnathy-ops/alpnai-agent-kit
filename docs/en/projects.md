@@ -6,6 +6,10 @@ Compare the cost, success rate and latency of two versions before deciding which
 
 [Open Projects](https://alpnai.com/projects) · [Terms](https://alpnai.com/en/legal/projects) · [Privacy](https://alpnai.com/en/legal/privacy)
 
+[Documentation library](README.md) · [ALPNAI](https://alpnai.com/en/docs)
+
+[Français](../fr/projects.md) · [English](../en/projects.md) · [Deutsch](../de/projects.md)
+
 ## Access and plans
 
 Sign in with ChatGPT. Projects belongs to the authenticated account holder; an agent API key does not unlock its reports or billing. No wallet is required.
@@ -31,3 +35,15 @@ Choose your currency and period, accept Projects terms, then use Stripe checkout
 This agent kit's API/MCP purchases remain **sandbox only**. Projects subscriptions are a separate website service; the kit neither starts nor renews them and performs no cryptocurrency transfer.
 
 Support: [frederic@alpnor.com](mailto:frederic@alpnor.com).
+
+## Automate report delivery
+
+An agency testing several agents can spend time collecting results. Add one ALPNAI call at the end of your own pipeline: the server calculates cost, latency and quality checks, then saves the result in Projects.
+
+save_project_report calculates and saves a report in the project explicitly authorized by its owner, using the existing Projects allowance. It requires request_id, title and input. Guide: https://alpnai.com/en/docs/projects-automation.
+
+Automatic and manual saves share the three lifetime free reports, or 100 reports per paid monthly period, or 1,200 per paid annual period. There is no overage billing or automatic upgrade to a paid plan.
+
+---
+
+[Your first audit](quickstart.md) · [Spend Proof: cost per success](spend-proof.md)

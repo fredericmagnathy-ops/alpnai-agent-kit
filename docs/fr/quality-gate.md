@@ -2,7 +2,7 @@
 
 Examinez la réussite, le coût et la latence avant d’adopter une variante.
 
-[Bibliothèque de documentation](README.md) · [Documentation sur le site](https://alpnai.com/fr/docs)
+[Bibliothèque de documentation](README.md) · [ALPNAI](https://alpnai.com/fr/docs)
 
 [Français](../fr/quality-gate.md) · [English](../en/quality-gate.md) · [Deutsch](../de/quality-gate.md)
 
@@ -48,4 +48,4 @@ experimental_bias_control reste unknown : partager des identifiants ne prouve pa
 
 ---
 
-[Précédent: Latency Lab : temps et reprises](latency.md) · [Suivant: Rapports et exports](reports.md)
+[Latency Lab : temps et reprises](latency.md) · [Rapports et exports](reports.md)

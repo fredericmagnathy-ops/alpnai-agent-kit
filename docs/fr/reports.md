@@ -2,7 +2,7 @@
 
 Un rapport lisible pour votre équipe, un JSON structuré pour vos outils.
 
-[Bibliothèque de documentation](README.md) · [Documentation sur le site](https://alpnai.com/fr/docs)
+[Bibliothèque de documentation](README.md) · [ALPNAI](https://alpnai.com/fr/docs)
 
 [Français](../fr/reports.md) · [English](../en/reports.md) · [Deutsch](../de/reports.md)
 
@@ -10,7 +10,7 @@ Un rapport lisible pour votre équipe, un JSON structuré pour vos outils.
 
 Le JSON conserve les indicateurs, contrôles, décisions et paramètres dans un format réutilisable. Le HTML présente les résultats pour les lire, les partager ou les imprimer.
 
-Les fichiers sont produits localement à partir des mêmes calculs. Aucun service de rédaction par modèle de langage n’est nécessaire pour générer le rapport.
+Dans les outils gratuits du navigateur, les fichiers sont produits localement à partir des mêmes calculs. Projects permet aussi de télécharger les résultats agrégés enregistrés dans votre compte. Aucun service de rédaction par modèle de langage n’est nécessaire pour générer ces rapports.
 
 ## Télécharger votre analyse
 
@@ -43,8 +43,14 @@ Path("audit-report.json").write_text(json.dumps(report, indent=2), encoding="utf
 
 Conservez la provenance du jeu de données et les seuils du test. Un exemple fictif doit rester identifié comme tel, même après export. Gardez vos rapports à l’abri si les identifiants révèlent votre activité.
 
-Les exports locaux ne constituent ni une facture ni une preuve de paiement. La page ne fournit pas d’historique cloud des audits : sauvegardez le rapport avant de fermer votre session.
+Les exports locaux ne constituent ni une facture ni une preuve de paiement. Les outils gratuits du navigateur ne conservent pas d’historique cloud : téléchargez leur rapport avant de fermer la page. Pour conserver volontairement des analyses en ligne, utilisez Projects avec votre compte ChatGPT.
+
+## Conserver des rapports dans Projects
+
+Projects conserve les résultats agrégés, les noms de projet/version et les identifiants nécessaires au suivi. Enregistrer un rapport transmet les mesures au serveur pour calcul ; les tentatives brutes et les prompts ne sont pas enregistrés dans la base. Une analyse locale ou un appel aux API d’analyse gratuites ne crée pas automatiquement de rapport Projects.
+
+Le titulaire connecté peut comparer jusqu’à deux rapports, télécharger leur JSON ou un dossier imprimable. Les rapports déjà créés restent téléchargeables après la fin d’un abonnement. Supprimer un rapport retire son contenu et ses libellés, sans restituer le quota ; une empreinte et les données techniques de suivi restent conservées.
 
 ---
 
-[Précédent: Quality Gate : comparer avant de changer](quality-gate.md) · [Suivant: API HTTP](api.md)
+[Quality Gate : comparer avant de changer](quality-gate.md) · [API HTTP](api.md)

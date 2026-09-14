@@ -2,7 +2,7 @@
 
 Erstellen Sie ein vollständiges Beispiel, starten Sie die Berechnung und erhalten Sie ein erklärtes Ergebnis.
 
-[Dokumentationsbibliothek](README.md) · [Dokumentation auf der Website](https://alpnai.com/de/docs)
+[Dokumentationsbibliothek](README.md) · [ALPNAI](https://alpnai.com/de/docs)
 
 [Français](../fr/quickstart.md) · [English](../en/quickstart.md) · [Deutsch](../de/quickstart.md)
 
@@ -56,4 +56,4 @@ Wiederholen Sie den Ablauf mit vollständigen Kosten und vorab festgelegten Erfo
 
 ---
 
-[Zurück: ALPNAI verstehen](introduction.md) · [Weiter: Spend Proof: Kosten pro Erfolg](spend-proof.md)
+[ALPNAI verstehen](introduction.md) · [Projects: private Berichte und Abonnements](projects.md)

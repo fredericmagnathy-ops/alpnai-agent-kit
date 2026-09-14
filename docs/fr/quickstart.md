@@ -2,7 +2,7 @@
 
 Générez un exemple complet, lancez le calcul et récupérez un résultat expliqué.
 
-[Bibliothèque de documentation](README.md) · [Documentation sur le site](https://alpnai.com/fr/docs)
+[Bibliothèque de documentation](README.md) · [ALPNAI](https://alpnai.com/fr/docs)
 
 [Français](../fr/quickstart.md) · [English](../en/quickstart.md) · [Deutsch](../de/quickstart.md)
 
@@ -56,4 +56,4 @@ Refaites ensuite le même parcours avec des coûts complets et des critères de 
 
 ---
 
-[Précédent: Comprendre ALPNAI](introduction.md) · [Suivant: Spend Proof : coût par succès](spend-proof.md)
+[Comprendre ALPNAI](introduction.md) · [Projects : rapports privés et abonnements](projects.md)
