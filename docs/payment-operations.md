@@ -50,4 +50,6 @@ At the continuity review on **14 September 2026 at 09:43 UTC**, two successful m
 
 Read-only describes its blockchain behavior: the service can update the existing ledger after verifying evidence. The exported report contains only batch counts: checked, confirmed and not confirmed. Those counts do not represent total customers, revenue or bank transfers. The workflow does not publish order identifiers, customer data, payment signatures or private keys. Deployment and successful execution remain separate from this documentation.
 
+A subsequent [manual reconciliation check at 10:02 UTC](https://github.com/fredericmagnathy-ops/alpnai-agent-kit/actions/runs/34831071690) succeeded after publication 10: zero orders checked, zero confirmed, and no payment operation called. This verifies that run, not automatic ten-minute continuity.
+
 See [cloud automation](../CLOUD_AUTOMATION.md) for configuration and offline validation, or the payment guides in [English](en/payments.md), [French](fr/payments.md) and [German](de/payments.md).
