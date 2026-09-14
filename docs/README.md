@@ -12,5 +12,6 @@ The Evidence pilot uses simulated purchases. No directory publication, real paym
 
 - [Source monitoring and evidence freshness](source-monitoring.md)
 - [Payment operations and recovery](payment-operations.md)
+- [Terms, consent and purchasing mandates](terms-and-mandates.md)
 
 [Back to the integration kit](../README.md)
