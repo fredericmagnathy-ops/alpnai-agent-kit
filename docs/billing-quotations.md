@@ -1,6 +1,6 @@
 # Billing quotations
 
-The prepared quotation feature preserves what was offered, the customer's billing details and the exact amount before a payment can be requested. It provides a private account view and JSON download. **Real purchases remain disabled.** No billing review has been issued, and there is no review-approval workflow for customers or operators yet. An empty quotation list is therefore expected; it is not a request to send money or add funds.
+The prepared quotation feature preserves what was offered, the customer's billing details and the exact amount before a payment can be requested. It provides a private account view and JSON download. **Real purchases remain disabled.** A private operator review workflow is now available. No real customer was approved during its implementation; customers and agents cannot approve their own review. An empty quotation list is therefore expected; it is not a request to send money or add funds.
 
 The free Spend Proof, Latency Lab and Quality Gate tools do not require a quotation or billing profile.
 
@@ -27,6 +27,22 @@ The prepared path saves a dated, immutable billing snapshot alongside the frozen
 The account export includes these customer-facing details. Internal billing-review identifiers, evidence references and the full review record are not exported. The result being purchased is also withheld until confirmed payment.
 
 New quotations require a valid review linked to the same owner, profile revision and terms version. A review must be approved, unexpired and contain the required supporting references. The client and agent cannot issue a review through their APIs. Entering a tax number or choosing business use in the [billing profile](billing-profile.md) does not verify those declarations or approve a tax treatment.
+
+## Operator review and revocation
+
+The [private operator console](https://alpnai.com/dashboard/governance#billing-review) lists up to 50 minimal dossiers per page. Full addresses, tax identifiers and supporting references load only after opening a dossier. The API requires the operator account session; an agent key or monitoring credential cannot access it. Unrevoked decisions remain reachable if a customer deletes their profile.
+
+1. Read the customer declaration, exact profile revision and archived terms. A declared country, business use or tax identifier does not establish tax treatment.
+2. Record the treatment established by an appropriately supported assessment. The form starts without a treatment, rate, evidence references or expiry. Record the legal basis, seller tax status reference and customer evidence reference. It stores references, not uploaded evidence, and does not certify that they are correct.
+3. Choose an explicit future expiry. The software accepts at most 90 days; this technical limit is not a recommended legal review period. The preview shows local time and the exact UTC instant.
+4. Review the summary and explicitly confirm the decision. Approval atomically checks the current profile, agent account and prior decision context. A changed dossier requires reloading and review. Duplicate submissions with the same unchanged request do not issue another decision.
+5. Revoke an existing decision explicitly before replacing it, including when it has expired or the profile/terms changed. A reason and confirmation are required. The original decision and dates remain immutable; the server records the approver and revoker. Revocation does not refund money or reverse an already submitted transfer.
+
+An uncertain response retains the same request identifier for a retry. Reloading the dossier lets the operator inspect the saved state. References and form entries stay in the current page rather than browser persistent storage; denied access clears the private view.
+
+Approval records a human decision. It does not activate commercial gates, create a purchasing mandate, authorize a transfer, issue an invoice or submit a payment. The three free analysis tools remain available without review.
+
+Technical endpoints: `GET /api/operator/billing` for the bounded list, `GET /api/operator/billing?user_id=…` for a dossier and `POST /api/operator/billing` for explicit approval/revocation. Mutations require the operator session, same origin and JSON. Responses are private and not cacheable. The account owner and agent APIs do not acquire these permissions.
 
 ## Exact amounts
 
