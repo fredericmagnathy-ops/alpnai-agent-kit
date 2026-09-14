@@ -4,7 +4,13 @@
 
 Connectez un agent autorisé à **Spend Proof**, l’audit gratuit ALPNAI du coût par tâche réussie, ou explorez le sandbox de preuves. Ce kit autonome comprend des clients Python sans dépendances, des exemples MCP et des tests hors ligne. Il ne règle aucune cryptomonnaie, ne crée pas de portefeuille, ne renouvelle pas d’abonnement et ne contacte aucun prospect.
 
-**État : service public sur [alpnai.com](https://alpnai.com/), paiements réels désactivés.** L’endpoint MCP principal est `/api/mcp`. Une clé pilote active est disponible via [/start](https://alpnai.com/start). La clé ne contourne pas les permissions de compte ; le kit ne copie aucune session de navigateur.
+**État : service public sur [alpnai.com](https://alpnai.com/) ; les achats crypto API/MCP restent exclusivement en sandbox.** L’endpoint MCP principal est `/api/mcp`. Une clé pilote active est disponible via [/start](https://alpnai.com/start). La clé ne contourne pas les permissions de compte ; le kit ne copie aucune session de navigateur.
+
+## ALPNAI Projects
+
+Conservez et comparez les résultats de vos agents dans un espace privé. [Ouvrez Projects](https://alpnai.com/projects) avec **la connexion ChatGPT** : 3 rapports enregistrés gratuits, sans carte. Les offres payantes coûtent **19 CHF ou 19 EUR par mois** pour 100 nouveaux rapports par période mensuelle payée, ou **190 CHF ou 190 EUR par an** pour 1 200 par période annuelle payée ; 10 projets. Stripe gère cet abonnement distinct sur le site. Sa disponibilité est indiquée dans Projects et l’accès nécessite un paiement confirmé. Le kit ne souscrit aucun abonnement et ne déplace aucune cryptomonnaie.
+
+[Guide Projects](docs/fr/projects.md) · [Conditions](https://alpnai.com/fr/legal/projects) · [Confidentialité](https://alpnai.com/fr/legal/privacy)
 
 ## Bibliothèque de documentation
 

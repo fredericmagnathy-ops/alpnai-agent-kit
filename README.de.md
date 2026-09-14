@@ -4,7 +4,13 @@
 
 Verbinden Sie einen autorisierten Agenten mit **Spend Proof**, dem kostenlosen ALPNAI-Audit der Kosten je erfolgreicher Aufgabe, oder testen Sie die Daten-Sandbox. Dieses eigenständige Kit enthält Python-Clients ohne zusätzliche Pakete, MCP-Beispiele und Offline-Tests. Es führt keine Kryptozahlungen aus, erstellt keine Wallets, verlängert keine Abonnements und kontaktiert keine Interessenten.
 
-**Status: öffentlicher Dienst unter [alpnai.com](https://alpnai.com/), echte Zahlungen deaktiviert.** Der primäre MCP-Endpunkt ist `/api/mcp`. Einen aktiven Pilotschlüssel erhalten Sie über [/start](https://alpnai.com/start). Agentenschlüssel umgehen keine Kontoberechtigungen; das Kit übernimmt keine Browsersitzungen.
+**Status: öffentlicher Dienst unter [alpnai.com](https://alpnai.com/); API-/MCP-Kryptokäufe bleiben ausschließlich in der Sandbox.** Der primäre MCP-Endpunkt ist `/api/mcp`. Einen aktiven Pilotschlüssel erhalten Sie über [/start](https://alpnai.com/start). Agentenschlüssel umgehen keine Kontoberechtigungen; das Kit übernimmt keine Browsersitzungen.
+
+## ALPNAI Projects
+
+Ergebnisse Ihrer Agenten privat speichern und vergleichen. [Projects öffnen](https://alpnai.com/projects), **mit ChatGPT anmelden**: 3 gespeicherte Berichte kostenlos, ohne Karte. Kostenpflichtige Angebote: **19 CHF oder 19 EUR monatlich** für 100 neue Berichte je bezahlter Monatsperiode oder **190 CHF oder 190 EUR jährlich** für 1.200 je bezahlter Jahresperiode; 10 Projekte. Stripe verwaltet das separate Website-Abonnement. Seine Verfügbarkeit wird in Projects angezeigt; Zugang setzt bestätigte Zahlung voraus. Das Kit schließt keine Abonnements ab und überträgt keine Kryptowährung.
+
+[Projects-Leitfaden](docs/de/projects.md) · [Bedingungen](https://alpnai.com/de/legal/projects) · [Datenschutz](https://alpnai.com/de/legal/privacy)
 
 ## Dokumentationsbibliothek
 
