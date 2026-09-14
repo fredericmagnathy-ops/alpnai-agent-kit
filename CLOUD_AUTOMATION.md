@@ -11,14 +11,14 @@ Prepared for `fredericmagnathy-ops/alpnai-agent-kit` on 14 September 2026. These
 
 Both support `workflow_dispatch`. The source endpoint records monitoring results in the service database. It returns `claims_auto_updated: false`: a changed source triggers review, rather than rewriting evidence. Source states `review_required` and `unavailable` fail the run; `baseline` and `unchanged` pass. Configuration, access, network and response-contract errors also fail the run.
 
-The public health check is tied to the prepared **sandbox** contract. It checks three product IDs, a populated evidence sample and five expected MCP tools with version `2026-07-28`. It makes no `tools/call` request. If the service later enables real payments or changes the contract, review this probe before changing its expectations. A green check establishes only these bounded responses, not source accuracy, coverage, revenue or overall uptime.
+The public health check is tied to the prepared **sandbox** contract. It checks three product IDs, a populated evidence sample and six expected MCP tools, including `audit_agent_costs`, with version `2026-07-28`. It makes no `tools/call` request. If the service later enables real payments or changes the contract, review this probe before changing its expectations. A green check establishes only these bounded responses, not source accuracy, coverage, revenue or overall uptime.
 
 The separate growth step records the service's aggregate 30-day diagnosis. It retains only numeric totals for sessions, registrations, activated pilots and zero sandbox revenue, plus one allowed decision: `collect_more_evidence`, `improve_activation` or `review_repeat_usage`. A valid diagnosis passes even when more evidence is needed; it is not a business-performance guarantee. Malformed data, unexpected real revenue or access failures fail the run. The endpoint records its diagnosis but does not automatically change prices or publish content.
 
 ## Operator setup after deployment
 
-1. Publish the service at an HTTPS origin that the operator authorizes the workflow to call. The expected origin is `https://alpnai.frederic150452.chatgpt.site`; public access has not been verified by this kit. The intended primary domain is `https://alpnai.com`. Once connected and verified, set `ALPNAI_BASE_URL` to that origin directly; the probe will not follow a redirect from the old origin.
-2. Put the kit on the default branch of [the intended repository](https://github.com/fredericmagnathy-ops/alpnai-agent-kit). Enable Actions according to the repository's policy. Jobs intentionally skip other repository names, including forks.
+1. Publish the service at an HTTPS origin that the operator authorizes the workflow to call. The active primary origin is `https://alpnai.com`, verified by the operator. Set `ALPNAI_BASE_URL` to this direct origin; the probe refuses redirects. This kit revision is tested offline, so inspect GitHub Actions for its latest deployed outcome.
+2. Put the kit on the default branch of [the public repository](https://github.com/fredericmagnathy-ops/alpnai-agent-kit). Enable Actions according to the repository's policy. Jobs intentionally skip other repository names, including forks.
 3. In repository **Settings → Secrets and variables → Actions**, configure the values below. Never commit them or paste them into logs. No secrets are needed to prepare or run offline tests.
 4. Run each workflow manually in Actions after the endpoint and secrets are ready. Inspect the summary and JSON artifact. Only then use the scheduled results operationally.
 
@@ -57,3 +57,5 @@ python3 scripts/check_cloud.py growth --report reports/growth-review.json
 ```
 
 These latter commands make real endpoint calls; `sources` records a source-monitoring result and `growth` records an aggregate diagnosis. They remain separate from the offline test command.
+
+The sample probe validates the envelope `{mode:"free_sample",payment_required:false,data:SNAPSHOT}` before checking its snapshot ID, facts and sources. MCP discovery uses `/api/mcp`. Health monitoring lists tools without invoking the audit or any purchase.

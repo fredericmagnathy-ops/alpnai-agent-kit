@@ -1,4 +1,4 @@
-"""Offline loopback contract tests. No AlpNAI account or external requests."""
+"""Offline loopback contract tests. No ALPNAI account or external requests."""
 
 import copy
 from decimal import Decimal
@@ -62,7 +62,7 @@ class ContractTests(unittest.TestCase):
                 if self.path not in {"/api/v1/snapshot", "/api/v1/evidence"}:
                     self.send_json({"error": "unexpected_path"}, 404)
                     return
-                if self.headers.get("Authorization") != "Bearer " + KEY or self.headers.get("X-AlpNAI-Mode") != "sandbox":
+                if self.headers.get("Authorization") != "Bearer " + KEY or self.headers.get("X-ALPNAI-Mode") != "sandbox":
                     self.send_json({"error": "missing_test_authorization"}, 401)
                     return
                 idem = self.headers.get("Idempotency-Key")

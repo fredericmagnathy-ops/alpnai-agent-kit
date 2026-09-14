@@ -1,4 +1,4 @@
-name: AlpNAI source monitor
+name: ALPNAI source monitor
 
 on:
   workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
         id: probe
         continue-on-error: true
         env:
-          ALPNAI_BASE_URL: ${{ vars.ALPNAI_BASE_URL || vars.ALPNAl_BASE_URL || 'https://alpnai.frederic150452.chatgpt.site' }}
+          ALPNAI_BASE_URL: ${{ vars.ALPNAI_BASE_URL || vars.ALPNAl_BASE_URL || 'https://alpnai.com' }}
           ALPNAI_MONITOR_TOKEN: ${{ secrets.ALPNAI_MONITOR_TOKEN }}
           ALPNAI_SITES_BYPASS: ${{ secrets.ALPNAI_SITES_BYPASS }}
         run: python scripts/check_cloud.py sources --report reports/source-monitor.json

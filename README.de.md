@@ -1,10 +1,24 @@
-# AlpNAI-Integrationskit für Agenten
+# ALPNAI-Integrationskit für Agenten
 
 [English](README.md) · [Français](README.fr.md)
 
-Einen autorisierten Agenten mit der **AlpNAI-Sandbox** verbinden und eine datierte Sammlung mit Quellenangaben prüfen. Dieses eigenständige Kit enthält einen Python-Client, MCP-Nachrichtenbeispiele und lokale Vertragstests. Es betreibt keinen Server, wickelt keine Kryptozahlungen ab, erstellt keine Wallet, verlängert kein Abonnement und kontaktiert keine potenziellen Kunden.
+Verbinden Sie einen autorisierten Agenten mit **Spend Proof**, dem kostenlosen ALPNAI-Audit der Kosten je erfolgreicher Aufgabe, oder testen Sie die Daten-Sandbox. Dieses eigenständige Kit enthält Python-Clients ohne zusätzliche Pakete, MCP-Beispiele und Offline-Tests. Es führt keine Kryptozahlungen aus, erstellt keine Wallets, verlängert keine Abonnements und kontaktiert keine Interessenten.
 
-**Status: vorbereitete Pilotdateien; durch dieses Kit weder veröffentlicht noch aktiviert. Keine echten Zahlungen.** Standardadresse: [alpnai.frederic150452.chatgpt.site](https://alpnai.frederic150452.chatgpt.site/). Der Betreiber steuert die Sichtbarkeit der Website. Wenn ein Endpunkt eine ChatGPT-Anmeldeseite zurückgibt, kann dieser Client die API nicht direkt nutzen: Ein Agentenschlüssel umgeht den Plattformzugang nicht. Sobald verfügbar, die vom Betreiber dokumentierte zugängliche Bereitstellung verwenden. Das Kit übernimmt keine Browsersitzungen.
+**Status: öffentlicher Dienst unter [alpnai.com](https://alpnai.com/), echte Zahlungen deaktiviert.** Der primäre MCP-Endpunkt ist `/api/mcp`. Einen aktiven Pilotschlüssel erhalten Sie über [/start](https://alpnai.com/start). Agentenschlüssel umgehen keine Kontoberechtigungen; das Kit übernimmt keine Browsersitzungen.
+
+## Kostenloser Spend-Proof-Audit
+
+Stellen Sie `ALPNAI_AGENT_KEY` über die Geheimnisverwaltung Ihres Prozesses bereit. Wählen Sie einen privaten Export und eine neue lokale Berichtsdatei. Die mitgelieferte Datei enthält **fiktive Demonstrationsdaten**, keine Kundeneinsparungen.
+
+```sh
+python3 examples/audit.py --input examples/spend-proof.synthetic.json --report reports/mein-audit.json
+```
+
+Erstellen Sie zuerst das lokale Verzeichnis `reports/` oder wählen Sie ein anderes vorhandenes privates Verzeichnis. Der Bericht wird mit eingeschränkten Berechtigungen gespeichert und nie im Terminal ausgegeben. Bestehende Dateien werden nicht überschrieben. `POST /api/v1/spend-proof` ist mit aktivem Bearer-Schlüssel kostenlos: keine Zahlung, keine Belastung des Testbudgets, keine Anbieteranbindung und keine Berichtsspeicherung durch den Dienst. Prompts, Antworten, Kundendokumente und Geheimnisse gehören nicht in die Eingabedaten.
+
+Jede Zeile ist ein Versuch mit `task_id`, `workflow`, `variant` (`baseline` oder `candidate`), `cost_usd`, `success` und optional `latency_ms`. Erfassen Sie Kosten für Modelle, Werkzeuge und Wiederholungen. Höchstens 1 000 Zeilen und 512 000 UTF-8-Bytes; Geldbeträge mit maximal sechs Nachkommastellen. Übereinstimmende Aufgabenkennungen, ausreichende Stichproben und geeignete Erfolgsquoten sind Voraussetzungen für eine bedingte Projektion. `monthlyTasks` bezeichnet gestartete Referenzaufgaben; die Kosten werden auf dieselbe erwartete Anzahl erfolgreicher Ergebnisse normiert. Unbekannte Versuchsverzerrungen schliessen eine automatische Produktivsetzung aus. Der Client verweigert Weiterleitungen, protokolliert keine Eingaben oder rohen Fehlermeldungen und wiederholt Anfragen nicht automatisch.
+
+Der Audit analysiert bereitgestellte Ausführungsdaten. Kostenpflichtige laufende Überwachung, Umsatzzuordnung und automatisches Modellrouting sind über das Kit nicht verfügbar. Die nachfolgenden Datenkäufe bleiben simuliert.
 
 ## Einstieg
 
@@ -15,7 +29,7 @@ python3 examples/buy.py --catalog
 python3 examples/buy.py --sample
 ```
 
-Nach der Bereitstellung ist ein Pilotschlüssel unter [/start](https://alpnai.frederic150452.chatgpt.site/start) erhältlich; der Betreiber legt das verfügbare simulierte Budget fest. Der erste Kaufbefehl fragt den Schlüssel verdeckt ab. Für automatisierte Aufrufe `ALPNAI_AGENT_KEY` über die Geheimnisverwaltung des Prozesses bereitstellen. Schlüssel nicht in Quellcode, veröffentlichte Dateien oder Befehle mit Shell-Verlauf einfügen.
+Ein Pilotschlüssel ist unter [/start](https://alpnai.com/start) erhältlich; der Betreiber legt das verfügbare simulierte Budget fest. Der erste Kaufbefehl fragt den Schlüssel verdeckt ab. Für automatisierte Aufrufe `ALPNAI_AGENT_KEY` über die Geheimnisverwaltung des Prozesses bereitstellen. Schlüssel nicht in Quellcode, veröffentlichte Dateien oder Befehle mit Shell-Verlauf einfügen.
 
 ```sh
 python3 examples/buy.py --product snapshot --max-usdc 0.01 --state .alpnai/snapshot-001.json
@@ -47,21 +61,22 @@ Ein gültiger Beleg muss `mode: sandbox`, `settled: false`, `real_revenue_usdc: 
 | `GET /api/v1/snapshot` | 0,01 simulierte USDC |
 | `GET /api/v1/changes?since=YYYY-MM-DD` | 0,05 simulierte USDC; Sammlungsereignisse nach dem Datum |
 | `GET /api/v1/evidence` | 0,25 simulierte USDC; Belege und Methodik |
-| `POST /mcp` | Streamable HTTP; [MCP-Hinweise auf Englisch](mcp/README.md) |
+| `POST /api/v1/spend-proof` | Kostenloser Audit mit aktivem Bearer-Schlüssel; keine Zahlung oder Berichtsspeicherung durch den Dienst |
+| `POST /api/mcp` | Streamable HTTP; [MCP-Hinweise auf Englisch](mcp/README.md) |
 
-Kauf-Header: `Authorization: Bearer <test-key>`, `X-AlpNAI-Mode: sandbox`, `Idempotency-Key: <persisted-id>`. IDs enthalten 8–100 Buchstaben, Ziffern, Bindestriche oder Unterstriche. [Katalogbeispiel](examples/catalog.sample.json) und [OpenAPI-Kopie](openapi.snapshot.json) bilden den vorbereiteten Vertrag ab; sie bestätigen keinen öffentlichen Serverzugang. Die [Herkunftsdatei](contract-provenance.json) dokumentiert die Grundlage.
+Kauf-Header: `Authorization: Bearer <test-key>`, `X-ALPNAI-Mode: sandbox`, `Idempotency-Key: <persisted-id>`. IDs enthalten 8–100 Buchstaben, Ziffern, Bindestriche oder Unterstriche. [Katalogbeispiel](examples/catalog.sample.json) und [OpenAPI-Kopie](openapi.snapshot.json) bilden den vorbereiteten Vertrag ab; sie sind keine Messung der aktuellen Verfügbarkeit. Die [Herkunftsdatei](contract-provenance.json) dokumentiert die Grundlage.
 
-Die erste Sammlung ist auf den 14. September 2026 datiert und betrifft OpenAIs Mitteilung vom 8. Juni 2026 über die vertrauliche Einreichung eines S-1-Entwurfs. Sie ist begrenzt und kuratiert. Change Set filtert datierte Ereignisse dieser Sammlung; beliebige historische Versionen werden noch nicht verglichen. Nullwerte in IPO-Feldern beweisen nicht, dass es keine späteren Mitteilungen gibt. Quellenverweise stehen in den gelieferten Daten. AlpNAI ist unabhängig von OpenAI und verkauft weder Aktien noch Zuteilungen oder Anlageempfehlungen.
+Die erste Sammlung ist auf den 14. September 2026 datiert und betrifft OpenAIs Mitteilung vom 8. Juni 2026 über die vertrauliche Einreichung eines S-1-Entwurfs. Sie ist begrenzt und kuratiert. Change Set filtert datierte Ereignisse dieser Sammlung; beliebige historische Versionen werden noch nicht verglichen. Nullwerte in IPO-Feldern beweisen nicht, dass es keine späteren Mitteilungen gibt. Quellenverweise stehen in den gelieferten Daten. ALPNAI ist unabhängig von OpenAI und verkauft weder Aktien noch Zuteilungen oder Anlageempfehlungen.
 
 ## Vorbereitete Cloud-Überwachung
 
-Vorgesehenes Repository: [fredericmagnathy-ops/alpnai-agent-kit](https://github.com/fredericmagnathy-ops/alpnai-agent-kit). MCP-Namensraum: `io.github.fredericmagnathy-ops/alpnai`. Die Veröffentlichung erfolgt separat durch den Betreiber.
+Öffentliches Repository: [fredericmagnathy-ops/alpnai-agent-kit](https://github.com/fredericmagnathy-ops/alpnai-agent-kit). MCP-Namensraum: `io.github.fredericmagnathy-ops/alpnai`. Diese Revision ist offline geprüft; aktuelle Cloud-Ergebnisse stehen in GitHub Actions.
 
 Zwei vorbereitete GitHub-Actions-Workflows prüfen Quellen alle sechs Stunden zur Minute 17 UTC sowie Katalog, Datenbeispiel und MCP täglich um 07:43 UTC. Nach Bereitstellung sind auch manuelle Starts möglich. Die Quellenprüfung protokolliert Ergebnisse, ändert keine Tatsachenaussagen und schlägt bei Prüfbedarf oder nicht erreichbaren Quellen fehl. Die Zustandsprüfung nutzt `server/discover` und `tools/list` mit MCP `2026-07-28`, ohne Kaufwerkzeuge aufzurufen.
 
 Vor Aktivierung Endpunkt und autorisierte Geheimnisse konfigurieren, API bereitstellen und Workflows im Standardbranch ablegen. Berichte enthalten nur Status und Zähler, werden sieben Tage aufbewahrt und erscheinen als GitHub-Zusammenfassung. Fehlgeschlagene Läufe können abhängig von den Kontoeinstellungen GitHub-Benachrichtigungen auslösen. Zeitpläne können sich verzögern und garantieren keinen durchgehenden Betrieb. Englische Einrichtungsanleitung: [Cloud automation](CLOUD_AUTOMATION.md).
 
-Der tägliche Workflow protokolliert ausserdem eine aggregierte Wachstumsdiagnose in einem separaten autorisierten Schritt. Die künftige Hauptdomain ist `https://alpnai.com`; `ALPNAI_BASE_URL` erst nach Anbindung und Prüfung der Domain umstellen.
+Der tägliche Workflow protokolliert ausserdem eine aggregierte Wachstumsdiagnose in einem separaten autorisierten Schritt. Die aktive Hauptdomain ist `https://alpnai.com`; verwenden Sie diese direkte Adresse in `ALPNAI_BASE_URL`.
 
 ## Lokal prüfen
 
@@ -75,4 +90,4 @@ Bei 401/403 Zugang, Widerruf oder Budget prüfen. 409 bedeutet, dass dieselbe ID
 
 ## Lizenz und Kontakt
 
-Die [MIT-Lizenz](LICENSE) gilt nur für Python-Code. API-Daten, Quelldokumente, Marken und andere Inhalte fallen nicht darunter; dafür gelten die [Dienstbedingungen](https://alpnai.frederic150452.chatgpt.site/legal) und die Rechte der Originalquellen. Dieses Kit versendet keine Marketingnachrichten und veröffentlicht keine externen Einträge. Integrationskontakt: [frederic@alpnor.com](mailto:frederic@alpnor.com).
+Die [MIT-Lizenz](LICENSE) gilt nur für Python-Code. API-Daten, Quelldokumente, Marken und andere Inhalte fallen nicht darunter; dafür gelten die [Dienstbedingungen](https://alpnai.com/legal) und die Rechte der Originalquellen. Dieses Kit versendet keine Marketingnachrichten und veröffentlicht keine externen Einträge. Integrationskontakt: [frederic@alpnor.com](mailto:frederic@alpnor.com).

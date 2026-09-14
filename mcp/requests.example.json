@@ -81,5 +81,57 @@
         "io.modelcontextprotocol/clientCapabilities": {}
       }
     }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": 6,
+    "method": "tools/call",
+    "params": {
+      "name": "audit_agent_costs",
+      "arguments": {
+        "runs": [
+          {
+            "task_id": "synthetic-invoice-01",
+            "workflow": "synthetic_invoice_extraction",
+            "variant": "baseline",
+            "cost_usd": 0.04,
+            "success": true,
+            "latency_ms": 2200
+          },
+          {
+            "task_id": "synthetic-invoice-01",
+            "workflow": "synthetic_invoice_extraction",
+            "variant": "candidate",
+            "cost_usd": 0.025,
+            "success": true,
+            "latency_ms": 1600
+          },
+          {
+            "task_id": "synthetic-invoice-02",
+            "workflow": "synthetic_invoice_extraction",
+            "variant": "baseline",
+            "cost_usd": 0.04,
+            "success": true,
+            "latency_ms": 2200
+          },
+          {
+            "task_id": "synthetic-invoice-02",
+            "workflow": "synthetic_invoice_extraction",
+            "variant": "candidate",
+            "cost_usd": 0.025,
+            "success": true,
+            "latency_ms": 1600
+          }
+        ]
+      },
+      "_meta": {
+        "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+        "io.modelcontextprotocol/clientInfo": {
+          "name": "alpnai-kit-example",
+          "version": "0.1.0"
+        },
+        "io.modelcontextprotocol/clientCapabilities": {}
+      }
+    }
   }
 ]

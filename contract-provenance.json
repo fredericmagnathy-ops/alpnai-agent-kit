@@ -1,30 +1,34 @@
 {
   "prepared_at": "2026-09-14",
-  "kit_version": "0.1.0",
+  "kit_version": "0.2.0",
   "source_type": "Local application contract snapshot; not a live API response",
-  "target_origin": "https://alpnai.frederic150452.chatgpt.site",
-  "hosted_public_access_confirmed": false,
+  "target_origin": "https://alpnai.com",
+  "hosted_public_access_confirmed": true,
   "live_payments_tested": false,
   "contract_files_sha256": {
     "app/api/v1/catalog/route.ts": "b108e4c990a5312558c001089d5e7f8e470c32fec524bb4f0df5c2c8157f9fae",
     "lib/data.ts": "f98296e9db877359ce32fa253921e1ac795f1dbc86a60dfd65a41f46099c0c22",
     "lib/purchase.ts": "d36b583a2594f3101bbf2a1855cc0fbcef6cd08e3b9cb3d4fd3b23530ab9be25",
-    "public/openapi.json": "83001f735d7e7fb5fcd9255705bd4dfd221b9104ed9908236b829e8b8681d2af",
+    "public/openapi.json": "c938f05e8921f709207c466e46f5fa7395f2d21a290eebe73f9a209d0b75577e",
     "app/api/operator/check-sources/route.ts": "499df5847707f18aae04716668f17cc7d5ed97791ea66ff419ef572967c891ce",
-    "app/mcp/route.ts": "acc4c9ceda49be8a02bc105f6511aa31822882345983bdb647a348f0dfb6b2b3",
-    "app/api/operator/growth/route.ts": "d0242320448087106c8c30b75562d722769d54ff3b6e15a4dfb7e2a2322f7101",
-    "lib/growth-metrics.ts": "1f739a584d1a0b8d3d82433d3fe6eda8289d3916f72d3735e843412321521cd1"
+    "app/mcp/route.ts": "1151cf9970bf3ef3a81cad7695c298af17b9219bede9abd092b0d61c897d99cb",
+    "app/api/operator/growth/route.ts": "4b90d21d2bf371262496dae18c44fa87097d17c7c8e17096e65ea9d5cffe5ff1",
+    "lib/growth-metrics.ts": "1f739a584d1a0b8d3d82433d3fe6eda8289d3916f72d3735e843412321521cd1",
+    "app/api/v1/sample/route.ts": "f38f94d9d9a4d939defee6e9509144e1e91345fa9de829aa218f83dbe03bbee2",
+    "app/api/v1/spend-proof/route.ts": "a7408cbcf67ad0e940c38bdb3b70f120a21658fd6b0669a3087e45e47ecdd619",
+    "app/api/mcp/route.ts": "41480d7857af571f595773e9a755610c5759c734f7407cadbf53cf75f3ed5743",
+    "lib/roi-engine.ts": "15fdec82fdc5ec2b10e26422b1ff018504959021ec960f91fa8ac6c935467628"
   },
   "catalog_sample_prices_verified_against": "lib/data.ts",
   "mcp_example_protocol_version": "2026-07-28",
   "mcp_registry_schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "mcp_note": "Strict current2026 local server contract, legacy initialization rejected. Discovery and every request use metadata protocolVersion/clientInfo/clientCapabilities with MCP-Protocol-Version and Mcp-Method headers. No remote availability check.",
-  "validation": "25 offline synthetic mock/loopback tests passed (10 purchase-client, 15 cloud-check tests); Python syntax, JSON and workflow YAML validated; no external workflow, remote purchases or wallet transactions.",
+  "mcp_note": "MCP 2026-07-28 discovery and listing at /api/mcp. audit_agent_costs requires an active Bearer pilot key; free audit, no stored report or payment. Legacy /mcp is not the production endpoint.",
+  "validation": "38 offline synthetic mock/loopback tests passed: 10 purchase-client, 18 cloud-check and 10 audit-client tests. No live audit, purchases, wallet transactions or workflow execution performed by this revision.",
   "mcp_sdk_version": "2.0.0",
   "intended_repository": "https://github.com/fredericmagnathy-ops/alpnai-agent-kit",
   "intended_mcp_namespace": "io.github.fredericmagnathy-ops/alpnai",
   "cloud_workflows": {
-    "status": "prepared_only_not_executed",
+    "status": "configured_in_repository; latest production outcome must be checked in GitHub Actions",
     "source_monitor_cron_utc": "17 */6 * * *",
     "public_health_cron_utc": "43 7 * * *",
     "timeout_seconds": 40,
@@ -36,7 +40,6 @@
       "automatic_price_changes": false
     }
   },
-  "planned_primary_origin": "https://alpnai.com",
   "primary_domain_connection_verified_by_kit": false,
   "action_tag_verification": {
     "verified_at": "2026-09-14",
@@ -46,5 +49,15 @@
       "actions/setup-python": "5fda3b95a4ea91299a34e894583c3862153e4b97",
       "actions/upload-artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"
     }
+  },
+  "hosted_public_access_confirmation": "Parent operator verified alpnai.com custom domain active; this revision tests client behavior offline only.",
+  "active_primary_origin": "https://alpnai.com",
+  "mcp_endpoint": "/api/mcp",
+  "mcp_expected_tools": 6,
+  "free_audit_endpoint": "/api/v1/spend-proof",
+  "sample_envelope": {
+    "mode": "free_sample",
+    "payment_required": false,
+    "data": "SNAPSHOT"
   }
 }

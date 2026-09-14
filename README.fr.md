@@ -1,10 +1,24 @@
-# Kit d'intégration AlpNAI pour agents
+# Kit d'intégration ALPNAI pour agents
 
 [English](README.md) · [Deutsch](README.de.md)
 
-Connecter un agent autorisé au **sandbox AlpNAI** et examiner une collection datée avec ses sources. Ce kit autonome contient un client Python, des exemples de messages MCP et des tests locaux. Il n'héberge pas le serveur, ne règle aucune cryptomonnaie, ne crée aucun portefeuille, ne renouvelle aucun abonnement et ne contacte aucun prospect.
+Connectez un agent autorisé à **Spend Proof**, l’audit gratuit ALPNAI du coût par tâche réussie, ou explorez le sandbox de preuves. Ce kit autonome comprend des clients Python sans dépendances, des exemples MCP et des tests hors ligne. Il ne règle aucune cryptomonnaie, ne crée pas de portefeuille, ne renouvelle pas d’abonnement et ne contacte aucun prospect.
 
-**État : kit pilote préparé ; publication et activation non effectuées par ce kit, sans paiement réel.** Adresse par défaut : [alpnai.frederic150452.chatgpt.site](https://alpnai.frederic150452.chatgpt.site/). L'opérateur contrôle la visibilité du site. Si un endpoint renvoie une page de connexion ChatGPT, ce client n'a pas d'accès direct à l'API : une clé d'agent ne contourne pas l'accès de la plateforme. Utiliser le déploiement accessible documenté par l'opérateur lorsqu'il existe. Le kit ne copie aucune session de navigateur.
+**État : service public sur [alpnai.com](https://alpnai.com/), paiements réels désactivés.** L’endpoint MCP principal est `/api/mcp`. Une clé pilote active est disponible via [/start](https://alpnai.com/start). La clé ne contourne pas les permissions de compte ; le kit ne copie aucune session de navigateur.
+
+## Audit Spend Proof gratuit
+
+Fournissez `ALPNAI_AGENT_KEY` par le gestionnaire de secrets de votre processus, puis choisissez un export privé et un nouveau fichier de rapport local. Le fichier inclus contient une **démonstration fictive**, pas des économies client.
+
+```sh
+python3 examples/audit.py --input examples/spend-proof.synthetic.json --report reports/mon-audit.json
+```
+
+Créez d’abord le dossier local `reports/`, ou choisissez un autre dossier privé existant. Le rapport est enregistré avec des permissions restrictives et n’est jamais affiché dans le terminal. Aucun fichier existant n’est écrasé. L’appel `POST /api/v1/spend-proof` est gratuit avec une clé Bearer active : aucun paiement, débit du budget fictif, raccordement fournisseur ou stockage du rapport par le service. N’incluez aucun prompt, réponse, document client ou secret dans les données.
+
+Chaque ligne représente un essai : `task_id`, `workflow`, `variant` (`baseline` ou `candidate`), `cost_usd`, `success` et éventuellement `latency_ms`. Incluez les coûts des modèles, outils et reprises. Maximum 1 000 lignes et 512 000 octets UTF-8 ; six décimales monétaires au plus. Les identifiants appariés, un échantillon suffisant et les seuils de réussite sont nécessaires avant une projection conditionnelle. `monthlyTasks` désigne les tâches de référence lancées ; les coûts projetés comparent le même nombre attendu de résultats réussis. L’absence de preuve concernant les biais exclut un déploiement automatique. Le client refuse les redirections, ne journalise ni entrées ni erreurs brutes et ne réessaie pas automatiquement.
+
+L’audit analyse les traces fournies. Le suivi continu payant, l’attribution de revenus et le routage automatique de modèles ne sont pas disponibles dans ce kit. Les achats de preuves ci-dessous restent fictifs.
 
 ## Démarrer
 
@@ -15,7 +29,7 @@ python3 examples/buy.py --catalog
 python3 examples/buy.py --sample
 ```
 
-Après déploiement, obtenir une clé pilote via [/start](https://alpnai.frederic150452.chatgpt.site/start) ; l'opérateur fixe le budget fictif disponible. La première commande d'achat demande sa clé sans l'afficher. Pour une exécution automatique, fournir `ALPNAI_AGENT_KEY` via le gestionnaire de secrets du processus. Ne pas placer la clé dans le code, l'historique du terminal ou un fichier publié.
+Obtenir une clé pilote via [/start](https://alpnai.com/start) ; l'opérateur fixe le budget fictif disponible. La première commande d'achat demande sa clé sans l'afficher. Pour une exécution automatique, fournir `ALPNAI_AGENT_KEY` via le gestionnaire de secrets du processus. Ne pas placer la clé dans le code, l'historique du terminal ou un fichier publié.
 
 ```sh
 python3 examples/buy.py --product snapshot --max-usdc 0.01 --state .alpnai/snapshot-001.json
@@ -47,21 +61,22 @@ Le reçu doit contenir `mode: sandbox`, `settled: false`, `real_revenue_usdc: 0`
 | `GET /api/v1/snapshot` | 0,01 USDC fictif |
 | `GET /api/v1/changes?since=YYYY-MM-DD` | 0,05 USDC fictif ; événements de la collection après la date |
 | `GET /api/v1/evidence` | 0,25 USDC fictif ; preuves et méthode |
-| `POST /mcp` | Streamable HTTP ; [notes MCP en anglais](mcp/README.md) |
+| `POST /api/v1/spend-proof` | Audit gratuit avec clé Bearer active ; sans paiement ni stockage du rapport par le service |
+| `POST /api/mcp` | Streamable HTTP ; [notes MCP en anglais](mcp/README.md) |
 
-En-têtes d'achat : `Authorization: Bearer <test-key>`, `X-AlpNAI-Mode: sandbox`, `Idempotency-Key: <persisted-id>`. L'identifiant contient 8 à 100 lettres, chiffres, tirets ou traits de soulignement. Le [catalogue exemple](examples/catalog.sample.json) et la [copie OpenAPI](openapi.snapshot.json) sont des copies du contrat préparé, sans confirmation de l'accès public du serveur. La [provenance](contract-provenance.json) indique leur origine.
+En-têtes d'achat : `Authorization: Bearer <test-key>`, `X-ALPNAI-Mode: sandbox`, `Idempotency-Key: <persisted-id>`. L'identifiant contient 8 à 100 lettres, chiffres, tirets ou traits de soulignement. Le [catalogue exemple](examples/catalog.sample.json) et la [copie OpenAPI](openapi.snapshot.json) sont des instantanés du contrat ; ils ne constituent pas une mesure de disponibilité actuelle. La [provenance](contract-provenance.json) indique leur origine.
 
-La collection initiale est datée du 14 septembre 2026 et porte sur l'annonce du dépôt confidentiel d'un projet S-1 par OpenAI le 8 juin 2026. Sa couverture est limitée et préparée à partir de sources sélectionnées. Change Set filtre les événements datés ; il ne compare pas librement toutes les versions historiques. Des champs IPO nuls ne prouvent pas l'absence d'annonces ultérieures. Les données livrées contiennent les références sources. AlpNAI est indépendant d'OpenAI et ne vend ni actions, ni allocations, ni recommandations d'investissement.
+La collection initiale est datée du 14 septembre 2026 et porte sur l'annonce du dépôt confidentiel d'un projet S-1 par OpenAI le 8 juin 2026. Sa couverture est limitée et préparée à partir de sources sélectionnées. Change Set filtre les événements datés ; il ne compare pas librement toutes les versions historiques. Des champs IPO nuls ne prouvent pas l'absence d'annonces ultérieures. Les données livrées contiennent les références sources. ALPNAI est indépendant d'OpenAI et ne vend ni actions, ni allocations, ni recommandations d'investissement.
 
 ## Surveillance cloud préparée
 
-Dépôt prévu : [fredericmagnathy-ops/alpnai-agent-kit](https://github.com/fredericmagnathy-ops/alpnai-agent-kit). Namespace MCP : `io.github.fredericmagnathy-ops/alpnai`. La publication reste une action distincte de l'opérateur.
+Dépôt public : [fredericmagnathy-ops/alpnai-agent-kit](https://github.com/fredericmagnathy-ops/alpnai-agent-kit). Namespace MCP : `io.github.fredericmagnathy-ops/alpnai`. Cette révision est vérifiée hors ligne ; les derniers résultats cloud sont consultables dans GitHub Actions.
 
 Deux workflows GitHub Actions sont prêts : sources toutes les six heures à la minute 17 UTC, puis catalogue/exemple/MCP chaque jour à 07 h 43 UTC. Ils peuvent aussi être lancés manuellement après déploiement. Le premier consigne les résultats sans modifier les faits et échoue si une source demande une revue ou devient indisponible. Le second utilise `server/discover` et `tools/list` en MCP `2026-07-28`, sans appeler les outils d'achat.
 
 Configurer l'adresse et les secrets autorisés, déployer l'API et placer les workflows sur la branche par défaut avant activation. Rapports limités aux statuts et compteurs, conservation sept jours, résumé dans GitHub. Une exécution en échec peut déclencher les notifications GitHub selon les réglages du compte. Le planning peut subir des retards et ne garantit pas une disponibilité continue. Configuration détaillée en anglais : [Cloud automation](CLOUD_AUTOMATION.md).
 
-Le workflow quotidien consigne aussi un diagnostic de croissance agrégé dans une étape autorisée distincte. Le futur domaine principal est `https://alpnai.com` ; configurer `ALPNAI_BASE_URL` après liaison et vérification du domaine.
+Le workflow quotidien consigne aussi un diagnostic de croissance agrégé dans une étape autorisée distincte. Le domaine principal actif est `https://alpnai.com` ; utiliser cette origine directe dans `ALPNAI_BASE_URL`.
 
 ## Vérifier localement
 
@@ -75,4 +90,4 @@ Les erreurs 401/403 demandent de vérifier l'accès, la révocation ou le budget
 
 ## Licence et contact
 
-La [licence MIT](LICENSE) couvre uniquement le code Python. Les données, documents sources, marques et autres éléments en sont exclus ; consulter les [conditions du service](https://alpnai.frederic150452.chatgpt.site/legal) et les sources originales. Ce kit ne diffuse aucun message marketing et ne publie aucune inscription externe. Contact intégration : [frederic@alpnor.com](mailto:frederic@alpnor.com).
+La [licence MIT](LICENSE) couvre uniquement le code Python. Les données, documents sources, marques et autres éléments en sont exclus ; consulter les [conditions du service](https://alpnai.com/legal) et les sources originales. Ce kit ne diffuse aucun message marketing et ne publie aucune inscription externe. Contact intégration : [frederic@alpnor.com](mailto:frederic@alpnor.com).

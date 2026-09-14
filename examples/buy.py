@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""AlpNAI sandbox client. Python 3.10+, standard library only. No wallet signing."""
+"""ALPNAI sandbox client. Python 3.10+, standard library only. No wallet signing."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ from urllib import error, parse, request
 import uuid
 
 
-DEFAULT_BASE = "https://alpnai.frederic150452.chatgpt.site"
+DEFAULT_BASE = "https://alpnai.com"
 MAX_BODY_BYTES = 2 * 1024 * 1024
 PRODUCTS = {"snapshot", "changes", "evidence"}
 
@@ -70,7 +70,7 @@ def money(value, label: str, *, allow_zero: bool = False) -> Decimal:
 
 def request_json(url: str, headers: dict[str, str], timeout: float) -> dict:
     opener = request.build_opener(NoRedirect())
-    req = request.Request(url, headers={"Accept": "application/json", "User-Agent": "AlpNAI-Sandbox-Kit/0.1.0", **headers})
+    req = request.Request(url, headers={"Accept": "application/json", "User-Agent": "ALPNAI-Sandbox-Kit/0.1.0", **headers})
     try:
         with opener.open(req, timeout=timeout) as response:
             if response.headers.get_content_type() != "application/json":
@@ -208,7 +208,7 @@ def buy(*, base: str, product: str, key: str, maximum: Decimal, state_path: Path
         url = base + item["path"]
         if since is not None:
             url += "?" + parse.urlencode({"since": since})
-        headers = {"Authorization": "Bearer " + key, "X-AlpNAI-Mode": "sandbox",
+        headers = {"Authorization": "Bearer " + key, "X-ALPNAI-Mode": "sandbox",
                    "Idempotency-Key": state["idempotency_key"]}
         for attempt in range(attempts):
             try:
@@ -253,7 +253,7 @@ def main() -> int:
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0
     except (ClientError, OSError) as exc:
-        print(f"AlpNAI: {exc}", file=sys.stderr)
+        print(f"ALPNAI: {exc}", file=sys.stderr)
         return 2
     except (KeyboardInterrupt, EOFError):
         print("Stopped. Keep the state file for any retry; an interrupted purchase may already have a receipt.", file=sys.stderr)

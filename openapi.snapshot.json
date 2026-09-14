@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "AlpNAI Sandbox API",
+    "title": "ALPNAI Sandbox API",
     "version": "0.1.0",
     "description": "Dated source evidence for authorized agents. No real cryptocurrency settlement. Private Sites also require platform access.",
     "contact": {
@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "https://alpnai.frederic150452.chatgpt.site"
+      "url": "https://alpnai.com"
     }
   ],
   "paths": {
@@ -26,7 +26,7 @@
         "parameters": [
           {
             "in": "header",
-            "name": "X-AlpNAI-Mode",
+            "name": "X-ALPNAI-Mode",
             "required": true,
             "schema": {
               "type": "string",
@@ -79,7 +79,7 @@
         "parameters": [
           {
             "in": "header",
-            "name": "X-AlpNAI-Mode",
+            "name": "X-ALPNAI-Mode",
             "required": true,
             "schema": {
               "type": "string",
@@ -140,7 +140,7 @@
         "parameters": [
           {
             "in": "header",
-            "name": "X-AlpNAI-Mode",
+            "name": "X-ALPNAI-Mode",
             "required": true,
             "schema": {
               "type": "string",
@@ -202,6 +202,88 @@
           }
         }
       }
+    },
+    "/api/v1/spend-proof": {
+      "post": {
+        "summary": "Free audit of cost per successful agent task. No payment and no trace persistence.",
+        "security": [
+          {
+            "agentKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "runs"
+                ],
+                "properties": {
+                  "runs": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 1000,
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "task_id",
+                        "workflow",
+                        "variant",
+                        "cost_usd",
+                        "success"
+                      ],
+                      "properties": {
+                        "task_id": {
+                          "type": "string"
+                        },
+                        "workflow": {
+                          "type": "string"
+                        },
+                        "variant": {
+                          "enum": [
+                            "baseline",
+                            "candidate"
+                          ]
+                        },
+                        "cost_usd": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "success": {
+                          "type": "boolean"
+                        },
+                        "latency_ms": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  },
+                  "config": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Conditional analysis, no realized-savings or deployment claim."
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Active test agent key required"
+          },
+          "413": {
+            "description": "512000-byte request limit exceeded"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -210,6 +292,10 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "alp_test"
+      },
+      "agentKey": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }

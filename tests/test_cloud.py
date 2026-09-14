@@ -112,7 +112,7 @@ class CloudTests(unittest.TestCase):
         client.fetch.side_effect = [
             ({"mode": "sandbox", "live_payments_enabled": False, "currency": "USDC",
               "products": [{"id": p} for p in ["snapshot", "changes", "evidence"]]}, {}),
-            ({"snapshot_id": "synthetic", "facts": [{"private": TOKEN}], "sources": [{"private": BYPASS}]}, {}),
+            ({"mode": "free_sample", "payment_required": False, "data": {"snapshot_id": "synthetic", "facts": [{"private": TOKEN}], "sources": [{"private": BYPASS}]}}, {}),
             ({"jsonrpc": "2.0", "id": 1, "result": {"supportedVersions": [cloud.MCP_VERSION], "capabilities": {}}}, {}),
             ({"jsonrpc": "2.0", "id": 2, "result": {"tools": [{"name": tool} for tool in cloud.TOOLS]}}, {}),
         ]
@@ -124,7 +124,7 @@ class CloudTests(unittest.TestCase):
             self.assertNotIn("Authorization", call.kwargs.get("headers", {}))
             body = call.kwargs.get("body", {})
             self.assertNotEqual(body.get("method"), "tools/call")
-        mcp_calls = [call for call in client.fetch.call_args_list if call.args[0] == "/mcp"]
+        mcp_calls = [call for call in client.fetch.call_args_list if call.args[0] == "/api/mcp"]
         self.assertEqual([call.kwargs["body"]["method"] for call in mcp_calls], ["server/discover", "tools/list"])
         for call in mcp_calls:
             self.assertEqual(call.kwargs["headers"]["Mcp-Method"], call.kwargs["body"]["method"])
@@ -143,6 +143,33 @@ class CloudTests(unittest.TestCase):
         self.assertEqual(headers["oai-sites-authorization"], "Bearer " + BYPASS)
         self.assertEqual(call.kwargs["timeout"], 40)
         self.assertEqual(req.method, "POST")
+
+    def test_sample_accepts_real_envelope_shape_and_exports_only_counts(self):
+        client = Mock()
+        client.fetch.return_value = ({"mode": "free_sample", "payment_required": False,
+            "data": {"snapshot_id": "synthetic-2026-09-14", "facts": [{"value": TOKEN}],
+                     "sources": [{"url": "https://example.invalid/source"}]}}, {})
+        self.assertEqual(cloud.sample_check(client), {"component": "sample", "status": "ok", "fact_count": 1, "source_count": 1})
+
+    def test_sample_rejects_missing_or_invalid_envelope_and_data(self):
+        data = {"snapshot_id": "synthetic", "facts": [{}], "sources": [{}]}
+        valid = {"mode": "free_sample", "payment_required": False, "data": data}
+        for payload in [data, {"mode": "free_sample", "payment_required": False},
+                        {**valid, "data": None}, {**valid, "data": []}, {**valid, "data": {}},
+                        {**valid, "payment_required": True}, {**valid, "payment_required": 0},
+                        {**valid, "mode": "paid"}, {**valid, "data": {**data, "facts": []}}]:
+            with self.subTest(payload=payload):
+                client = Mock(); client.fetch.return_value = (payload, {})
+                with self.assertRaises(cloud.CheckError): cloud.sample_check(client)
+
+    def test_mcp_requires_free_audit_tool_without_invoking_it(self):
+        client = Mock()
+        client.fetch.side_effect = [
+            ({"jsonrpc": "2.0", "id": 1, "result": {"supportedVersions": [cloud.MCP_VERSION], "capabilities": {}}}, {}),
+            ({"jsonrpc": "2.0", "id": 2, "result": {"tools": [{"name": name} for name in cloud.TOOLS - {"audit_agent_costs"}]}}, {}),
+        ]
+        with self.assertRaises(cloud.CheckError) as caught: cloud.mcp_check(client)
+        self.assertEqual(caught.exception.code, "missing_mcp_tools")
 
     def test_mcp_unsupported_version_stops_before_tools_list(self):
         client = Mock()
@@ -167,7 +194,7 @@ class CloudTests(unittest.TestCase):
         client.opener = Mock()
         body = b'event: message\ndata: {"jsonrpc":"2.0","id":2,"result":{"tools":[]}}\n\n'
         client.opener.open.return_value = FakeResponse(body, "text/event-stream")
-        result, _ = client.fetch("/mcp", body={"jsonrpc": "2.0", "id": 2, "method": "tools/list"}, rpc_id=2)
+        result, _ = client.fetch("/api/mcp", body={"jsonrpc": "2.0", "id": 2, "method": "tools/list"}, rpc_id=2)
         self.assertEqual(result["id"], 2)
 
     def test_redirect_never_forwards_either_secret(self):

@@ -1,5 +1,5 @@
 {
-  "brand": "AlpNAI",
+  "brand": "ALPNAI",
   "operator": "SWISS International (project)",
   "currency": "USDC",
   "network": "eip155:8453",
@@ -31,7 +31,7 @@
       "path": "/api/v1/evidence"
     }
   ],
-  "mcp": "/mcp",
+  "mcp": "/api/mcp",
   "docs": "/docs",
   "terms": "/legal"
 }

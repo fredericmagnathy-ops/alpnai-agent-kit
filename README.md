@@ -1,10 +1,24 @@
-# AlpNAI agent integration kit
+# ALPNAI agent integration kit
 
 [Français](README.fr.md) · [Deutsch](README.de.md)
 
-Connect an authorized agent to the **AlpNAI sandbox** and inspect a dated, source-linked evidence collection. This standalone kit contains a Python client, MCP message examples and local contract tests. It does not run the server, settle cryptocurrency, create a wallet, renew a subscription or contact prospective customers.
+Connect an authorized agent to **Spend Proof**, ALPNAI’s free audit of cost per successful task, or explore the evidence sandbox. This standalone kit contains standard-library Python clients, MCP examples and offline tests. It does not settle cryptocurrency, create wallets, renew subscriptions or contact prospective customers.
 
-**Status: prepared pilot assets, not published or activated by this kit; no real payments.** The default URL is [alpnai.frederic150452.chatgpt.site](https://alpnai.frederic150452.chatgpt.site/). Site visibility is controlled by its operator. If an endpoint returns a ChatGPT sign-in page, the API is not directly accessible to this client: an agent key does not bypass platform access. Use the operator's documented accessible deployment when available; this kit does not copy browser sessions or circumvent sign-in.
+**Status: public service at [alpnai.com](https://alpnai.com/), real payments disabled.** The primary MCP endpoint is `/api/mcp`. Obtain an active pilot key through [/start](https://alpnai.com/start). Agent keys do not bypass account permissions; this kit never copies browser sessions.
+
+## Free Spend Proof audit
+
+Supply `ALPNAI_AGENT_KEY` through your process secret store, then run the client with a private input export and a new local report path. The included file is **synthetic demonstration data**, not customer savings.
+
+```sh
+python3 examples/audit.py --input examples/spend-proof.synthetic.json --report reports/my-audit.json
+```
+
+Create the local `reports/` directory first, or select another existing private directory. The report is saved with restrictive permissions and never printed. Existing files are not overwritten. The request is a free `POST /api/v1/spend-proof` with an active Bearer key: no payment, simulated-budget debit, provider connection or report persistence on the service. No prompts, responses, customer documents or keys belong in input data.
+
+Each row is an attempt with `task_id`, `workflow`, `variant` (`baseline` or `candidate`), `cost_usd`, `success` and optional `latency_ms`. Include all model, tool and retry costs. At most 1,000 rows and 512,000 UTF-8 bytes; monetary values use at most six decimal places. Matched task IDs, enough distinct tasks and acceptable success rates are required before a conditional opportunity is shown. `monthlyTasks` means launched baseline tasks; projected costs are normalized to the same expected number of successful tasks. Unknown experimental bias prevents automatic deployment. The client refuses redirects, logs no input or raw errors and makes no automatic retry.
+
+This audit measures supplied traces. Paid continuous monitoring, revenue attribution and automatic model routing are not available through the kit. API evidence purchases below remain simulated.
 
 ## Quick start
 
@@ -15,7 +29,7 @@ python3 examples/buy.py --catalog
 python3 examples/buy.py --sample
 ```
 
-After deployment, obtain a pilot key at [/start](https://alpnai.frederic150452.chatgpt.site/start); the operator sets the available simulated budget. The first purchase command prompts for that agent key without echoing it. For automation, supply `ALPNAI_AGENT_KEY` through your process's secret store. Do not paste keys into code, commands that enter shell history or committed files.
+Obtain a pilot key at [/start](https://alpnai.com/start); the operator sets the available simulated budget. The first purchase command prompts for that agent key without echoing it. For automation, supply `ALPNAI_AGENT_KEY` through your process's secret store. Do not paste keys into code, commands that enter shell history or committed files.
 
 ```sh
 python3 examples/buy.py --product snapshot --max-usdc 0.01 --state .alpnai/snapshot-001.json
@@ -47,21 +61,22 @@ A valid sandbox receipt must include `mode: sandbox`, `settled: false`, `real_re
 | `GET /api/v1/snapshot` | 0.01 simulated USDC |
 | `GET /api/v1/changes?since=YYYY-MM-DD` | 0.05 simulated USDC; collection events after the date |
 | `GET /api/v1/evidence` | 0.25 simulated USDC; evidence and methodology |
-| `POST /mcp` | Streamable HTTP; see [MCP notes](mcp/README.md) |
+| `POST /api/v1/spend-proof` | Free audit with an active Bearer agent key; no payment or server-side report persistence |
+| `POST /api/mcp` | Streamable HTTP; see [MCP notes](mcp/README.md) |
 
-Purchase headers are `Authorization: Bearer <test-key>`, `X-AlpNAI-Mode: sandbox` and `Idempotency-Key: <persisted-id>`. IDs contain 8–100 letters, digits, underscores or hyphens. The included [catalog sample](examples/catalog.sample.json) and [OpenAPI snapshot](openapi.snapshot.json) are prepared contract snapshots, not confirmation that the hosted API is publicly accessible. Provenance is recorded in [contract-provenance.json](contract-provenance.json).
+Purchase headers are `Authorization: Bearer <test-key>`, `X-ALPNAI-Mode: sandbox` and `Idempotency-Key: <persisted-id>`. IDs contain 8–100 letters, digits, underscores or hyphens. The included [catalog sample](examples/catalog.sample.json) and [OpenAPI snapshot](openapi.snapshot.json) are contract snapshots, not a measurement of current uptime. Provenance is recorded in [contract-provenance.json](contract-provenance.json).
 
-The initial collection is dated 14 September 2026 and concerns OpenAI's confidential draft S-1 announcement of 8 June 2026. It is limited, curated coverage. Change Set filters dated events in that collection; it does not compare arbitrary historical snapshots. Null IPO fields do not establish the absence of later announcements. Source references remain available in the returned data. AlpNAI is independent of OpenAI and does not sell shares, allocations or investment recommendations.
+The initial collection is dated 14 September 2026 and concerns OpenAI's confidential draft S-1 announcement of 8 June 2026. It is limited, curated coverage. Change Set filters dated events in that collection; it does not compare arbitrary historical snapshots. Null IPO fields do not establish the absence of later announcements. Source references remain available in the returned data. ALPNAI is independent of OpenAI and does not sell shares, allocations or investment recommendations.
 
 ## Prepared cloud monitoring
 
-The intended repository is [fredericmagnathy-ops/alpnai-agent-kit](https://github.com/fredericmagnathy-ops/alpnai-agent-kit), with MCP namespace `io.github.fredericmagnathy-ops/alpnai`. Publication is a separate operator action.
+The public repository is [fredericmagnathy-ops/alpnai-agent-kit](https://github.com/fredericmagnathy-ops/alpnai-agent-kit), with MCP namespace `io.github.fredericmagnathy-ops/alpnai`. This revision is validated offline; inspect GitHub Actions for the latest cloud results.
 
 Two prepared GitHub Actions workflows check sources every six hours at minute 17 UTC and catalog/sample/MCP daily at 07:43 UTC. Each can also be run manually after deployment. The source check records monitoring results, preserves factual claims and fails when review is required or a source is unavailable. Health checks use MCP `server/discover` and `tools/list` with version `2026-07-28`; they never call purchase tools.
 
 Configure the endpoint and authorized secrets, deploy the API and place the workflows on the repository's default branch before activation. Reports contain only statuses and counts, are retained for seven days and produce a job summary. A failed run can trigger GitHub notifications according to account settings. Schedules can be delayed and do not constitute a continuous-service guarantee. Setup, exact variables, permissions and limitations: [Cloud automation](CLOUD_AUTOMATION.md).
 
-The daily workflow also records an aggregate growth diagnosis using a separate authorized step. The future primary domain is `https://alpnai.com`; configure `ALPNAI_BASE_URL` once the domain is connected and verified.
+The daily workflow also records an aggregate growth diagnosis using a separate authorized step. The active primary domain is `https://alpnai.com`; use this direct origin in `ALPNAI_BASE_URL`.
 
 ## Verify locally
 
@@ -75,4 +90,4 @@ Errors 401/403 require reviewing access, revocation or budget; 409 means an ID w
 
 ## License and contact
 
-The [MIT license](LICENSE) covers Python code only. API data, source documents, trademarks and other assets are outside that grant; consult [service terms](https://alpnai.frederic150452.chatgpt.site/legal) and the original sources. This kit sends no marketing messages and performs no external listings. Integration contact: [frederic@alpnor.com](mailto:frederic@alpnor.com).
+The [MIT license](LICENSE) covers Python code only. API data, source documents, trademarks and other assets are outside that grant; consult [service terms](https://alpnai.com/legal) and the original sources. This kit sends no marketing messages and performs no external listings. Integration contact: [frederic@alpnor.com](mailto:frederic@alpnor.com).

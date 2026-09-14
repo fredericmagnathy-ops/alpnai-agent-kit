@@ -1,0 +1,648 @@
+{
+  "runs": [
+    {
+      "task_id": "synthetic-invoice-01",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-01",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-02",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-02",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-03",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-03",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-04",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-04",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-05",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-05",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-06",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-06",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-07",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-07",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-08",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-08",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-09",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-09",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-10",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-10",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-11",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-11",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-12",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-12",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-13",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-13",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-14",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-14",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-15",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-15",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-16",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-16",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-17",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-17",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-18",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-18",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-19",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-19",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-20",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-20",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-21",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-21",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-22",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-22",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-23",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-23",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-24",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-24",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-25",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-25",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-26",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-26",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-27",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-27",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-28",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-28",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-29",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-29",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-30",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-30",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-31",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-31",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-32",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-32",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-33",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-33",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-34",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-34",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-35",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-35",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-36",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-36",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-37",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-37",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-38",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-38",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-39",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": true,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-39",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": true,
+      "latency_ms": 1600
+    },
+    {
+      "task_id": "synthetic-invoice-40",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "baseline",
+      "cost_usd": 0.04,
+      "success": false,
+      "latency_ms": 2200
+    },
+    {
+      "task_id": "synthetic-invoice-40",
+      "workflow": "synthetic_invoice_extraction",
+      "variant": "candidate",
+      "cost_usd": 0.025,
+      "success": false,
+      "latency_ms": 1600
+    }
+  ],
+  "config": {
+    "monthlyTasks": 10000,
+    "maxP95LatencyMs": 3000
+  }
+}

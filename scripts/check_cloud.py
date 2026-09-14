@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bounded AlpNAI cloud checks. Standard library only; sanitized reports only."""
+"""Bounded ALPNAI cloud checks. Standard library only; sanitized reports only."""
 
 from __future__ import annotations
 
@@ -12,12 +12,12 @@ import socket
 import sys
 from urllib import error, parse, request
 
-DEFAULT_BASE = "https://alpnai.frederic150452.chatgpt.site"
+DEFAULT_BASE = "https://alpnai.com"
 HTTP_TIMEOUT = 40
 MAX_BODY = 2 * 1024 * 1024
 MCP_VERSION = "2026-07-28"
 SOURCE_STATUSES = {"baseline", "unchanged", "review_required", "unavailable"}
-TOOLS = {"get_catalog", "get_free_sample", "purchase_snapshot", "purchase_changes", "purchase_evidence"}
+TOOLS = {"get_catalog", "get_free_sample", "purchase_snapshot", "purchase_changes", "purchase_evidence", "audit_agent_costs"}
 GROWTH_DECISIONS = {"collect_more_evidence", "improve_activation", "review_repeat_usage"}
 
 
@@ -63,9 +63,9 @@ class HttpClient:
 
     def fetch(self, path: str, *, body: dict | None = None, headers: dict | None = None,
               rpc_id: int | None = None) -> tuple[dict, dict]:
-        if path not in {"/api/operator/check-sources", "/api/operator/growth", "/api/v1/catalog", "/api/v1/sample", "/mcp"}:
+        if path not in {"/api/operator/check-sources", "/api/operator/growth", "/api/v1/catalog", "/api/v1/sample", "/api/mcp"}:
             raise CheckError("endpoint_not_allowed")
-        request_headers = {"Accept": "application/json", "User-Agent": "AlpNAI-Cloud-Checks/0.1.0"}
+        request_headers = {"Accept": "application/json", "User-Agent": "ALPNAI-Cloud-Checks/0.1.0"}
         if self.bypass:
             request_headers["OAI-Sites-Authorization"] = "Bearer " + self.bypass
         request_headers.update(headers or {})
@@ -73,7 +73,7 @@ class HttpClient:
         if body is not None:
             encoded = json.dumps(body).encode("utf-8")
             request_headers["Content-Type"] = "application/json"
-        if path == "/mcp":
+        if path == "/api/mcp":
             request_headers["Accept"] = "application/json, text/event-stream"
         req = request.Request(self.base + path, data=encoded, headers=request_headers,
                               method="POST" if body is not None else "GET")
@@ -82,7 +82,7 @@ class HttpClient:
                 status = response.status
                 response_headers = dict(response.headers.items())
                 content_type = response.headers.get_content_type()
-                if content_type not in {"application/json", "text/event-stream"} or (content_type == "text/event-stream" and path != "/mcp"):
+                if content_type not in {"application/json", "text/event-stream"} or (content_type == "text/event-stream" and path != "/api/mcp"):
                     raise CheckError("unexpected_content_type", status)
                 raw = response.read(MAX_BODY + 1)
         except error.HTTPError as exc:
@@ -175,8 +175,12 @@ def growth_check(client: HttpClient, token: str) -> list[dict]:
 
 def sample_check(client: HttpClient) -> dict:
     payload, _ = client.fetch("/api/v1/sample")
-    facts, sources = payload.get("facts"), payload.get("sources")
-    if (not isinstance(payload.get("snapshot_id"), str) or not isinstance(facts, list)
+    if (payload.get("mode") != "free_sample" or payload.get("payment_required") is not False
+            or not isinstance(payload.get("data"), dict)):
+        raise CheckError("invalid_sample_envelope")
+    data = payload["data"]
+    facts, sources = data.get("facts"), data.get("sources")
+    if (not isinstance(data.get("snapshot_id"), str) or not data["snapshot_id"] or not isinstance(facts, list)
             or not isinstance(sources, list) or not facts or not sources):
         raise CheckError("invalid_sample_contract")
     return {"component": "sample", "status": "ok", "fact_count": len(facts), "source_count": len(sources)}
@@ -194,13 +198,13 @@ def mcp_check(client: HttpClient) -> dict:
             "io.modelcontextprotocol/clientInfo": {"name": "alpnai-cloud-health", "version": "0.1.0"},
             "io.modelcontextprotocol/clientCapabilities": {}}
     headers = {"MCP-Protocol-Version": MCP_VERSION, "Mcp-Method": "server/discover"}
-    discovered, _ = client.fetch("/mcp", body={"jsonrpc": "2.0", "id": 1,
+    discovered, _ = client.fetch("/api/mcp", body={"jsonrpc": "2.0", "id": 1,
         "method": "server/discover", "params": {"_meta": meta}}, headers=headers, rpc_id=1)
     result = rpc_result(discovered, 1)
     versions = result.get("supportedVersions")
     if not isinstance(versions, list) or MCP_VERSION not in versions or not isinstance(result.get("capabilities"), dict):
         raise CheckError("unsupported_mcp_version")
-    listed, _ = client.fetch("/mcp", body={"jsonrpc": "2.0", "id": 2, "method": "tools/list",
+    listed, _ = client.fetch("/api/mcp", body={"jsonrpc": "2.0", "id": 2, "method": "tools/list",
                               "params": {"_meta": meta}},
                               headers={**headers, "Mcp-Method": "tools/list"}, rpc_id=2)
     tools = rpc_result(listed, 2).get("tools")
@@ -241,7 +245,7 @@ def write_summary(report: dict) -> None:
     if not path:
         return
     # Only locally defined labels and numeric counters enter the job summary.
-    lines = ["## AlpNAI cloud check", "", "Result: " + ("passed" if report.get("ok") is True else "attention required"), "",
+    lines = ["## ALPNAI cloud check", "", "Result: " + ("passed" if report.get("ok") is True else "attention required"), "",
              "| Component | Status |", "|---|---|"]
     for check in report.get("checks", []):
         component = check.get("component") if check.get("component") in {"sources", "catalog", "sample", "mcp", "growth", "configuration"} else "unknown"
