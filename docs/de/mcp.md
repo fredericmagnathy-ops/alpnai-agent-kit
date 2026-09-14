@@ -8,9 +8,13 @@ Entdecken Sie Werkzeuge und rufen Sie audit_agent_costs mit Ihren Aufzeichnungen
 
 ## Endpunkt und Protokoll
 
-Verwenden Sie POST https://alpnai.com/api/mcp. Der installierte Server stellt MCP 2026-07-28 mit JSON-Antworten bereit. Die Erkennung nutzt server/discover; initialize-Beispiele älterer Versionen beschreiben diesen Vertrag nicht.
+Verwenden Sie POST https://alpnai.com/api/mcp. Der Server unterstützt MCP 2026-07-28 mit server/discover und JSON-Antworten. Er akzeptiert außerdem MCP-Clients der Versionen 2025-11-25, 2025-06-18 und 2025-03-26 über initialize.
 
 Jede Anfrage enthält Protokollversion, Clientinformationen und Fähigkeiten unter params._meta. Technische Feldnamen werden nicht übersetzt.
+
+## Ältere MCP-Clients
+
+Clients von 2025 verwenden initialize, notifications/initialized, dann tools/list und tools/call. Konfigurieren Sie Streamable HTTP, akzeptieren Sie application/json und text/event-stream und senden Sie den Schlüssel als Authorization: Bearer. Der Transport ist zustandslos; dieselben Schlüssel- und Budgetprüfungen gelten. Das folgende Beispiel verwendet das Protokoll von 2026.
 
 ## Registrierte Werkzeuge
 

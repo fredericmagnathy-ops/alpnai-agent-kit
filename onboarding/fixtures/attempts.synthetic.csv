@@ -1,0 +1,11 @@
+task_id,workflow,variant,cost_usd,success,latency_ms,attempt_id
+synthetic-01,synthetic_extraction,baseline,0.04,true,2000,1
+synthetic-01,synthetic_extraction,candidate,0.02,true,1000,1
+synthetic-02,synthetic_extraction,baseline,0.02,false,1200,1
+synthetic-02,synthetic_extraction,baseline,0.04,true,2000,2
+synthetic-02,synthetic_extraction,candidate,0.01,false,800,1
+synthetic-02,synthetic_extraction,candidate,0.02,true,1000,2
+synthetic-03,synthetic_extraction,baseline,0.04,false,2000,1
+synthetic-03,synthetic_extraction,candidate,0.02,false,1000,1
+synthetic-04,synthetic_extraction,baseline,0.04,true,2000,1
+synthetic-04,synthetic_extraction,candidate,0.02,true,1000,1

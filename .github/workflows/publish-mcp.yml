@@ -1,0 +1,51 @@
+name: Publish ALPNAI to the MCP Registry
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout the authorized integration repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Download verified publisher
+        shell: bash
+        run: |
+          curl --fail --silent --show-error --location --max-time 60 \
+            https://github.com/modelcontextprotocol/registry/releases/download/v1.8.1/mcp-publisher_linux_amd64.tar.gz \
+            --output mcp-publisher.tar.gz
+          echo 'a06c9096dcb9727c13555b6be26c7effa707b01f06a4c561ba7a3635443cf2cc  mcp-publisher.tar.gz' | sha256sum --check --strict
+          tar -xzf mcp-publisher.tar.gz mcp-publisher
+      - name: Validate the listing
+        run: ./mcp-publisher validate server.json
+      - name: Authenticate the GitHub namespace
+        run: ./mcp-publisher login github-oidc
+      - name: Publish the listing
+        run: ./mcp-publisher publish server.json
+      - name: Check the public record
+        shell: bash
+        run: |
+          curl --fail --silent --show-error --max-time 30 \
+            'https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.fredericmagnathy-ops/alpnai' \
+            --output registry-result.json
+          python3 - <<'PY'
+          import json
+          with open('registry-result.json', encoding='utf-8') as handle:
+              result = json.load(handle)
+          matches = [item for item in result.get('servers', [])
+                     if item.get('server', {}).get('name') == 'io.github.fredericmagnathy-ops/alpnai']
+          if not matches:
+              raise SystemExit('Publication response received but public record not yet visible. Check before retrying.')
+          print('ALPNAI public registry record found.')
+          PY

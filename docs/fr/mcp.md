@@ -8,9 +8,13 @@ Découvrez les outils et appelez audit_agent_costs sur vos traces.
 
 ## Adresse et protocole
 
-Utilisez POST https://alpnai.com/api/mcp. Le serveur installé expose le protocole MCP 2026-07-28 avec réponse JSON. Il utilise server/discover pour la découverte ; les exemples initialize d’anciennes versions ne décrivent pas ce contrat.
+Utilisez POST https://alpnai.com/api/mcp. Le serveur expose MCP 2026-07-28 avec server/discover pour la découverte et des réponses JSON. Il accepte aussi les clients MCP 2025-11-25, 2025-06-18 et 2025-03-26 via initialize.
 
 Chaque appel transmet la version du protocole, les informations du client et ses capacités dans params._meta. Les champs techniques ne sont pas traduits.
+
+## Clients MCP antérieurs
+
+Les clients 2025 utilisent initialize, notifications/initialized, puis tools/list et tools/call. Configurez le transport Streamable HTTP, acceptez application/json et text/event-stream, et envoyez votre clé dans Authorization: Bearer. Le mode est sans session persistante ; les mêmes contrôles de clé et de budget s’appliquent. L’exemple ci-dessous utilise le protocole 2026.
 
 ## Les outils enregistrés
 

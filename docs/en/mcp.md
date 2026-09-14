@@ -8,9 +8,13 @@ Discover tools and call audit_agent_costs with your records.
 
 ## Endpoint and protocol
 
-Use POST https://alpnai.com/api/mcp. The installed server exposes MCP 2026-07-28 with JSON responses. Discovery uses server/discover; initialize examples from older versions do not describe this contract.
+Use POST https://alpnai.com/api/mcp. The server exposes MCP 2026-07-28 with server/discover and JSON responses. It also accepts MCP 2025-11-25, 2025-06-18 and 2025-03-26 clients through initialize.
 
 Each request includes protocol version, client information and capabilities in params._meta. Technical field names are not translated.
+
+## Earlier MCP clients
+
+2025 clients use initialize, notifications/initialized, then tools/list and tools/call. Configure Streamable HTTP, accept application/json and text/event-stream, and send your key in Authorization: Bearer. The transport is stateless; the same key and budget checks apply. The example below uses the 2026 protocol.
 
 ## Registered tools
 

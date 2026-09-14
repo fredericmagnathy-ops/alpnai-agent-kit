@@ -1,0 +1,52 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.fredericmagnathy-ops/alpnai",
+  "title": "ALPNAI — Agent Performance Tools",
+  "description": "Free agent cost, latency and quality analysis with a key. Evidence purchases are sandbox-only.",
+  "version": "0.1.0",
+  "websiteUrl": "https://alpnai.com/en/docs/mcp",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://alpnai.com/api/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Active ALPNAI agent key from https://alpnai.com/start. Required for performance tools.",
+          "value": "Bearer {agent_key}",
+          "variables": {
+            "agent_key": {
+              "description": "ALPNAI agent key",
+              "isRequired": true,
+              "isSecret": true
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "com.alpnai": {
+        "supportedProtocolVersions": [
+          "2026-07-28",
+          "2025-11-25",
+          "2025-06-18",
+          "2025-03-26"
+        ],
+        "discoveryMethod": "server/discover",
+        "integrationRepository": "https://github.com/fredericmagnathy-ops/alpnai-agent-kit",
+        "documentationUrl": "https://alpnai.com/en/docs",
+        "keyRequestUrl": "https://alpnai.com/start",
+        "freeTools": [
+          "audit_agent_costs",
+          "analyze_agent_latency",
+          "check_agent_quality"
+        ],
+        "cryptoPurchases": "sandbox-only",
+        "liveCryptoPaymentsEnabled": false,
+        "projectsSubscription": "Separate human website subscription through Stripe; not purchased via MCP."
+      }
+    }
+  }
+}

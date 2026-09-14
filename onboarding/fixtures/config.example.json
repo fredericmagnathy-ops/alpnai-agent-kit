@@ -1,0 +1,6 @@
+{
+  "minSamples": 30,
+  "minSuccessRate": 0.95,
+  "maxSuccessRateDrop": 0.02,
+  "maxP95LatencyMs": 3000
+}

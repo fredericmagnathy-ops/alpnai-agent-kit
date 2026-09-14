@@ -1,5 +1,7 @@
 # ALPNAI agent integration kit
 
+Have a CSV export? [Import your own attempts](onboarding/README.md) before your first audit.
+
 [Français](README.fr.md) · [Deutsch](README.de.md)
 
 Connect an authorized agent to **Spend Proof**, ALPNAI’s free audit of cost per successful task, or explore the evidence sandbox. This standalone kit contains standard-library Python clients, MCP examples and offline tests. It does not settle cryptocurrency, create wallets, renew subscriptions or contact prospective customers.

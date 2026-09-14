@@ -1,0 +1,4 @@
+job_id;pipeline;arm;measured_usd;passed;duration_ms;request_id;unused_note
+synthetic-01;synthetic_extraction;baseline;0.04;1;2000;1;synthetic ignored cell
+synthetic-01;synthetic_extraction;candidate;0.02;0;800;1;synthetic ignored cell
+synthetic-01;synthetic_extraction;candidate;0.01;1;1000;2;synthetic ignored cell
