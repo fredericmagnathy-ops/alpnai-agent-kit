@@ -6,6 +6,26 @@ Verbinden Sie einen autorisierten Agenten mit **Spend Proof**, dem kostenlosen A
 
 **Status: öffentlicher Dienst unter [alpnai.com](https://alpnai.com/), echte Zahlungen deaktiviert.** Der primäre MCP-Endpunkt ist `/api/mcp`. Einen aktiven Pilotschlüssel erhalten Sie über [/start](https://alpnai.com/start). Agentenschlüssel umgehen keine Kontoberechtigungen; das Kit übernimmt keine Browsersitzungen.
 
+## Dokumentationsbibliothek
+
+[Dokumentation auf der Website](https://alpnai.com/de/docs) · [Zehn praktische Anleitungen](docs/de/README.md)
+
+[FR](https://alpnai.com/fr/docs) · [EN](https://alpnai.com/en/docs) · [DE](https://alpnai.com/de/docs)
+
+[Spend Proof](https://alpnai.com/de/tools/spend-proof) · [Latency Lab](https://alpnai.com/tools/latency-lab) · [Quality Gate](https://alpnai.com/tools/quality-gate)
+
+Alle drei Werkzeuge akzeptieren dieselben Aufzeichnungen. Browserberechnung und HTML/JSON-Exporte erfolgen lokal; API/MCP-Aufrufe senden die Daten mit aktivem Schlüssel zum Server. Der vorhandene Python-Auditclient bleibt auf Spend Proof beschränkt.
+
+| Werkzeug | Kostenlose APIs | MCP |
+|---|---|---|
+| Spend Proof | `POST /api/v1/spend-proof` | `audit_agent_costs` |
+| Latency Lab | `POST /api/v1/latency` | `analyze_agent_latency` |
+| Quality Gate | `POST /api/v1/quality-gate` | `check_agent_quality` |
+
+[Acht MCP-Werkzeuge](docs/de/mcp.md): `get_catalog`, `get_free_sample`, `audit_agent_costs`, `analyze_agent_latency`, `check_agent_quality`, `purchase_snapshot`, `purchase_changes`, `purchase_evidence`.
+
+MCP-Kaufbeispiele bleiben im Sandbox-Modus. PayAI/x402 wird validiert; dieses Repository belegt keine Mainnet-Abwicklung. Das Kit führt keine Abonnements, Provisionen oder automatischen Banküberweisungen aus.
+
 ## Kostenloser Spend-Proof-Audit
 
 Stellen Sie `ALPNAI_AGENT_KEY` über die Geheimnisverwaltung Ihres Prozesses bereit. Wählen Sie einen privaten Export und eine neue lokale Berichtsdatei. Die mitgelieferte Datei enthält **fiktive Demonstrationsdaten**, keine Kundeneinsparungen.
@@ -62,6 +82,8 @@ Ein gültiger Beleg muss `mode: sandbox`, `settled: false`, `real_revenue_usdc: 
 | `GET /api/v1/changes?since=YYYY-MM-DD` | 0,05 simulierte USDC; Sammlungsereignisse nach dem Datum |
 | `GET /api/v1/evidence` | 0,25 simulierte USDC; Belege und Methodik |
 | `POST /api/v1/spend-proof` | Kostenloser Audit mit aktivem Bearer-Schlüssel; keine Zahlung oder Berichtsspeicherung durch den Dienst |
+| `POST /api/v1/latency` | Kostenlose P50/P95-, Abdeckungs- und Wiederholungsanalyse; aktiver Schlüssel |
+| `POST /api/v1/quality-gate` | Kostenlose Vergleichs- und Erfolgsprüfungen; aktiver Schlüssel |
 | `POST /api/mcp` | Streamable HTTP; [MCP-Hinweise auf Englisch](mcp/README.md) |
 
 Kauf-Header: `Authorization: Bearer <test-key>`, `X-ALPNAI-Mode: sandbox`, `Idempotency-Key: <persisted-id>`. IDs enthalten 8–100 Buchstaben, Ziffern, Bindestriche oder Unterstriche. [Katalogbeispiel](examples/catalog.sample.json) und [OpenAPI-Kopie](openapi.snapshot.json) bilden den vorbereiteten Vertrag ab; sie sind keine Messung der aktuellen Verfügbarkeit. Die [Herkunftsdatei](contract-provenance.json) dokumentiert die Grundlage.
@@ -72,7 +94,7 @@ Die erste Sammlung ist auf den 14. September 2026 datiert und betrifft OpenAIs M
 
 Öffentliches Repository: [fredericmagnathy-ops/alpnai-agent-kit](https://github.com/fredericmagnathy-ops/alpnai-agent-kit). MCP-Namensraum: `io.github.fredericmagnathy-ops/alpnai`. Diese Revision ist offline geprüft; aktuelle Cloud-Ergebnisse stehen in GitHub Actions.
 
-Zwei vorbereitete GitHub-Actions-Workflows prüfen Quellen alle sechs Stunden zur Minute 17 UTC sowie Katalog, Datenbeispiel und MCP täglich um 07:43 UTC. Nach Bereitstellung sind auch manuelle Starts möglich. Die Quellenprüfung protokolliert Ergebnisse, ändert keine Tatsachenaussagen und schlägt bei Prüfbedarf oder nicht erreichbaren Quellen fehl. Die Zustandsprüfung nutzt `server/discover` und `tools/list` mit MCP `2026-07-28`, ohne Kaufwerkzeuge aufzurufen.
+Drei vorbereitete GitHub-Actions-Workflows prüfen Quellen alle sechs Stunden zur Minute 17 UTC, Katalog, Datenbeispiel und acht MCP-Werkzeuge täglich um 07:43 UTC sowie bestehende Zahlungsaufträge zu den Minuten 06, 16, 26, 36, 46 und 56 jeder Stunde. Der Zahlungsabgleich liest die Blockchain und kann bestehende Buchungen aktualisieren; er sendet keine Zahlung, Abwicklung oder Banküberweisung. Exportiert werden nur die Anzahlen geprüfter, bestätigter und nicht bestätigter Aufträge in Gruppen von höchstens fünf. Nach Bereitstellung sind auch manuelle Starts möglich. Die Quellenprüfung protokolliert Ergebnisse, ändert keine Tatsachenaussagen und schlägt bei Prüfbedarf oder nicht erreichbaren Quellen fehl. Die Zustandsprüfung nutzt `server/discover` und `tools/list` mit MCP `2026-07-28`, ohne Kaufwerkzeuge aufzurufen.
 
 Vor Aktivierung Endpunkt und autorisierte Geheimnisse konfigurieren, API bereitstellen und Workflows im Standardbranch ablegen. Berichte enthalten nur Status und Zähler, werden sieben Tage aufbewahrt und erscheinen als GitHub-Zusammenfassung. Fehlgeschlagene Läufe können abhängig von den Kontoeinstellungen GitHub-Benachrichtigungen auslösen. Zeitpläne können sich verzögern und garantieren keinen durchgehenden Betrieb. Englische Einrichtungsanleitung: [Cloud automation](CLOUD_AUTOMATION.md).
 

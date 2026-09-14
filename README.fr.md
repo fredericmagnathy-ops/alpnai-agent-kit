@@ -6,6 +6,26 @@ Connectez un agent autorisé à **Spend Proof**, l’audit gratuit ALPNAI du co�
 
 **État : service public sur [alpnai.com](https://alpnai.com/), paiements réels désactivés.** L’endpoint MCP principal est `/api/mcp`. Une clé pilote active est disponible via [/start](https://alpnai.com/start). La clé ne contourne pas les permissions de compte ; le kit ne copie aucune session de navigateur.
 
+## Bibliothèque de documentation
+
+[Documentation sur le site](https://alpnai.com/fr/docs) · [Les dix guides](docs/fr/README.md)
+
+[FR](https://alpnai.com/fr/docs) · [EN](https://alpnai.com/en/docs) · [DE](https://alpnai.com/de/docs)
+
+[Spend Proof](https://alpnai.com/fr/tools/spend-proof) · [Latency Lab](https://alpnai.com/tools/latency-lab) · [Quality Gate](https://alpnai.com/tools/quality-gate)
+
+Les trois outils acceptent les mêmes traces. Le calcul et les exports HTML/JSON du navigateur sont locaux ; les appels API/MCP transmettent les traces au serveur avec une clé active. Le kit Python existant reste centré sur Spend Proof.
+
+| Outil | API gratuites | MCP |
+|---|---|---|
+| Spend Proof | `POST /api/v1/spend-proof` | `audit_agent_costs` |
+| Latency Lab | `POST /api/v1/latency` | `analyze_agent_latency` |
+| Quality Gate | `POST /api/v1/quality-gate` | `check_agent_quality` |
+
+[Huit outils MCP](docs/fr/mcp.md): `get_catalog`, `get_free_sample`, `audit_agent_costs`, `analyze_agent_latency`, `check_agent_quality`, `purchase_snapshot`, `purchase_changes`, `purchase_evidence`.
+
+Les exemples MCP d’achat restent en sandbox. PayAI/x402 est en validation ; ce dépôt ne prouve aucun règlement mainnet. Aucun abonnement, commission ou virement automatique n’est exécuté par ce kit.
+
 ## Audit Spend Proof gratuit
 
 Fournissez `ALPNAI_AGENT_KEY` par le gestionnaire de secrets de votre processus, puis choisissez un export privé et un nouveau fichier de rapport local. Le fichier inclus contient une **démonstration fictive**, pas des économies client.
@@ -62,6 +82,8 @@ Le reçu doit contenir `mode: sandbox`, `settled: false`, `real_revenue_usdc: 0`
 | `GET /api/v1/changes?since=YYYY-MM-DD` | 0,05 USDC fictif ; événements de la collection après la date |
 | `GET /api/v1/evidence` | 0,25 USDC fictif ; preuves et méthode |
 | `POST /api/v1/spend-proof` | Audit gratuit avec clé Bearer active ; sans paiement ni stockage du rapport par le service |
+| `POST /api/v1/latency` | Analyse gratuite P50/P95, couverture et reprises ; clé active |
+| `POST /api/v1/quality-gate` | Contrôles gratuits de comparaison et de réussite ; clé active |
 | `POST /api/mcp` | Streamable HTTP ; [notes MCP en anglais](mcp/README.md) |
 
 En-têtes d'achat : `Authorization: Bearer <test-key>`, `X-ALPNAI-Mode: sandbox`, `Idempotency-Key: <persisted-id>`. L'identifiant contient 8 à 100 lettres, chiffres, tirets ou traits de soulignement. Le [catalogue exemple](examples/catalog.sample.json) et la [copie OpenAPI](openapi.snapshot.json) sont des instantanés du contrat ; ils ne constituent pas une mesure de disponibilité actuelle. La [provenance](contract-provenance.json) indique leur origine.
@@ -72,7 +94,7 @@ La collection initiale est datée du 14 septembre 2026 et porte sur l'annonce du
 
 Dépôt public : [fredericmagnathy-ops/alpnai-agent-kit](https://github.com/fredericmagnathy-ops/alpnai-agent-kit). Namespace MCP : `io.github.fredericmagnathy-ops/alpnai`. Cette révision est vérifiée hors ligne ; les derniers résultats cloud sont consultables dans GitHub Actions.
 
-Deux workflows GitHub Actions sont prêts : sources toutes les six heures à la minute 17 UTC, puis catalogue/exemple/MCP chaque jour à 07 h 43 UTC. Ils peuvent aussi être lancés manuellement après déploiement. Le premier consigne les résultats sans modifier les faits et échoue si une source demande une revue ou devient indisponible. Le second utilise `server/discover` et `tools/list` en MCP `2026-07-28`, sans appeler les outils d'achat.
+Trois workflows GitHub Actions sont prêts : sources toutes les six heures à la minute 17 UTC, catalogue/exemple/huit outils MCP chaque jour à 07 h 43 UTC, et réconciliation des commandes existantes aux minutes 06, 16, 26, 36, 46 et 56 de chaque heure. La réconciliation lit la blockchain et peut actualiser le registre existant ; elle ne soumet ni paiement, ni règlement, ni virement bancaire. Elle exporte seulement les nombres de commandes examinées, confirmées et non confirmées, par lot de cinq au maximum. Ils peuvent aussi être lancés manuellement après déploiement. Le premier consigne les résultats sans modifier les faits et échoue si une source demande une revue ou devient indisponible. Le second utilise `server/discover` et `tools/list` en MCP `2026-07-28`, sans appeler les outils d'achat.
 
 Configurer l'adresse et les secrets autorisés, déployer l'API et placer les workflows sur la branche par défaut avant activation. Rapports limités aux statuts et compteurs, conservation sept jours, résumé dans GitHub. Une exécution en échec peut déclencher les notifications GitHub selon les réglages du compte. Le planning peut subir des retards et ne garantit pas une disponibilité continue. Configuration détaillée en anglais : [Cloud automation](CLOUD_AUTOMATION.md).
 

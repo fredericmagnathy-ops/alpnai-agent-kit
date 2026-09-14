@@ -6,6 +6,26 @@ Connect an authorized agent to **Spend Proof**, ALPNAI’s free audit of cost pe
 
 **Status: public service at [alpnai.com](https://alpnai.com/), real payments disabled.** The primary MCP endpoint is `/api/mcp`. Obtain an active pilot key through [/start](https://alpnai.com/start). Agent keys do not bypass account permissions; this kit never copies browser sessions.
 
+## Documentation library
+
+[Website documentation](https://alpnai.com/en/docs) · [Ten practical guides](docs/en/README.md)
+
+[FR](https://alpnai.com/fr/docs) · [EN](https://alpnai.com/en/docs) · [DE](https://alpnai.com/de/docs)
+
+[Spend Proof](https://alpnai.com/en/tools/spend-proof) · [Latency Lab](https://alpnai.com/tools/latency-lab) · [Quality Gate](https://alpnai.com/tools/quality-gate)
+
+All three tools accept the same records. Browser calculation and HTML/JSON exports are local; API/MCP calls send records to the server with an active key. The existing Python audit client remains specific to Spend Proof.
+
+| Tool | Free APIs | MCP |
+|---|---|---|
+| Spend Proof | `POST /api/v1/spend-proof` | `audit_agent_costs` |
+| Latency Lab | `POST /api/v1/latency` | `analyze_agent_latency` |
+| Quality Gate | `POST /api/v1/quality-gate` | `check_agent_quality` |
+
+[Eight MCP tools](docs/en/mcp.md): `get_catalog`, `get_free_sample`, `audit_agent_costs`, `analyze_agent_latency`, `check_agent_quality`, `purchase_snapshot`, `purchase_changes`, `purchase_evidence`.
+
+MCP purchase examples remain in sandbox mode. PayAI/x402 is under validation; this repository proves no mainnet settlement. This kit executes no subscriptions, commissions or automatic bank transfers.
+
 ## Free Spend Proof audit
 
 Supply `ALPNAI_AGENT_KEY` through your process secret store, then run the client with a private input export and a new local report path. The included file is **synthetic demonstration data**, not customer savings.
@@ -62,6 +82,8 @@ A valid sandbox receipt must include `mode: sandbox`, `settled: false`, `real_re
 | `GET /api/v1/changes?since=YYYY-MM-DD` | 0.05 simulated USDC; collection events after the date |
 | `GET /api/v1/evidence` | 0.25 simulated USDC; evidence and methodology |
 | `POST /api/v1/spend-proof` | Free audit with an active Bearer agent key; no payment or server-side report persistence |
+| `POST /api/v1/latency` | Free P50/P95, coverage and retry analysis; active key required |
+| `POST /api/v1/quality-gate` | Free comparison and success checks; active key required |
 | `POST /api/mcp` | Streamable HTTP; see [MCP notes](mcp/README.md) |
 
 Purchase headers are `Authorization: Bearer <test-key>`, `X-ALPNAI-Mode: sandbox` and `Idempotency-Key: <persisted-id>`. IDs contain 8–100 letters, digits, underscores or hyphens. The included [catalog sample](examples/catalog.sample.json) and [OpenAPI snapshot](openapi.snapshot.json) are contract snapshots, not a measurement of current uptime. Provenance is recorded in [contract-provenance.json](contract-provenance.json).
@@ -72,7 +94,7 @@ The initial collection is dated 14 September 2026 and concerns OpenAI's confiden
 
 The public repository is [fredericmagnathy-ops/alpnai-agent-kit](https://github.com/fredericmagnathy-ops/alpnai-agent-kit), with MCP namespace `io.github.fredericmagnathy-ops/alpnai`. This revision is validated offline; inspect GitHub Actions for the latest cloud results.
 
-Two prepared GitHub Actions workflows check sources every six hours at minute 17 UTC and catalog/sample/MCP daily at 07:43 UTC. Each can also be run manually after deployment. The source check records monitoring results, preserves factual claims and fails when review is required or a source is unavailable. Health checks use MCP `server/discover` and `tools/list` with version `2026-07-28`; they never call purchase tools.
+Three prepared GitHub Actions workflows check sources every six hours at minute 17 UTC, catalog/sample/eight MCP tools daily at 07:43 UTC, and reconcile existing payment records at minutes 06, 16, 26, 36, 46 and 56 of every hour. Reconciliation reads the chain and may update existing ledger records; it never submits a payment, settlement or bank transfer. It exports only checked/confirmed/not-confirmed counts for at most five orders. Each can also be run manually after deployment. The source check records monitoring results, preserves factual claims and fails when review is required or a source is unavailable. Health checks use MCP `server/discover` and `tools/list` with version `2026-07-28`; they never call purchase tools.
 
 Configure the endpoint and authorized secrets, deploy the API and place the workflows on the repository's default branch before activation. Reports contain only statuses and counts, are retained for seven days and produce a job summary. A failed run can trigger GitHub notifications according to account settings. Schedules can be delayed and do not constitute a continuous-service guarantee. Setup, exact variables, permissions and limitations: [Cloud automation](CLOUD_AUTOMATION.md).
 

@@ -17,8 +17,11 @@ HTTP_TIMEOUT = 40
 MAX_BODY = 2 * 1024 * 1024
 MCP_VERSION = "2026-07-28"
 SOURCE_STATUSES = {"baseline", "unchanged", "review_required", "unavailable"}
-TOOLS = {"get_catalog", "get_free_sample", "purchase_snapshot", "purchase_changes", "purchase_evidence", "audit_agent_costs"}
+TOOLS = {"get_catalog", "get_free_sample", "purchase_snapshot", "purchase_changes", "purchase_evidence",
+         "audit_agent_costs", "analyze_agent_latency", "check_agent_quality"}
 GROWTH_DECISIONS = {"collect_more_evidence", "improve_activation", "review_repeat_usage"}
+RECONCILE_PATH = "/api/operator/payments/reconcile"
+MAX_RECONCILE_ORDERS = 5
 
 
 class CheckError(Exception):
@@ -54,6 +57,14 @@ def secret_value(value: str, required: bool = False) -> str:
     return value
 
 
+def reconciliation_origin(value: str) -> str:
+    """Keep the payment-monitor credential on the production origin or loopback."""
+    origin = validated_origin(value)
+    if origin != DEFAULT_BASE and parse.urlsplit(origin).hostname not in {"127.0.0.1", "localhost", "::1"}:
+        raise CheckError("reconciliation_origin_not_allowed")
+    return origin
+
+
 class HttpClient:
     def __init__(self, base: str, bypass: str = "", timeout: float = HTTP_TIMEOUT):
         self.base = validated_origin(base)
@@ -63,8 +74,12 @@ class HttpClient:
 
     def fetch(self, path: str, *, body: dict | None = None, headers: dict | None = None,
               rpc_id: int | None = None) -> tuple[dict, dict]:
-        if path not in {"/api/operator/check-sources", "/api/operator/growth", "/api/v1/catalog", "/api/v1/sample", "/api/mcp"}:
+        if path not in {"/api/operator/check-sources", "/api/operator/growth", "/api/v1/catalog", "/api/v1/sample", "/api/mcp", RECONCILE_PATH}:
             raise CheckError("endpoint_not_allowed")
+        if path == RECONCILE_PATH:
+            reconciliation_origin(self.base)
+            if body != {"action": "reconcile"}:
+                raise CheckError("reconciliation_action_not_allowed")
         request_headers = {"Accept": "application/json", "User-Agent": "ALPNAI-Cloud-Checks/0.1.0"}
         if self.bypass:
             request_headers["OAI-Sites-Authorization"] = "Bearer " + self.bypass
@@ -173,6 +188,30 @@ def growth_check(client: HttpClient, token: str) -> list[dict]:
              "automatic_price_changes": False, "content_changes_require_validation": True}]
 
 
+def reconciliation_check(client: HttpClient, token: str) -> list[dict]:
+    """Recheck existing orders; never ask to quote, authorize, submit or resettle."""
+    token = secret_value(token, required=True)
+    payload, _ = client.fetch(RECONCILE_PATH, body={"action": "reconcile"},
+                              headers={"Authorization": "Bearer " + token})
+    if (payload.get("operation") != "read_only_chain_reconciliation"
+            or payload.get("payment_operations_called") is not False):
+        raise CheckError("invalid_reconciliation_policy")
+    orders = payload.get("orders")
+    if not isinstance(orders, list) or len(orders) > MAX_RECONCILE_ORDERS:
+        raise CheckError("invalid_reconciliation_results")
+    confirmed = 0
+    for order in orders:
+        if not isinstance(order, dict) or type(order.get("confirmed")) is not bool:
+            raise CheckError("invalid_reconciliation_results")
+        confirmed += int(order["confirmed"])
+    # Drop order IDs, clients, addresses, signatures and all unrecognized fields.
+    # A non-confirmed item can be pending, unknown or an unsubmitted reservation.
+    return [{"component": "reconciliation", "status": "ok",
+             "operation": "read_only_chain_reconciliation", "payment_operations_called": False,
+             "counts": {"checked": len(orders), "confirmed": confirmed,
+                        "not_confirmed": len(orders) - confirmed}}]
+
+
 def sample_check(client: HttpClient) -> dict:
     payload, _ = client.fetch("/api/v1/sample")
     if (payload.get("mode") != "free_sample" or payload.get("payment_required") is not False
@@ -221,11 +260,15 @@ def run_checks(kind: str, *, base: str, token: str = "", bypass: str = "", clien
     report = {"schema_version": 1, "kind": kind,
               "checked_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "ok": False, "checks": []}
     try:
+        if kind == "reconcile":
+            base = reconciliation_origin(base)
         client = client or HttpClient(base, bypass)
         if kind == "sources":
             report["checks"] = source_check(client, token)
         elif kind == "growth":
             report["checks"] = growth_check(client, token)
+        elif kind == "reconcile":
+            report["checks"] = reconciliation_check(client, token)
         elif kind == "health":
             for name, check in [("catalog", catalog_check), ("sample", sample_check), ("mcp", mcp_check)]:
                 try:
@@ -235,7 +278,8 @@ def run_checks(kind: str, *, base: str, token: str = "", bypass: str = "", clien
         else:
             raise CheckError("unknown_check_kind")
     except CheckError as exc:
-        report["checks"].append(failure(kind if kind in {"sources", "growth"} else "configuration", exc))
+        component = "reconciliation" if kind == "reconcile" else kind if kind in {"sources", "growth"} else "configuration"
+        report["checks"].append(failure(component, exc))
     report["ok"] = bool(report["checks"]) and all(c["status"] == "ok" for c in report["checks"])
     return report
 
@@ -248,7 +292,7 @@ def write_summary(report: dict) -> None:
     lines = ["## ALPNAI cloud check", "", "Result: " + ("passed" if report.get("ok") is True else "attention required"), "",
              "| Component | Status |", "|---|---|"]
     for check in report.get("checks", []):
-        component = check.get("component") if check.get("component") in {"sources", "catalog", "sample", "mcp", "growth", "configuration"} else "unknown"
+        component = check.get("component") if check.get("component") in {"sources", "catalog", "sample", "mcp", "growth", "reconciliation", "configuration"} else "unknown"
         status = check.get("status") if check.get("status") in {"ok", "error", "attention_required"} else "error"
         lines.append(f"| {component} | {status} |")
         if check.get("decision") in GROWTH_DECISIONS:
@@ -265,14 +309,20 @@ def write_summary(report: dict) -> None:
                 count = counts.get(label)
                 if type(count) is int and 0 <= count <= 100:
                     lines.append(f"| {label} count | {count} |")
-    lines += ["", "No purchases, messages or issues were created. Source checks do not automatically update factual claims.", ""]
+            if component == "reconciliation":
+                for label in ["checked", "confirmed", "not_confirmed"]:
+                    count = counts.get(label)
+                    if type(count) is int and 0 <= count <= MAX_RECONCILE_ORDERS:
+                        lines.append(f"| {label} orders | {count} |")
+    lines += ["", "No purchases, messages or issues were created. Source checks do not automatically update factual claims.",
+              "Reconciliation submits no transactions; it may update existing ledger records.", ""]
     with open(path, "a", encoding="utf-8") as stream:
         stream.write("\n".join(lines))
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("kind", choices=["sources", "health", "growth", "summary"])
+    parser.add_argument("kind", choices=["sources", "health", "growth", "reconcile", "summary"])
     parser.add_argument("--report", type=Path, required=True)
     args = parser.parse_args()
     if args.kind == "summary":

@@ -118,6 +118,9 @@ class CloudTests(unittest.TestCase):
         ]
         report = cloud.run_checks("health", base=cloud.DEFAULT_BASE, token=TOKEN, client=client)
         self.assertTrue(report["ok"])
+        self.assertEqual(len(cloud.TOOLS), 8)
+        self.assertEqual(report["checks"][-1]["tool_count"], 8)
+        self.assertTrue({"analyze_agent_latency", "check_agent_quality"}.issubset(cloud.TOOLS))
         self.assertNotIn(TOKEN, json.dumps(report))
         self.assertNotIn(BYPASS, json.dumps(report))
         for call in client.fetch.call_args_list:
@@ -162,14 +165,121 @@ class CloudTests(unittest.TestCase):
                 client = Mock(); client.fetch.return_value = (payload, {})
                 with self.assertRaises(cloud.CheckError): cloud.sample_check(client)
 
-    def test_mcp_requires_free_audit_tool_without_invoking_it(self):
+    def test_mcp_requires_all_three_analysis_tools_without_invoking_them(self):
+        for missing in ["audit_agent_costs", "analyze_agent_latency", "check_agent_quality"]:
+            with self.subTest(missing=missing):
+                client = Mock()
+                client.fetch.side_effect = [
+                    ({"jsonrpc": "2.0", "id": 1, "result": {"supportedVersions": [cloud.MCP_VERSION], "capabilities": {}}}, {}),
+                    ({"jsonrpc": "2.0", "id": 2, "result": {"tools": [{"name": name} for name in cloud.TOOLS - {missing}]}}, {}),
+                ]
+                with self.assertRaises(cloud.CheckError) as caught: cloud.mcp_check(client)
+                self.assertEqual(caught.exception.code, "missing_mcp_tools")
+                self.assertEqual(client.fetch.call_count, 2)
+                for call in client.fetch.call_args_list:
+                    self.assertNotEqual(call.kwargs["body"]["method"], "tools/call")
+
+    def test_reconciliation_only_posts_fixed_action_and_exports_aggregate_counts(self):
         client = Mock()
-        client.fetch.side_effect = [
-            ({"jsonrpc": "2.0", "id": 1, "result": {"supportedVersions": [cloud.MCP_VERSION], "capabilities": {}}}, {}),
-            ({"jsonrpc": "2.0", "id": 2, "result": {"tools": [{"name": name} for name in cloud.TOOLS - {"audit_agent_costs"}]}}, {}),
-        ]
-        with self.assertRaises(cloud.CheckError) as caught: cloud.mcp_check(client)
-        self.assertEqual(caught.exception.code, "missing_mcp_tools")
+        client.fetch.return_value = ({"operation": "read_only_chain_reconciliation",
+            "payment_operations_called": False, "orders": [
+                {"order_id": "private-order-id", "confirmed": True, "signature": TOKEN},
+                {"order_id": "private-other-id", "confirmed": False, "client": "private@example.invalid"}],
+            "wallet": BYPASS, "nonce": TOKEN}, {})
+        report = cloud.run_checks("reconcile", base=cloud.DEFAULT_BASE, token=TOKEN, client=client)
+        self.assertTrue(report["ok"])
+        client.fetch.assert_called_once_with(cloud.RECONCILE_PATH, body={"action": "reconcile"},
+                                             headers={"Authorization": "Bearer " + TOKEN})
+        self.assertEqual(report["checks"], [{"component": "reconciliation", "status": "ok",
+            "operation": "read_only_chain_reconciliation", "payment_operations_called": False,
+            "counts": {"checked": 2, "confirmed": 1, "not_confirmed": 1}}])
+        for value in [TOKEN, BYPASS, "private-order-id", "private-other-id", "private@example.invalid", "signature", "nonce"]:
+            self.assertNotIn(value, json.dumps(report))
+
+    def test_empty_reconciliation_batch_is_not_a_payment_or_failure(self):
+        client = Mock()
+        client.fetch.return_value = ({"operation": "read_only_chain_reconciliation",
+            "payment_operations_called": False, "orders": []}, {})
+        report = cloud.run_checks("reconcile", base=cloud.DEFAULT_BASE, token=TOKEN, client=client)
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["checks"][0]["counts"], {"checked": 0, "confirmed": 0, "not_confirmed": 0})
+
+    def test_reconciliation_rejects_payment_operations_or_malformed_results(self):
+        valid = {"operation": "read_only_chain_reconciliation", "payment_operations_called": False,
+                 "orders": [{"confirmed": False}]}
+        invalid = [{**valid, "operation": "settlement"}, {**valid, "operation": TOKEN},
+                   {**valid, "payment_operations_called": True}, {**valid, "payment_operations_called": 0},
+                   {**valid, "orders": None}, {**valid, "orders": [{"confirmed": False}] * 6},
+                   {**valid, "orders": [None]}, {**valid, "orders": [{}]},
+                   {**valid, "orders": [{"confirmed": 1}]}, {**valid, "orders": [{"confirmed": "true"}]}]
+        for payload in invalid:
+            with self.subTest(payload=payload):
+                client = Mock(); client.fetch.return_value = (payload, {})
+                report = cloud.run_checks("reconcile", base=cloud.DEFAULT_BASE, token=TOKEN, client=client)
+                self.assertFalse(report["ok"])
+                self.assertNotIn(TOKEN, json.dumps(report))
+                self.assertEqual(client.fetch.call_count, 1)
+
+    def test_reconciliation_without_monitor_token_makes_no_request(self):
+        client = Mock()
+        report = cloud.run_checks("reconcile", base=cloud.DEFAULT_BASE, client=client)
+        self.assertFalse(report["ok"])
+        client.fetch.assert_not_called()
+
+    def test_reconciliation_refuses_other_origins_before_exposing_credentials(self):
+        for base in ["https://example.invalid", "https://alpnai.com.example.invalid",
+                     "https://alpnai.com:444", "http://alpnai.com", "https://localhost.example.invalid"]:
+            with self.subTest(base=base):
+                client = Mock()
+                report = cloud.run_checks("reconcile", base=base, token=TOKEN, bypass=BYPASS, client=client)
+                self.assertFalse(report["ok"])
+                client.fetch.assert_not_called()
+                self.assertNotIn(TOKEN, json.dumps(report))
+        for base in [cloud.DEFAULT_BASE, cloud.DEFAULT_BASE + "/", "http://127.0.0.1:5173",
+                     "http://localhost:8080", "http://[::1]:9000"]:
+            self.assertEqual(cloud.reconciliation_origin(base), base.rstrip("/"))
+
+    def test_reconciliation_transport_refuses_changed_actions_and_origins(self):
+        for body in [None, {}, {"action": "settle"}, {"action": "reconcile", "signature": TOKEN}]:
+            with self.subTest(body=body):
+                client = cloud.HttpClient(cloud.DEFAULT_BASE, BYPASS)
+                client.opener = Mock()
+                with self.assertRaises(cloud.CheckError):
+                    client.fetch(cloud.RECONCILE_PATH, body=body, headers={"Authorization": "Bearer " + TOKEN})
+                client.opener.open.assert_not_called()
+        client = cloud.HttpClient("https://example.invalid", BYPASS)
+        client.opener = Mock()
+        with self.assertRaises(cloud.CheckError):
+            client.fetch(cloud.RECONCILE_PATH, body={"action": "reconcile"}, headers={"Authorization": "Bearer " + TOKEN})
+        client.opener.open.assert_not_called()
+
+    def test_reconciliation_transport_has_no_payment_authorization_or_settlement_request(self):
+        client = cloud.HttpClient(cloud.DEFAULT_BASE)
+        client.opener = Mock()
+        client.opener.open.return_value = FakeResponse({"operation": "read_only_chain_reconciliation",
+            "payment_operations_called": False, "orders": []})
+        cloud.reconciliation_check(client, TOKEN)
+        client.opener.open.assert_called_once()
+        req = client.opener.open.call_args.args[0]
+        self.assertEqual(req.full_url, "https://alpnai.com/api/operator/payments/reconcile")
+        self.assertEqual(req.method, "POST")
+        self.assertEqual(json.loads(req.data), {"action": "reconcile"})
+        headers = {k.lower(): v for k, v in req.header_items()}
+        self.assertEqual(headers["authorization"], "Bearer " + TOKEN)
+        self.assertNotIn("payment-signature", headers)
+        self.assertNotIn("x-alpnai-mode", headers)
+        self.assertNotIn("idempotency-key", headers)
+
+    def test_reconciliation_network_failure_never_retries_or_exports_raw_exception(self):
+        client = cloud.HttpClient(cloud.DEFAULT_BASE)
+        client.opener = Mock()
+        client.opener.open.side_effect = TimeoutError("private-order-id " + TOKEN)
+        report = cloud.run_checks("reconcile", base=cloud.DEFAULT_BASE, token=TOKEN, client=client)
+        self.assertFalse(report["ok"])
+        client.opener.open.assert_called_once()
+        self.assertEqual(report["checks"][0]["code"], "network_or_tls_error")
+        self.assertNotIn(TOKEN, json.dumps(report))
+        self.assertNotIn("private-order-id", json.dumps(report))
 
     def test_mcp_unsupported_version_stops_before_tools_list(self):
         client = Mock()
@@ -222,10 +332,12 @@ class CloudTests(unittest.TestCase):
         thread.start()
         try:
             base = f"http://127.0.0.1:{server.server_port}"
-            report = cloud.run_checks("sources", base=base, token=TOKEN, bypass=BYPASS)
-            self.assertFalse(report["ok"])
-            self.assertEqual(report["checks"][0]["code"], "redirect_refused")
-            self.assertEqual(calls, ["/api/operator/check-sources"])
+            for kind, path in [("sources", "/api/operator/check-sources"), ("reconcile", cloud.RECONCILE_PATH)]:
+                calls.clear()
+                report = cloud.run_checks(kind, base=base, token=TOKEN, bypass=BYPASS)
+                self.assertFalse(report["ok"])
+                self.assertEqual(report["checks"][0]["code"], "redirect_refused")
+                self.assertEqual(calls, [path])
         finally:
             server.shutdown()
             server.server_close()
@@ -251,6 +363,37 @@ class CloudTests(unittest.TestCase):
             text = path.read_text()
             for secret in [TOKEN, BYPASS, "private@example.invalid"]:
                 self.assertNotIn(secret, text)
+
+    def test_reconciliation_summary_exports_only_bounded_counts(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "summary.md"
+            with patch.dict(os.environ, {"GITHUB_STEP_SUMMARY": str(path)}):
+                cloud.write_summary({"ok": True, "checks": [{"component": "reconciliation", "status": "ok",
+                    "order_id": TOKEN, "signature": BYPASS, "orders": [{"client": "private@example.invalid"}],
+                    "counts": {"checked": 5, "confirmed": 2, "not_confirmed": 3, TOKEN: 7}}]})
+            text = path.read_text()
+            self.assertIn("| checked orders | 5 |", text)
+            self.assertIn("| confirmed orders | 2 |", text)
+            self.assertIn("| not_confirmed orders | 3 |", text)
+            for secret in [TOKEN, BYPASS, "private@example.invalid"]:
+                self.assertNotIn(secret, text)
+
+    def test_reconciliation_workflow_is_fixed_scoped_and_has_no_payment_secrets(self):
+        root = Path(__file__).parents[1]
+        workflow = (root / ".github/workflows/payment-reconciliation.yml").read_text()
+        daily = (root / ".github/workflows/daily-health.yml").read_text()
+        self.assertIn("cron: '6,16,26,36,46,56 * * * *'", workflow)
+        self.assertIn("workflow_dispatch:", workflow)
+        self.assertIn("github.repository == 'fredericmagnathy-ops/alpnai-agent-kit'", workflow)
+        self.assertIn("ALPNAI_BASE_URL: 'https://alpnai.com'", workflow)
+        self.assertIn("secrets.ALPNAI_MONITOR_TOKEN", workflow)
+        self.assertIn("scripts/check_cloud.py reconcile", workflow)
+        self.assertIn("persist-credentials: false", workflow)
+        for line in workflow.splitlines():
+            if "uses:" in line:
+                self.assertIn(line.split("uses:", 1)[1].split("#", 1)[0].strip(), daily)
+        for forbidden in ["CDP_API_KEY", "PRIVATE_KEY", "PAYMENT_SIGNATURE", "workflow_call:"]:
+            self.assertNotIn(forbidden, workflow)
 
 
 if __name__ == "__main__":
