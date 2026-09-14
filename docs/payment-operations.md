@@ -34,6 +34,8 @@ A read-only quotation lookup returns HTTP `200` with `status: "quoted"`, `settle
 
 Agents can check their own order through `GET /api/v1/orders/{id}` with their agent authentication. Signed-in customers can use `GET /api/account/orders/{id}`; ownership comes from the authenticated account, not a submitted customer identifier. The account's commercial receipt view is restricted to Base mainnet orders with a matching mandate and agent. Responses are private and not cacheable.
 
+The prepared [printable payment receipt](payment-receipts.md) is available through `GET /api/account/orders/{id}/receipt?lang=fr`, with `en` and `de` also supported. It requires the signed-in owner and a settled order whose saved receipt, result hash and any frozen billing snapshot pass validation. It reads historical order data rather than today's profile, terms or billing review. Historical orders without a snapshot receive a minimal payment record; missing customer or tax details are not invented. Printing or saving as PDF uses the browser's Print command; the server returns HTML, not a PDF file. This read does not call a payment provider or submit a transaction.
+
 ## What the dashboard counts
 
 Commercial aggregates count only settled Base mainnet orders. Pending orders, quotes, Sepolia tests and sandbox purchases do not increase real revenue. The account lists quotations separately from pending and completed payments. Paying customers are distinct authenticated account owners, not transaction counts or unique wallet addresses. Commercial order lists expose a small set of metadata; the transaction hash is shown only after settlement.
@@ -42,7 +44,9 @@ USDC totals are gross settled receipts. They are not net profit, a bank balance,
 
 ## Scheduled checks
 
-The prepared reconciliation workflow runs at minutes 06, 16, 26, 36, 46 and 56 of each hour, and supports manual dispatch. Its fixed request is `POST /api/operator/payments/reconcile` with `{"action":"reconcile"}`. It uses the authorized monitor credential, refuses redirects and is restricted to the expected repository and service origin.
+The reconciliation workflow is **scheduled** for minutes 06, 16, 26, 36, 46 and 56 of each hour, and supports manual dispatch. The configuration does not prove that every scheduled execution occurs. Its fixed request is `POST /api/operator/payments/reconcile` with `{"action":"reconcile"}`. It uses the authorized monitor credential, refuses redirects and is restricted to the expected repository and service origin.
+
+At the continuity review on **14 September 2026 at 09:43 UTC**, two successful manual reconciliation runs were visible and no reconciliation run had `event: schedule`. The latest verified manual run was [14 September at 05:20 UTC](https://github.com/fredericmagnathy-ops/alpnai-agent-kit/actions/runs/34809295659): zero orders checked and zero confirmed. The workflow was active on the default `main` branch and Actions was enabled. The cause of the absent scheduled runs was not established; this is not evidence of a payment-provider outage. A later manual check can verify the deployed endpoint but cannot demonstrate ten-minute scheduler continuity. Track scheduled execution, successful completion and report freshness separately.
 
 Read-only describes its blockchain behavior: the service can update the existing ledger after verifying evidence. The exported report contains only batch counts: checked, confirmed and not confirmed. Those counts do not represent total customers, revenue or bank transfers. The workflow does not publish order identifiers, customer data, payment signatures or private keys. Deployment and successful execution remain separate from this documentation.
 

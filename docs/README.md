@@ -15,5 +15,6 @@ The Evidence pilot uses simulated purchases. No directory publication, real paym
 - [Terms, consent and purchasing mandates](terms-and-mandates.md)
 - [Private billing profile](billing-profile.md)
 - [Billing quotations and private downloads](billing-quotations.md)
+- [Printable payment receipts](payment-receipts.md)
 
 [Back to the integration kit](../README.md)
