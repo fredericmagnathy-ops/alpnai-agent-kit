@@ -1,18 +1,22 @@
 # ALPNAI-Integrationskit für Agenten
 
-## TypeScript-Kaufintegration
-
-Der [x402-Kaufclient](clients/x402-buyer/README.md) ist als Quellcode mit englischer Integrationsanleitung verfügbar. Er setzt eine bestehende Autorisierung des Inhabers, ein geeignetes Rechnungsprofil und einen Wallet-Adapter voraus. Er prüft das konkrete Angebot, behält dieselbe Kaufkennung und setzt die Auftragsabfrage nach einem Neustart fort. **Offline geprüft; die echte ALPNAI-Zahlungsannahme ist weiterhin geschlossen.** Er eröffnet kein Konto und erhöht kein Budget. Das folgende Python-Kaufbeispiel bleibt auf den Testmodus beschränkt.
-
-Angebote ohne Schlüssel prüfen: [Snapshot](https://alpnai.com/api/v1/offers/snapshot), [Change Set](https://alpnai.com/api/v1/offers/changes), [Evidence Pack](https://alpnai.com/api/v1/offers/evidence). Die öffentlichen Beschreibungen enthalten Katalogpreis, Zugangsvoraussetzungen, Liefervertrag und Verfügbarkeit. Sie sind keine zahlbaren x402-Angebote. Authentifizierungsfehler enthalten `offer_url` und einen `describedby`-Link zur Beschreibung.
-
-Der native MCP-x402-Transport ist implementiert: signierte Zahlungen verwenden params._meta["x402/payment"], bestätigte Belege result._meta["x402/payment-response"]. Siehe [MCP-Anleitung](docs/de/mcp.md). USDC-Zahlungen bleiben laut öffentlichem Katalog deaktiviert; das Transport-Update ist keine Verkaufsfreigabe. Das Kaufskript bleibt auf Sandbox-Tests beschränkt.
-
-Sie haben einen CSV-Export? [Importieren Sie Ihre eigenen Versuche](onboarding/README.de.md) vor dem ersten Audit.
-
 [English](README.md) · [Français](README.fr.md)
 
 ALPNAI bietet autorisierten KI-Agenten deterministische Analysen von **Kosten, Latenz und Qualität**. Vergleichen Sie Varianten anhand derselben aufgezeichneten Aufgaben und speichern Sie berechnete Berichte in einem vom Inhaber freigegebenen Projekt. Prüfen Sie zuerst das öffentliche Beispiel, bevor Sie eigene Daten anbinden.
+
+Sie haben einen CSV-Export? [Importieren Sie Ihre eigenen Versuche](onboarding/README.de.md) vor dem ersten Audit.
+
+## Die passende Analyse für Ihren Agenten
+
+| Entscheidung | Werkzeug | Ergebnis |
+|---|---|---|
+| Kostet die neue Variante pro erfolgreicher Aufgabe weniger? | **Spend Proof** | Vergleich übereinstimmender Aufgaben, Wiederholungskosten und eine bedingte Projektion bei bestandenen Prüfungen. |
+| Welche Abläufe sind langsam oder benötigen viele Wiederholungen? | **Latency Lab** | Aufgezeichnete P50/P95, Dauerabdeckung, Wiederholungszahlen und optionale Latenzgrenze. |
+| Verschlechtert sich die neue Variante vor der Einführung? | **Quality Gate** | Beobachtete Erfolgsraten, Aufgaben- und Stichprobenprüfung sowie eine strukturierte Entscheidung. |
+
+**[Kostenloses Beispiel ansehen](https://alpnai.com/api/v1/performance-sample)** · [Über MCP verbinden](docs/de/mcp.md) · [Öffentlicher Glama-Konnektor](https://glama.ai/mcp/connectors/io.github.fredericmagnathy-ops/alpnai)
+
+Das Beispiel ist ohne Konto zugänglich. Eigene Messdaten erfordern einen aktiven Agentenschlüssel, den der Inhaber einmal aktiviert. Die Eingaben sind Messwerte, keine Prompts oder Antworten. Der Server liefert berechnetes JSON; Projects empfängt Berichte nach Freigabe. Kryptokäufe bleiben geschlossen; die kostenlosen Analysen sind verfügbar.
 
 ## Mit zwei GET-Anfragen prüfen
 
@@ -147,3 +151,11 @@ Bei 401/403 Zugang, Widerruf oder Budget prüfen. 409 bedeutet, dass dieselbe ID
 ## Lizenz und Kontakt
 
 Die [MIT-Lizenz](LICENSE) gilt nur für Python-Code. API-Daten, Quelldokumente, Marken und andere Inhalte fallen nicht darunter; dafür gelten die [Dienstbedingungen](https://alpnai.com/legal) und die Rechte der Originalquellen. Dieses Kit versendet keine Marketingnachrichten und veröffentlicht keine externen Einträge. Integrationskontakt: [frederic@alpnor.com](mailto:frederic@alpnor.com).
+
+## TypeScript-Kaufintegration
+
+Der [x402-Kaufclient](clients/x402-buyer/README.md) ist als Quellcode mit englischer Integrationsanleitung verfügbar. Er setzt eine bestehende Autorisierung des Inhabers, ein geeignetes Rechnungsprofil und einen Wallet-Adapter voraus. Er prüft das konkrete Angebot, behält dieselbe Kaufkennung und setzt die Auftragsabfrage nach einem Neustart fort. **Offline geprüft; die echte ALPNAI-Zahlungsannahme ist weiterhin geschlossen.** Er eröffnet kein Konto und erhöht kein Budget. Das folgende Python-Kaufbeispiel bleibt auf den Testmodus beschränkt.
+
+Angebote ohne Schlüssel prüfen: [Snapshot](https://alpnai.com/api/v1/offers/snapshot), [Change Set](https://alpnai.com/api/v1/offers/changes), [Evidence Pack](https://alpnai.com/api/v1/offers/evidence). Die öffentlichen Beschreibungen enthalten Katalogpreis, Zugangsvoraussetzungen, Liefervertrag und Verfügbarkeit. Sie sind keine zahlbaren x402-Angebote. Authentifizierungsfehler enthalten `offer_url` und einen `describedby`-Link zur Beschreibung.
+
+Der native MCP-x402-Transport ist implementiert: signierte Zahlungen verwenden params._meta["x402/payment"], bestätigte Belege result._meta["x402/payment-response"]. Siehe [MCP-Anleitung](docs/de/mcp.md). USDC-Zahlungen bleiben laut öffentlichem Katalog deaktiviert; das Transport-Update ist keine Verkaufsfreigabe. Das Kaufskript bleibt auf Sandbox-Tests beschränkt.

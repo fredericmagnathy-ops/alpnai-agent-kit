@@ -1,18 +1,22 @@
 # ALPNAI agent integration kit
 
-## TypeScript buyer integration
-
-The [x402 buyer client](clients/x402-buyer/README.md) is now available as source for agents with an existing owner authorization, billing qualification and wallet adapter. It validates the exact quote, preserves the same purchase identity and resumes pending order checks after restart. **Offline validated; live ALPNAI collection is currently closed.** It never opens an account, changes spending permissions or purchases on its own. The Python purchase example below remains sandbox-only.
-
-Inspect an offer without a key: [Snapshot](https://alpnai.com/api/v1/offers/snapshot), [Change Set](https://alpnai.com/api/v1/offers/changes), [Evidence Pack](https://alpnai.com/api/v1/offers/evidence). Each public descriptor gives the catalog price, access requirements, delivery contract and current availability. It is not a payable x402 quotation. Protected purchase errors include an `offer_url` and a `Link: rel="describedby"` to the corresponding descriptor.
-
-Native MCP x402 transport is implemented: signed payloads use params._meta["x402/payment"], and confirmed receipts use result._meta["x402/payment-response"]. See the [MCP guide](docs/en/mcp.md). Commercial USDC collection remains disabled in the live catalogue; this transport update is not a paid launch. The included purchase script still performs sandbox tests only.
-
-Have a CSV export? [Import your own attempts](onboarding/README.md) before your first audit.
-
 [Français](README.fr.md) · [Deutsch](README.de.md)
 
 ALPNAI gives authorized AI agents deterministic **cost, latency and quality analyses**. Compare variants on the same recorded tasks, then deliver a computed report to an owner-authorized project. Start by checking the public example before connecting your own data.
+
+Have a CSV export? [Import your own attempts](onboarding/README.md) before your first audit.
+
+## Choose the analysis your agent needs
+
+| Decision | Tool | Delivered result |
+|---|---|---|
+| Is the candidate cheaper per successful task? | **Spend Proof** | Paired-task cost comparison, retry costs and a conditional opportunity when the gates pass. |
+| Which workflows are slow or retry-heavy? | **Latency Lab** | Recorded P50/P95, duration coverage, retry counts and an optional latency threshold check. |
+| Does the candidate regress before rollout? | **Quality Gate** | Observed success rates, matched-task and sample checks, and a structured next-step decision. |
+
+**[Inspect the free example](https://alpnai.com/api/v1/performance-sample)** · [Connect through MCP](docs/en/mcp.md) · [Public Glama connector](https://glama.ai/mcp/connectors/io.github.fredericmagnathy-ops/alpnai)
+
+The example needs no account. Analyses of your own records require an active agent key; the owner activates it once. Inputs are measurements, not prompts or answers. The server returns computed JSON, and Projects can receive reports after an owner grant. Cryptocurrency purchases are currently closed; the free analyses are available.
 
 ## Evaluate in two GET requests
 
@@ -147,3 +151,11 @@ Errors 401/403 require reviewing access, revocation or budget; 409 means an ID w
 ## License and contact
 
 The [MIT license](LICENSE) covers Python code only. API data, source documents, trademarks and other assets are outside that grant; consult [service terms](https://alpnai.com/legal) and the original sources. This kit sends no marketing messages and performs no external listings. Integration contact: [frederic@alpnor.com](mailto:frederic@alpnor.com).
+
+## TypeScript buyer integration
+
+The [x402 buyer client](clients/x402-buyer/README.md) is now available as source for agents with an existing owner authorization, billing qualification and wallet adapter. It validates the exact quote, preserves the same purchase identity and resumes pending order checks after restart. **Offline validated; live ALPNAI collection is currently closed.** It never opens an account, changes spending permissions or purchases on its own. The Python purchase example below remains sandbox-only.
+
+Inspect an offer without a key: [Snapshot](https://alpnai.com/api/v1/offers/snapshot), [Change Set](https://alpnai.com/api/v1/offers/changes), [Evidence Pack](https://alpnai.com/api/v1/offers/evidence). Each public descriptor gives the catalog price, access requirements, delivery contract and current availability. It is not a payable x402 quotation. Protected purchase errors include an `offer_url` and a `Link: rel="describedby"` to the corresponding descriptor.
+
+Native MCP x402 transport is implemented: signed payloads use params._meta["x402/payment"], and confirmed receipts use result._meta["x402/payment-response"]. See the [MCP guide](docs/en/mcp.md). Commercial USDC collection remains disabled in the live catalogue; this transport update is not a paid launch. The included purchase script still performs sandbox tests only.

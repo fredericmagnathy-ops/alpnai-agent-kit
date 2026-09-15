@@ -1,6 +1,6 @@
 {
   "prepared_at": "2026-09-15",
-  "kit_version": "0.5.0",
+  "kit_version": "0.5.1",
   "source_type": "Local application contract snapshot; not a live API response",
   "target_origin": "https://alpnai.com",
   "hosted_public_access_confirmed": true,
@@ -11,7 +11,7 @@
     "lib/purchase.ts": "eee690a95815a73f6a852fde2ab2b7f0ffe477446996ff3e158ae1638fb0eba6",
     "public/openapi.json": "e1d6c8d68032fc636695eeeac34b6020af03ddd0303a3471f873015c62100cfd",
     "app/api/operator/check-sources/route.ts": "a5c074a28f80df9ec55b2a34db5a75f00b8c8655e569fb7a387ae749e5563b4f",
-    "app/mcp/route.ts": "1c3aec961301a2cd6afdcaf493961e21ca9812fb5bbfefb03a204dc9e70e4dc4",
+    "app/mcp/route.ts": "3159b24c90a0df3917472ddb1fff31ecb0fec652515735d79b7db692dbf8d1d4",
     "app/api/operator/growth/route.ts": "46685313c08b09d5e80c9eda294ba75f813b323eda8f151ed8d49565c9c91548",
     "lib/growth-metrics.ts": "7d061591cf1d5332615ab0d7fd56fdd0db73894d395d8909b4e1ad29272e3210",
     "app/api/v1/sample/route.ts": "f38f94d9d9a4d939defee6e9509144e1e91345fa9de829aa218f83dbe03bbee2",
@@ -25,7 +25,8 @@
     "public/examples/verify-performance-sample.mjs": "9270d1b79041cb01e2b933b63631db9fe33a3f6cb26fd6b2f5207a4d0aab78cc",
     "lib/agent-offers.ts": "a83c38b1efe75d8840d70ef67237a06ce0e42f61026f884b16cafb500174dc1f",
     "app/api/v1/offers/[product]/route.ts": "a8cee509a1d4d9f7325731cd66e715cd4196f7084732d9c2623f5c917c644d17",
-    "lib/payments/follow-up.ts": "b6a99f6a77dd34d33ebdc02a8e90693d6ce3719a1f55ad4da7ac7d2324e7f264"
+    "lib/payments/follow-up.ts": "b6a99f6a77dd34d33ebdc02a8e90693d6ce3719a1f55ad4da7ac7d2324e7f264",
+    "public/.well-known/mcp/server-card.json": "b57b2ddcdd9bd54e314abb588174024ce0feefc6f7fbbf309d4313c607832569"
   },
   "catalog_sample_prices_verified_against": "lib/data.ts",
   "mcp_example_protocol_version": "2026-07-28",
@@ -71,7 +72,7 @@
   "projects_agent_scope": "Owner-opt-in write-only fixed project; shared quota; no reading, deletion or billing.",
   "historical_validation": "38 offline synthetic mock/loopback tests passed: 10 purchase-client, 18 cloud-check and 10 audit-client tests. No live audit, purchases, wallet transactions or workflow execution performed by this revision.",
   "validation": "v29: 37 MCP transport tests, 13 real SQLite recovery tests, 38 catalog/sample tests, 5 public-offer tests and 28 kit cloud tests passed. External providers and monetary calls simulated; no real payment or signing.",
-  "application_preparation_target": "v29",
+  "application_preparation_target": "v30",
   "public_evaluation": {
     "endpoint": "/api/v1/performance-sample",
     "fixture": "examples/performance.sample.json",
@@ -191,5 +192,43 @@
     "onboarding_automated": false,
     "public_bazaar_metadata": "Exact reviewed static declaration only; no buyer credential or order identity"
   },
-  "previous_validation": "v28 public offer contracts verified live using anonymous GET only. The standalone TypeScript buyer was validated with 18 offline tests, including real SDK quote construction and mocked transport. No real wallet signature, purchase or settlement."
+  "previous_validation": "v28 public offer contracts verified live using anonymous GET only. The standalone TypeScript buyer was validated with 18 offline tests, including real SDK quote construction and mocked transport. No real wallet signature, purchase or settlement.",
+  "discovery_metadata_validation": {
+    "source_commit": "3a1e8f5167aa1e5c4f37c2029f322f6b1860d1bb",
+    "checked_at": "2026-09-15T03:37:46.341Z",
+    "mcp_http_status": 200,
+    "server_card_http_status": 200,
+    "tool_count": 10,
+    "card_version": "0.1.1",
+    "card_matches_live_tools": true,
+    "purchase_called": false,
+    "descriptions": [
+      {
+        "name": "analyze_agent_latency",
+        "description": "Find slow agent workflows and retry overhead before scaling. Supply recorded attempts with task_id, workflow, variant, cost_usd, success and optional latency_ms. Returns P50/P95 of summed recorded attempt durations per task, retry counts, duration coverage and an optional P95 threshold check for each workflow and variant. Missing durations produce null percentiles, not zero latency. This measures supplied durations, not live end-to-end service latency. Free calculation; requires an active ALPNAI agent key; no payment or automatic deployment."
+      },
+      {
+        "name": "check_agent_quality",
+        "description": "Check whether a candidate agent workflow regresses before replacing the baseline. Supply baseline and candidate attempts on matching task IDs with client-provided success labels and costs. Returns observed success rates, task-set matching, sample-size, success, latency and cost gates, plus a decision such as collect_more_data, quality_regression or candidate_for_controlled_trial. Optional thresholds use config. It evaluates the recorded labels, not the correctness of answers or future performance. Free calculation; requires an active ALPNAI agent key; no payment or automatic deployment."
+      }
+    ]
+  },
+  "discovery_channels": {
+    "glama": {
+      "url": "https://glama.ai/mcp/connectors/io.github.fredericmagnathy-ops/alpnai",
+      "public_listing_verified": true,
+      "observed_tool_count": 10,
+      "owner_claim_completed": false
+    },
+    "github_topics_added": [
+      "mcp-server",
+      "model-context-protocol",
+      "ai-agents",
+      "agent-tools",
+      "llm-evaluation",
+      "latency",
+      "cost-analysis",
+      "x402"
+    ]
+  }
 }
