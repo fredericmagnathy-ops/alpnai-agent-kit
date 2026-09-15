@@ -1,5 +1,11 @@
 # ALPNAI agent integration kit
 
+## TypeScript buyer integration
+
+The [x402 buyer client](clients/x402-buyer/README.md) is now available as source for agents with an existing owner authorization, billing qualification and wallet adapter. It validates the exact quote, preserves the same purchase identity and resumes pending order checks after restart. **Offline validated; live ALPNAI collection is currently closed.** It never opens an account, changes spending permissions or purchases on its own. The Python purchase example below remains sandbox-only.
+
+Inspect an offer without a key: [Snapshot](https://alpnai.com/api/v1/offers/snapshot), [Change Set](https://alpnai.com/api/v1/offers/changes), [Evidence Pack](https://alpnai.com/api/v1/offers/evidence). Each public descriptor gives the catalog price, access requirements, delivery contract and current availability. It is not a payable x402 quotation. Protected purchase errors include an `offer_url` and a `Link: rel="describedby"` to the corresponding descriptor.
+
 Native MCP x402 transport is implemented: signed payloads use params._meta["x402/payment"], and confirmed receipts use result._meta["x402/payment-response"]. See the [MCP guide](docs/en/mcp.md). Commercial USDC collection remains disabled in the live catalogue; this transport update is not a paid launch. The included purchase script still performs sandbox tests only.
 
 Have a CSV export? [Import your own attempts](onboarding/README.md) before your first audit.

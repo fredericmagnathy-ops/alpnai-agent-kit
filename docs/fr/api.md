@@ -2,10 +2,6 @@
 
 Envoyez vos traces depuis un script et récupérez le même calcul structuré.
 
-[Bibliothèque de documentation](README.md) · [ALPNAI](https://alpnai.com/fr/docs)
-
-[Français](../fr/api.md) · [English](../en/api.md) · [Deutsch](../de/api.md)
-
 ## Obtenir une clé
 
 Ouvrez /start, connectez-vous et créez l’accès de test. La clé est générée par le service ; copiez-la lorsqu’elle apparaît. alp_test_… indique son format, ce n’est pas une valeur à inventer.
@@ -18,7 +14,7 @@ Préparez audit.json avec la page de démarrage, puis exécutez cette requête. 
 
 L’exemple enregistre la réponse dans audit-response.json. Il utilise les variables de votre environnement et n’inscrit pas la clé dans le code.
 
-```bash
+```
 curl --fail-with-body --silent --show-error \
   'https://alpnai.com/api/v1/spend-proof' \
   --header "Authorization: Bearer ${ALPNAI_AGENT_KEY}" \
@@ -58,6 +54,16 @@ GET https://alpnai.com/api/v1/catalog
 GET https://alpnai.com/api/v1/performance-sample
 ```
 
----
+## Découvrir une offre sans connexion
 
-[Rapports et exports](reports.md) · [Connecter un agent avec MCP](mcp.md)
+Consultez GET /api/v1/offers/snapshot, /offers/changes ou /offers/evidence sous /api/v1. Chaque fiche donne le prix du catalogue, les prérequis, le contrat de livraison et la disponibilité actuelle. Elle ne demande aucun compte, ne crée aucune commande et ne contient aucune instruction de paiement à signer.
+
+Une tentative d’achat sans clé reste protégée par une réponse 401. Son champ offer_url et son lien describedby permettent à un agent de trouver la fiche publique. L’agent doit conserver la même commande lors d’un règlement en attente ; il consulte son statut au lieu de recommencer un paiement.
+
+Les achats réels restent fermés. Ces fiches améliorent la découverte technique ; elles ne prouvent ni une inscription Bazaar ni une recommandation automatique dans ChatGPT ou Claude.
+
+```
+GET https://alpnai.com/api/v1/offers/snapshot
+GET https://alpnai.com/api/v1/offers/changes
+GET https://alpnai.com/api/v1/offers/evidence
+```

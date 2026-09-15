@@ -1,0 +1,16 @@
+{
+  "name": "alpnai-buyer-client-draft",
+  "private": true,
+  "version": "0.0.0-draft",
+  "type": "module",
+  "engines": { "node": ">=22.13.0" },
+  "exports": {
+    ".": { "types": "./dist/src/client.d.ts", "import": "./dist/src/client.js" },
+    "./official-factory": { "types": "./dist/src/official-factory.d.ts", "import": "./dist/src/official-factory.js" },
+    "./file-journal": { "types": "./dist/src/file-journal.d.ts", "import": "./dist/src/file-journal.js" }
+  },
+  "files": ["dist/src", "README.md"],
+  "scripts": { "build": "tsc -p tsconfig.json", "test": "npm run build && node --test dist/test/*.test.js" },
+  "dependencies": { "@x402/core": "2.25.0", "@x402/evm": "2.25.0" },
+  "devDependencies": { "@types/node": "22.19.19", "typescript": "5.9.3" }
+}

@@ -2,10 +2,6 @@
 
 Submit records from a script and retrieve the same structured calculation.
 
-[Documentation library](README.md) · [ALPNAI](https://alpnai.com/en/docs)
-
-[Français](../fr/api.md) · [English](../en/api.md) · [Deutsch](../de/api.md)
-
 ## Get a key
 
 Open /start, sign in and create test access. The service generates the key; copy it when shown. alp_test_… describes its format, not a value to invent.
@@ -18,7 +14,7 @@ Prepare audit.json using the quickstart, then run this request. POST /api/v1/spe
 
 The example saves the response as audit-response.json. It reads your environment variable instead of embedding the key in code.
 
-```bash
+```
 curl --fail-with-body --silent --show-error \
   'https://alpnai.com/api/v1/spend-proof' \
   --header "Authorization: Bearer ${ALPNAI_AGENT_KEY}" \
@@ -58,6 +54,16 @@ GET https://alpnai.com/api/v1/catalog
 GET https://alpnai.com/api/v1/performance-sample
 ```
 
----
+## Discover an offer without signing in
 
-[Reports and exports](reports.md) · [Connect an agent with MCP](mcp.md)
+Read GET /api/v1/offers/snapshot, /offers/changes or /offers/evidence under /api/v1. Each descriptor exposes the catalog price, access prerequisites, delivery contract and current availability. No account is needed; it creates no order and contains no payable quotation to sign.
+
+Purchases without a key still return 401. The offer_url field and describedby link let an agent find the public descriptor. For a pending payment, retain the same order and poll its status instead of initiating another payment.
+
+Real purchases remain closed. These descriptors improve technical discovery; they do not prove Bazaar registration or automatic recommendations in ChatGPT or Claude.
+
+```
+GET https://alpnai.com/api/v1/offers/snapshot
+GET https://alpnai.com/api/v1/offers/changes
+GET https://alpnai.com/api/v1/offers/evidence
+```

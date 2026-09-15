@@ -2,10 +2,6 @@
 
 Senden Sie Aufzeichnungen per Skript und erhalten Sie dieselbe strukturierte Berechnung.
 
-[Dokumentationsbibliothek](README.md) · [ALPNAI](https://alpnai.com/de/docs)
-
-[Français](../fr/api.md) · [English](../en/api.md) · [Deutsch](../de/api.md)
-
 ## Einen Schlüssel erhalten
 
 Öffnen Sie /start, melden Sie sich an und erstellen Sie den Testzugang. Kopieren Sie den vom Dienst erzeugten Schlüssel bei der Anzeige. alp_test_… beschreibt nur das Format.
@@ -18,7 +14,7 @@ Erstellen Sie audit.json mit der Kurzanleitung und führen Sie die Anfrage aus. 
 
 Das Beispiel speichert die Antwort als audit-response.json und liest den Schlüssel aus der Umgebung statt aus dem Quelltext.
 
-```bash
+```
 curl --fail-with-body --silent --show-error \
   'https://alpnai.com/api/v1/spend-proof' \
   --header "Authorization: Bearer ${ALPNAI_AGENT_KEY}" \
@@ -58,6 +54,16 @@ GET https://alpnai.com/api/v1/catalog
 GET https://alpnai.com/api/v1/performance-sample
 ```
 
----
+## Ein Angebot ohne Anmeldung prüfen
 
-[Berichte und Exporte](reports.md) · [Einen Agenten über MCP verbinden](mcp.md)
+Lesen Sie GET /api/v1/offers/snapshot, /offers/changes oder /offers/evidence unter /api/v1. Jede Beschreibung enthält Katalogpreis, Zugangsvoraussetzungen, Liefervertrag und aktuelle Verfügbarkeit. Sie erfordert kein Konto, erstellt keine Bestellung und enthält keine zu unterzeichnende Zahlungsaufforderung.
+
+Kaufanfragen ohne Schlüssel erhalten weiterhin 401. Das Feld offer_url und der describedby-Link führen den Agenten zur öffentlichen Beschreibung. Bei einer ausstehenden Zahlung dieselbe Bestellung beibehalten und ihren Status abfragen, statt erneut zu bezahlen.
+
+Reale Käufe bleiben geschlossen. Diese Beschreibungen verbessern die technische Auffindbarkeit; sie belegen weder einen Bazaar-Eintrag noch automatische Empfehlungen in ChatGPT oder Claude.
+
+```
+GET https://alpnai.com/api/v1/offers/snapshot
+GET https://alpnai.com/api/v1/offers/changes
+GET https://alpnai.com/api/v1/offers/evidence
+```

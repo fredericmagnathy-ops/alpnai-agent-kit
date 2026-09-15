@@ -3,7 +3,7 @@
   "info": {
     "title": "ALPNAI Agent API",
     "version": "0.1.0",
-    "description": "Analyze supplied AI-agent measurements and save aggregate reports with an explicit Projects owner grant. Free analysis endpoints do not persist reports. Evidence purchase endpoints remain sandbox-only. No cryptocurrency settlement through this contract.",
+    "description": "Analyze supplied AI-agent measurements and save aggregate reports with an explicit Projects owner grant. Evidence calls default to sandbox. Live x402 requires current commercial availability, an owner-authorized mandate and an approved billing profile. Read /api/v1/catalog for current availability; live collection remains closed until commercial activation.",
     "contact": {
       "email": "frederic@alpnor.com"
     }
@@ -17,7 +17,7 @@
     "/api/v1/snapshot": {
       "get": {
         "operationId": "purchase_snapshot",
-        "summary": "Sandbox purchase. No real settlement.",
+        "summary": "Evidence purchase with explicit mode and current eligibility checks",
         "security": [
           {
             "AgentKey": []
@@ -31,9 +31,11 @@
             "schema": {
               "type": "string",
               "enum": [
-                "sandbox"
+                "sandbox",
+                "live"
               ]
-            }
+            },
+            "description": "Use live explicitly for x402. Commercial activation, owner mandate and billing eligibility are required."
           },
           {
             "in": "header",
@@ -43,11 +45,30 @@
               "type": "string",
               "pattern": "^[A-Za-z0-9_-]{8,100}$"
             }
+          },
+          {
+            "name": "X-AlpNAI-Mandate",
+            "in": "header",
+            "required": false,
+            "description": "Required in live mode: an active owner-authorized mandate for this agent.",
+            "schema": {
+              "type": "string",
+              "pattern": "^[-a-zA-Z0-9]{8,80}$"
+            }
+          },
+          {
+            "name": "PAYMENT-SIGNATURE",
+            "in": "header",
+            "required": false,
+            "description": "x402 v2 signed exact payment payload. Only submit after checking the original 402 quote and owner wallet policy. Never send a private key.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Sandbox receipt and evidence"
+            "description": "Sandbox receipt, or a finalized live receipt with its result. Inspect settled and network."
           },
           "400": {
             "description": "Invalid input"
@@ -62,15 +83,30 @@
             "description": "Idempotency conflict"
           },
           "503": {
-            "description": "Service or live payment unavailable"
+            "description": "Commerce unavailable or billing qualification required; no payment requested."
+          },
+          "202": {
+            "description": "Payment confirmation pending. Poll the same order; do not send a second payment."
+          },
+          "402": {
+            "description": "Exact x402 payment challenge with frozen price, terms and expiry. No paid result delivered.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Base64 x402 v2 payment requirements"
+              }
+            }
           }
-        }
+        },
+        "description": "Read /api/v1/offers/snapshot first for public price, access and availability metadata. Authentication errors include this URL as offer_url and in Link rel=describedby. Only an eligible authenticated live request can receive a payable x402 challenge."
       }
     },
     "/api/v1/changes": {
       "get": {
         "operationId": "purchase_changes",
-        "summary": "Sandbox purchase. No real settlement.",
+        "summary": "Evidence purchase with explicit mode and current eligibility checks",
         "security": [
           {
             "AgentKey": []
@@ -84,9 +120,11 @@
             "schema": {
               "type": "string",
               "enum": [
-                "sandbox"
+                "sandbox",
+                "live"
               ]
-            }
+            },
+            "description": "Use live explicitly for x402. Commercial activation, owner mandate and billing eligibility are required."
           },
           {
             "in": "header",
@@ -104,11 +142,30 @@
               "type": "string",
               "format": "date"
             }
+          },
+          {
+            "name": "X-AlpNAI-Mandate",
+            "in": "header",
+            "required": false,
+            "description": "Required in live mode: an active owner-authorized mandate for this agent.",
+            "schema": {
+              "type": "string",
+              "pattern": "^[-a-zA-Z0-9]{8,80}$"
+            }
+          },
+          {
+            "name": "PAYMENT-SIGNATURE",
+            "in": "header",
+            "required": false,
+            "description": "x402 v2 signed exact payment payload. Only submit after checking the original 402 quote and owner wallet policy. Never send a private key.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Sandbox receipt and evidence"
+            "description": "Sandbox receipt, or a finalized live receipt with its result. Inspect settled and network."
           },
           "400": {
             "description": "Invalid input"
@@ -123,15 +180,30 @@
             "description": "Idempotency conflict"
           },
           "503": {
-            "description": "Service or live payment unavailable"
+            "description": "Commerce unavailable or billing qualification required; no payment requested."
+          },
+          "202": {
+            "description": "Payment confirmation pending. Poll the same order; do not send a second payment."
+          },
+          "402": {
+            "description": "Exact x402 payment challenge with frozen price, terms and expiry. No paid result delivered.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Base64 x402 v2 payment requirements"
+              }
+            }
           }
-        }
+        },
+        "description": "Read /api/v1/offers/changes first for public price, access and availability metadata. Authentication errors include this URL as offer_url and in Link rel=describedby. Only an eligible authenticated live request can receive a payable x402 challenge."
       }
     },
     "/api/v1/evidence": {
       "get": {
         "operationId": "purchase_evidence",
-        "summary": "Sandbox purchase. No real settlement.",
+        "summary": "Evidence purchase with explicit mode and current eligibility checks",
         "security": [
           {
             "AgentKey": []
@@ -145,9 +217,11 @@
             "schema": {
               "type": "string",
               "enum": [
-                "sandbox"
+                "sandbox",
+                "live"
               ]
-            }
+            },
+            "description": "Use live explicitly for x402. Commercial activation, owner mandate and billing eligibility are required."
           },
           {
             "in": "header",
@@ -157,11 +231,30 @@
               "type": "string",
               "pattern": "^[A-Za-z0-9_-]{8,100}$"
             }
+          },
+          {
+            "name": "X-AlpNAI-Mandate",
+            "in": "header",
+            "required": false,
+            "description": "Required in live mode: an active owner-authorized mandate for this agent.",
+            "schema": {
+              "type": "string",
+              "pattern": "^[-a-zA-Z0-9]{8,80}$"
+            }
+          },
+          {
+            "name": "PAYMENT-SIGNATURE",
+            "in": "header",
+            "required": false,
+            "description": "x402 v2 signed exact payment payload. Only submit after checking the original 402 quote and owner wallet policy. Never send a private key.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Sandbox receipt and evidence"
+            "description": "Sandbox receipt, or a finalized live receipt with its result. Inspect settled and network."
           },
           "400": {
             "description": "Invalid input"
@@ -176,9 +269,24 @@
             "description": "Idempotency conflict"
           },
           "503": {
-            "description": "Service or live payment unavailable"
+            "description": "Commerce unavailable or billing qualification required; no payment requested."
+          },
+          "202": {
+            "description": "Payment confirmation pending. Poll the same order; do not send a second payment."
+          },
+          "402": {
+            "description": "Exact x402 payment challenge with frozen price, terms and expiry. No paid result delivered.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Base64 x402 v2 payment requirements"
+              }
+            }
           }
-        }
+        },
+        "description": "Read /api/v1/offers/evidence first for public price, access and availability metadata. Authentication errors include this URL as offer_url and in Link rel=describedby. Only an eligible authenticated live request can receive a payable x402 challenge."
       }
     },
     "/api/v1/catalog": {
@@ -2855,6 +2963,116 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/v1/offers/{product}": {
+      "get": {
+        "operationId": "get_public_offer",
+        "summary": "Inspect product access, price and availability without authentication or payment",
+        "description": "This ALPNAI descriptor is not an x402 PaymentRequired response. Never sign or transfer funds using it. Follow the access prerequisites to request an authenticated, order-bound quote when commercial routes are open.",
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "product",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "snapshot",
+                "changes",
+                "evidence"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Public service metadata; no order, billing verification, signature or payment is created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "kind",
+                    "id",
+                    "purchase",
+                    "pricing",
+                    "discovery",
+                    "delivery"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "service_offer"
+                    },
+                    "id": {
+                      "type": "string",
+                      "enum": [
+                        "snapshot",
+                        "changes",
+                        "evidence"
+                      ]
+                    },
+                    "purchase": {
+                      "type": "object",
+                      "required": [
+                        "route_enabled",
+                        "mainnet_enabled",
+                        "account_eligibility_checked",
+                        "anonymous_purchase_supported"
+                      ],
+                      "properties": {
+                        "route_enabled": {
+                          "type": "boolean"
+                        },
+                        "mainnet_enabled": {
+                          "type": "boolean"
+                        },
+                        "account_eligibility_checked": {
+                          "const": false
+                        },
+                        "anonymous_purchase_supported": {
+                          "const": false
+                        }
+                      }
+                    },
+                    "discovery": {
+                      "type": "object",
+                      "required": [
+                        "payment_required",
+                        "payment_authorized",
+                        "product_data_included"
+                      ],
+                      "properties": {
+                        "payment_required": {
+                          "const": false
+                        },
+                        "payment_authorized": {
+                          "const": false
+                        },
+                        "product_data_included": {
+                          "const": false
+                        }
+                      }
+                    },
+                    "pricing": {
+                      "type": "object"
+                    },
+                    "delivery": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Query parameters are not accepted."
+          },
+          "404": {
+            "description": "Unknown product."
           }
         }
       }

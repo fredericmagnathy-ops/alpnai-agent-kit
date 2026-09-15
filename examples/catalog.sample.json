@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1.0",
+  "schema_version": "1.4.0",
   "brand": "ALPNAI",
   "operator": "Frederic Madureira Rodrigues / SWISS International",
   "purpose": "Deterministic cost, latency and quality analysis for authorized AI agents.",
@@ -16,6 +16,7 @@
       "description": "Versioned facts and source references for the OpenAI IPO.",
       "path": "/api/v1/snapshot",
       "method": "GET",
+      "offer_url": "https://alpnai.com/api/v1/offers/snapshot",
       "category": "curated_source_evidence",
       "availability": "sandbox_only",
       "result_format": "application/json",
@@ -29,6 +30,7 @@
       "description": "Dated events after a supplied date within the maintained collection.",
       "path": "/api/v1/changes",
       "method": "GET",
+      "offer_url": "https://alpnai.com/api/v1/offers/changes",
       "category": "curated_source_evidence",
       "availability": "sandbox_only",
       "result_format": "application/json",
@@ -42,6 +44,7 @@
       "description": "Facts, chronology, unknown fields and evidence provenance.",
       "path": "/api/v1/evidence",
       "method": "GET",
+      "offer_url": "https://alpnai.com/api/v1/offers/evidence",
       "category": "curated_source_evidence",
       "availability": "sandbox_only",
       "result_format": "application/json",
@@ -176,7 +179,7 @@
   "commerce": {
     "routes_enabled": false,
     "mainnet_enabled": false,
-    "mandate_preparation_enabled": false,
+    "mandate_preparation_enabled": true,
     "required_before_payment": [
       "active_agent_key",
       "owner_signed_budget_mandate",
@@ -184,14 +187,35 @@
       "approved_billing_review",
       "exact_payment_authorization"
     ],
-    "automatic_billing_qualification": false,
-    "billing_review": "operator_required",
-    "mcp_purchase_mode": "sandbox",
+    "automatic_billing_qualification": true,
+    "billing_review": "automatic_eu_gb_business_or_operator_exception",
+    "billing_qualification": {
+      "setup": "/account#billing",
+      "status": "/api/account/billing/qualify",
+      "scope": "Verified EU/UK business use of standard digital information APIs; configured Swiss seller establishment required.",
+      "evidence": "Provider-verified VAT number with registered name/address match, bound to saved profile, seller, terms and ruleset.",
+      "renewal": "Automatically at a subsequent purchase after dated evidence expires, under the existing unchanged-profile consent.",
+      "payment_authorized": false
+    },
+    "mcp_purchase_mode": "explicit_live_or_sandbox",
+    "mcp_default_mode": "sandbox",
+    "mcp_live_supported": true,
+    "mcp_live_available": false,
+    "payment_transport": "MCP _meta x402 with optional HTTP continuation",
+    "mcp_payment_metadata": "x402/payment",
+    "mcp_settlement_metadata": "x402/payment-response",
     "status": "commercial_activation_pending"
   },
   "mcp": "/api/mcp",
   "docs": "/en/docs/introduction",
   "openapi": "/openapi.json",
   "terms": "/en/legal/terms",
-  "integration_kit": "https://github.com/fredericmagnathy-ops/alpnai-agent-kit"
+  "integration_kit": "https://github.com/fredericmagnathy-ops/alpnai-agent-kit",
+  "discovery": {
+    "offers": "/api/v1/offers/{product}",
+    "authentication_required": false,
+    "payment_required": false,
+    "anonymous_purchases": false,
+    "description": "Public descriptions expose price, access requirements and availability; they are not payable x402 quotations."
+  }
 }

@@ -1,5 +1,11 @@
 # Kit d'intégration ALPNAI pour agents
 
+## Intégration acheteur TypeScript
+
+Le [client d’achat x402](clients/x402-buyer/README.md) est disponible en code source, avec un guide technique en anglais. Il s’adresse aux agents disposant déjà d’une autorisation du titulaire, d’un profil de facturation admissible et d’un adaptateur de portefeuille. Il vérifie le devis exact, conserve l’identité de l’achat et reprend le suivi d’une commande après redémarrage. **Validé hors ligne ; l’encaissement ALPNAI reste fermé.** Il ne crée aucun compte et n’élargit aucun budget. L’exemple Python ci-dessous reste réservé au mode de test.
+
+Consultez une offre sans clé : [Snapshot](https://alpnai.com/api/v1/offers/snapshot), [Change Set](https://alpnai.com/api/v1/offers/changes), [Evidence Pack](https://alpnai.com/api/v1/offers/evidence). Chaque fiche publique expose le prix du catalogue, les conditions d’accès, le livrable et la disponibilité. Elle ne constitue pas un devis x402 payable. Les erreurs d’authentification contiennent le champ `offer_url` et un lien `describedby` vers la fiche.
+
 Le transport MCP x402 natif est implémenté : les paiements signés passent par params._meta["x402/payment"] et les reçus confirmés par result._meta["x402/payment-response"]. Voir le [guide MCP](docs/fr/mcp.md). Les encaissements USDC restent désactivés dans le catalogue public ; cette mise à jour ne constitue pas une ouverture commerciale. Le script d’achat du kit reste limité aux tests.
 
 Vous avez un export CSV ? [Convertissez vos propres tentatives](onboarding/README.fr.md) avant le premier audit.
