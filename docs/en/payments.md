@@ -2,10 +2,6 @@
 
 Distinguish Projects card subscriptions, free analysis and USDC purchases still in test mode.
 
-[Documentation library](README.md) · [ALPNAI](https://alpnai.com/en/docs)
-
-[Français](../fr/payments.md) · [English](../en/payments.md) · [Deutsch](../de/payments.md)
-
 ## What can be used today
 
 Spend Proof, Latency Lab and Quality Gate offer free calculations. Projects is a private ChatGPT-authenticated workspace with three saved reports free for the lifetime of the account and Stripe subscriptions open on the website. The Evidence pilot lets you try API/MCP purchases with a key and a simulated budget.
@@ -68,6 +64,8 @@ The proposed payment is USDC on Base into the seller’s wallet, accessible thro
 
 This route does not depend on Coinbase Business. The conversion provider must accept the seller’s activity and bank account; its rates, fees and timing apply. The customer buys a service, not an investment, return or IPO allocation.
 
----
+## Automatic business verification
 
-[Automate report delivery](projects-automation.md) · [Data and access](security.md)
+If you request business verification, your VAT number is sent to Stripe in a technical record separate from your Projects subscription. With your business-use and VAT-territory confirmation, ALPNAI compares the registry name and address with your saved profile. The system retains your declaration, technical references, dated result, registry data needed for the comparison and applied rule. Evidence expires no later than 24 hours after verification started; with your consent, a new generation is requested on a later purchase using the unchanged profile. Reading an old response does not renew evidence. These data are not published or sent to the blockchain. Deleting or editing the profile prevents new purchases under its previous version without rewriting retained evidence or documents. Access or deletion can be requested subject to applicable rights and retention obligations; these verification records currently have no automatic purge.
+
+In Account → Billing profile, save legal details, confirm business use and VAT territory, then start verification. qualified means the profile satisfies the rule; it is not payment evidence. USDC services remain closed until commercial activation.

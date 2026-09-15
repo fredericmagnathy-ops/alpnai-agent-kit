@@ -2,10 +2,6 @@
 
 Découvrez les outils et appelez audit_agent_costs sur vos traces.
 
-[Bibliothèque de documentation](README.md) · [ALPNAI](https://alpnai.com/fr/docs)
-
-[Français](../fr/mcp.md) · [English](../en/mcp.md) · [Deutsch](../de/mcp.md)
-
 ## Adresse et protocole
 
 Utilisez POST https://alpnai.com/api/mcp. Le serveur expose MCP 2026-07-28 avec server/discover pour la découverte et des réponses JSON. Il accepte aussi les clients MCP 2025-11-25, 2025-06-18 et 2025-03-26 via initialize.
@@ -20,7 +16,7 @@ Les clients 2025 utilisent initialize, notifications/initialized, puis tools/lis
 
 get_catalog et get_free_sample servent à découvrir le pilote. audit_agent_costs, analyze_agent_latency et check_agent_quality exécutent respectivement Spend Proof, Latency Lab et Quality Gate gratuitement avec une clé active. Les trois acceptent runs et config.
 
-purchase_snapshot, purchase_changes et purchase_evidence simulent des achats Evidence et consomment un budget fictif. Ils attendent idempotency_key ; purchase_changes peut aussi recevoir since au format YYYY-MM-DD. Le serveur expose ainsi neuf outils.
+purchase_snapshot, purchase_changes et purchase_evidence utilisent par défaut le mode sandbox et consomment un budget de test. Ils attendent idempotency_key ; purchase_changes peut aussi recevoir since au format YYYY-MM-DD. Le serveur expose ainsi neuf outils.
 
 save_project_report calcule et enregistre un rapport dans le projet autorisé explicitement par son titulaire, avec le quota Projects existant. Il attend request_id, title et input. Guide : https://alpnai.com/fr/docs/projects-automation.
 
@@ -89,6 +85,23 @@ GET https://alpnai.com/api/v1/catalog
 GET https://alpnai.com/api/v1/performance-sample
 ```
 
----
+## Demander un achat depuis MCP
 
-[API HTTP](api.md) · [Automatiser la livraison de rapports](projects-automation.md)
+Le serveur accepte mode: sandbox (par défaut) ou mode: live demandé explicitement. Le mode live ne contourne ni la disponibilité commerciale publiée dans get_catalog, ni le mandat du propriétaire, ni la qualification de facturation. Les encaissements USDC restent actuellement fermés.
+
+Transmettez la clé dans Authorization: Bearer et le mandat dans mandate_id ou X-AlpNAI-Mandate. Si un devis devient disponible, le résultat MCP contient http_status:402, les exigences x402 et une continuation REST. Ce résultat est une demande de paiement, pas un reçu payé.
+
+Un client x402 HTTP utilise l’URL de continuation et la même Idempotency-Key. Après validation du prix et du mandat par la politique du portefeuille acheteur, PAYMENT-SIGNATURE doit être transmis comme en-tête. N’envoyez jamais de clé privée. Un état 202 se suit avec l’URL de commande originale, sans second paiement.
+
+Un client MCP x402 peut répéter le même outil, avec mode live, le même mandat et la même clé d’idempotence, en plaçant le PaymentPayload signé dans params._meta["x402/payment"]. Après confirmation du règlement, result._meta["x402/payment-response"] contient le reçu x402. La continuation HTTP reste disponible ; utilisez un seul transport de signature par requête. Un paiement joint au mode sandbox est refusé. Aucune clé privée ne doit être transmise.
+
+```json
+{
+  "name": "purchase_snapshot",
+  "arguments": {
+    "mode": "live",
+    "mandate_id": "OWNER_AUTHORIZED_MANDATE_ID",
+    "idempotency_key": "purchase_20260915_001"
+  }
+}
+```

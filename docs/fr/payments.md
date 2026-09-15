@@ -2,10 +2,6 @@
 
 Distinguez les abonnements Projects par carte, les analyses gratuites et les achats USDC encore en test.
 
-[Bibliothèque de documentation](README.md) · [ALPNAI](https://alpnai.com/fr/docs)
-
-[Français](../fr/payments.md) · [English](../en/payments.md) · [Deutsch](../de/payments.md)
-
 ## Ce qui peut être utilisé aujourd’hui
 
 Spend Proof, Latency Lab et Quality Gate proposent des calculs gratuits. Projects est un espace privé accessible avec ChatGPT : trois rapports enregistrés gratuits à vie et des abonnements Stripe ouverts sur le site. Le pilote Evidence permet d’essayer des achats API/MCP avec une clé et un budget fictif.
@@ -68,6 +64,8 @@ Le paiement prévu est en USDC sur Base vers le portefeuille du vendeur, accessi
 
 Ce parcours ne repose pas sur Coinbase Business. Le prestataire de conversion doit accepter l’activité du vendeur et son compte bancaire ; ses cours, frais et délais s’appliquent. Le client achète un service, pas un placement, un rendement ou une allocation IPO.
 
----
+## Vérification professionnelle automatique
 
-[Automatiser la livraison de rapports](projects-automation.md) · [Données et accès](security.md)
+Si vous demandez la vérification professionnelle, votre numéro de TVA est transmis à Stripe dans une fiche technique distincte de votre abonnement Projects. Avec votre confirmation d’usage professionnel et de territoire TVA, ALPNAI compare le nom et l’adresse du registre fiscal au profil enregistré. Le système conserve votre déclaration, les références techniques, le résultat daté, les données du registre nécessaires à cette comparaison et la règle appliquée. La preuve expire au plus tard 24 heures après le début de cette vérification ; avec votre consentement, une nouvelle génération est demandée lors d’un achat ultérieur sur le même profil. Lire une ancienne réponse ne renouvelle pas la preuve. Ces données ne sont pas publiées ni transmises à la blockchain. Effacer ou modifier le profil interdit de nouveaux achats fondés sur son ancienne version, sans réécrire les preuves et justificatifs conservés. Vous pouvez demander accès ou suppression selon les droits et obligations de conservation applicables ; aucune purge automatique de ces preuves n’est actuellement prévue.
+
+Dans Compte → Profil de facturation, enregistrez les coordonnées légales, confirmez l’usage professionnel et le territoire TVA, puis lancez la vérification. qualified signifie que le dossier satisfait la règle ; ce n’est pas une preuve de paiement. Les services USDC restent fermés jusqu’à l’activation commerciale.

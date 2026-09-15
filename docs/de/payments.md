@@ -2,10 +2,6 @@
 
 Unterscheiden Sie Projects-Kartenabonnements, kostenlose Analysen und USDC-Käufe im Testmodus.
 
-[Dokumentationsbibliothek](README.md) · [ALPNAI](https://alpnai.com/de/docs)
-
-[Français](../fr/payments.md) · [English](../en/payments.md) · [Deutsch](../de/payments.md)
-
 ## Was heute genutzt werden kann
 
 Spend Proof, Latency Lab und Quality Gate bieten kostenlose Berechnungen. Projects ist ein privater Bereich mit ChatGPT-Anmeldung, drei dauerhaft kostenlosen gespeicherten Berichten und auf der Website freigegebenen Stripe-Abonnements. Im Evidence-Piloten lassen sich API-/MCP-Käufe mit Schlüssel und fiktivem Budget testen.
@@ -68,6 +64,8 @@ Vorgesehen ist USDC auf Base an die über MetaMask zugängliche Wallet des Anbie
 
 Dieser Ablauf setzt Coinbase Business nicht voraus. Der Umtauschdienstleister muss Tätigkeit und Bankkonto akzeptieren; seine Kurse, Gebühren und Fristen gelten. Der Kunde kauft eine Dienstleistung, keine Anlage, Rendite oder IPO-Zuteilung.
 
----
+## Automatische Unternehmensprüfung
 
-[Berichte automatisch zustellen](projects-automation.md) · [Daten und Zugänge](security.md)
+Bei einer angeforderten Unternehmensprüfung wird Ihre Umsatzsteuer-ID an Stripe in einen von Ihrem Projects-Abonnement getrennten technischen Datensatz übermittelt. Mit Ihrer Bestätigung zur geschäftlichen Nutzung und zum Mehrwertsteuergebiet vergleicht ALPNAI Namen und Adresse aus dem Register mit dem gespeicherten Profil. Gespeichert werden Erklärung, technische Referenzen, datiertes Ergebnis, erforderliche Registerangaben und angewandte Regel. Der Nachweis endet spätestens 24 Stunden nach Beginn der Prüfung; mit Ihrer Einwilligung wird bei einem späteren Kauf mit unverändertem Profil eine neue Prüfung angefordert. Das Lesen einer alten Antwort erneuert keinen Nachweis. Diese Daten werden weder veröffentlicht noch an die Blockchain gesendet. Ändern oder Löschen des Profils verhindert neue Käufe auf Grundlage der alten Version, ohne vorhandene Belege umzuschreiben. Auskunft oder Löschung können nach geltenden Rechten und Aufbewahrungspflichten beantragt werden; für diese Nachweise gibt es derzeit keine automatische Löschung.
+
+Unter Konto → Rechnungsprofil die rechtlichen Angaben speichern, geschäftliche Nutzung und Mehrwertsteuergebiet bestätigen und Prüfung starten. qualified bedeutet, dass das Profil die Regel erfüllt, nicht dass bezahlt wurde. USDC-Dienste bleiben bis zur Verkaufsfreischaltung geschlossen.

@@ -2,10 +2,6 @@
 
 Discover tools and call audit_agent_costs with your records.
 
-[Documentation library](README.md) · [ALPNAI](https://alpnai.com/en/docs)
-
-[Français](../fr/mcp.md) · [English](../en/mcp.md) · [Deutsch](../de/mcp.md)
-
 ## Endpoint and protocol
 
 Use POST https://alpnai.com/api/mcp. The server exposes MCP 2026-07-28 with server/discover and JSON responses. It also accepts MCP 2025-11-25, 2025-06-18 and 2025-03-26 clients through initialize.
@@ -89,6 +85,23 @@ GET https://alpnai.com/api/v1/catalog
 GET https://alpnai.com/api/v1/performance-sample
 ```
 
----
+## Request a purchase through MCP
 
-[HTTP API](api.md) · [Automate report delivery](projects-automation.md)
+The server accepts mode: sandbox (default) or explicitly requested mode: live. Live mode does not bypass current commercial availability from get_catalog, the owner mandate or billing qualification. USDC collection is currently closed.
+
+Send the agent key in Authorization: Bearer and the mandate in mandate_id or X-AlpNAI-Mandate. When a quote is available, the MCP result contains http_status:402, x402 requirements and a REST continuation. This is a payment request, not a paid receipt.
+
+An HTTP x402 client uses the continuation URL and the same Idempotency-Key. Once the buyer wallet policy authorizes the price and mandate, send PAYMENT-SIGNATURE as a request header. Never send a private key. Follow a 202 state at the original order URL without a second payment.
+
+An x402 MCP client can retry the same tool with explicit live mode, the same mandate and idempotency key, placing its signed PaymentPayload in params._meta["x402/payment"]. After confirmed settlement, result._meta["x402/payment-response"] contains the x402 receipt. HTTP continuation remains available; use only one signature transport per request. A payment attached to sandbox mode is rejected. Never transmit a private key.
+
+```json
+{
+  "name": "purchase_snapshot",
+  "arguments": {
+    "mode": "live",
+    "mandate_id": "OWNER_AUTHORIZED_MANDATE_ID",
+    "idempotency_key": "purchase_20260915_001"
+  }
+}
+```

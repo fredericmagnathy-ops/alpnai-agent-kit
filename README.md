@@ -1,5 +1,7 @@
 # ALPNAI agent integration kit
 
+Native MCP x402 transport is implemented: signed payloads use params._meta["x402/payment"], and confirmed receipts use result._meta["x402/payment-response"]. See the [MCP guide](docs/en/mcp.md). Commercial USDC collection remains disabled in the live catalogue; this transport update is not a paid launch. The included purchase script still performs sandbox tests only.
+
 Have a CSV export? [Import your own attempts](onboarding/README.md) before your first audit.
 
 [Français](README.fr.md) · [Deutsch](README.de.md)

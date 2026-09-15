@@ -1,5 +1,7 @@
 # ALPNAI-Integrationskit für Agenten
 
+Der native MCP-x402-Transport ist implementiert: signierte Zahlungen verwenden params._meta["x402/payment"], bestätigte Belege result._meta["x402/payment-response"]. Siehe [MCP-Anleitung](docs/de/mcp.md). USDC-Zahlungen bleiben laut öffentlichem Katalog deaktiviert; das Transport-Update ist keine Verkaufsfreigabe. Das Kaufskript bleibt auf Sandbox-Tests beschränkt.
+
 Sie haben einen CSV-Export? [Importieren Sie Ihre eigenen Versuche](onboarding/README.de.md) vor dem ersten Audit.
 
 [English](README.md) · [Français](README.fr.md)

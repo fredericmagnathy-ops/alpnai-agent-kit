@@ -1,5 +1,7 @@
 # Kit d'intégration ALPNAI pour agents
 
+Le transport MCP x402 natif est implémenté : les paiements signés passent par params._meta["x402/payment"] et les reçus confirmés par result._meta["x402/payment-response"]. Voir le [guide MCP](docs/fr/mcp.md). Les encaissements USDC restent désactivés dans le catalogue public ; cette mise à jour ne constitue pas une ouverture commerciale. Le script d’achat du kit reste limité aux tests.
+
 Vous avez un export CSV ? [Convertissez vos propres tentatives](onboarding/README.fr.md) avant le premier audit.
 
 [English](README.md) · [Deutsch](README.de.md)

@@ -2,10 +2,6 @@
 
 Entdecken Sie Werkzeuge und rufen Sie audit_agent_costs mit Ihren Aufzeichnungen auf.
 
-[Dokumentationsbibliothek](README.md) · [ALPNAI](https://alpnai.com/de/docs)
-
-[Français](../fr/mcp.md) · [English](../en/mcp.md) · [Deutsch](../de/mcp.md)
-
 ## Endpunkt und Protokoll
 
 Verwenden Sie POST https://alpnai.com/api/mcp. Der Server unterstützt MCP 2026-07-28 mit server/discover und JSON-Antworten. Er akzeptiert außerdem MCP-Clients der Versionen 2025-11-25, 2025-06-18 und 2025-03-26 über initialize.
@@ -89,6 +85,23 @@ GET https://alpnai.com/api/v1/catalog
 GET https://alpnai.com/api/v1/performance-sample
 ```
 
----
+## Einen Kauf über MCP anfordern
 
-[HTTP-API](api.md) · [Berichte automatisch zustellen](projects-automation.md)
+Der Server akzeptiert mode: sandbox (Standard) oder ausdrücklich mode: live. Live umgeht weder die in get_catalog veröffentlichte Verfügbarkeit noch das Mandat des Inhabers oder die Abrechnungsprüfung. USDC-Zahlungen sind derzeit geschlossen.
+
+Senden Sie den Agentenschlüssel über Authorization: Bearer und das Mandat über mandate_id oder X-AlpNAI-Mandate. Sobald ein Angebot verfügbar ist, enthält das MCP-Ergebnis http_status:402, die x402-Anforderungen und eine REST-Fortsetzung. Das ist eine Zahlungsanforderung, kein bezahlter Beleg.
+
+Ein HTTP-x402-Client nutzt die Fortsetzungs-URL mit derselben Idempotency-Key. Nachdem die Wallet-Richtlinie des Käufers Preis und Mandat autorisiert hat, wird PAYMENT-SIGNATURE als Anfrage-Header gesendet. Niemals einen privaten Schlüssel senden. Bei Status 202 die ursprüngliche Bestellung abfragen, ohne eine zweite Zahlung auszulösen.
+
+Ein x402-MCP-Client kann dasselbe Tool mit ausdrücklichem Live-Modus, gleichem Mandat und Idempotenzschlüssel erneut aufrufen und den signierten PaymentPayload in params._meta["x402/payment"] übergeben. Nach bestätigter Zahlung enthält result._meta["x402/payment-response"] den x402-Beleg. HTTP-Fortsetzung bleibt verfügbar; verwenden Sie pro Anfrage nur einen Signaturtransport. Zahlungen im Sandbox-Modus werden abgelehnt. Niemals private Schlüssel übertragen.
+
+```json
+{
+  "name": "purchase_snapshot",
+  "arguments": {
+    "mode": "live",
+    "mandate_id": "OWNER_AUTHORIZED_MANDATE_ID",
+    "idempotency_key": "purchase_20260915_001"
+  }
+}
+```
