@@ -54,7 +54,7 @@ Alle drei Werkzeuge akzeptieren dieselben Aufzeichnungen. Browserberechnung und 
 | Latency Lab | `POST /api/v1/latency` | `analyze_agent_latency` |
 | Quality Gate | `POST /api/v1/quality-gate` | `check_agent_quality` |
 
-[Neun MCP-Werkzeuge](docs/de/mcp.md): `get_catalog`, `get_free_sample`, `audit_agent_costs`, `analyze_agent_latency`, `check_agent_quality`, `save_project_report`, `purchase_snapshot`, `purchase_changes`, `purchase_evidence`.
+[Zehn MCP-Werkzeuge](docs/de/mcp.md): `get_catalog`, `get_free_sample`, `audit_agent_costs`, `analyze_agent_latency`, `check_agent_quality`, `save_project_report`, `get_order`, `purchase_snapshot`, `purchase_changes`, `purchase_evidence`.
 
 MCP-Kaufbeispiele bleiben im Sandbox-Modus. PayAI/x402 wird validiert; dieses Repository belegt keine Mainnet-Abwicklung. Das Kit führt keine Abonnements, Provisionen oder automatischen Banküberweisungen aus.
 
@@ -127,7 +127,7 @@ Die erste Sammlung ist auf den 14. September 2026 datiert und betrifft OpenAIs M
 
 Öffentliches Repository: [fredericmagnathy-ops/alpnai-agent-kit](https://github.com/fredericmagnathy-ops/alpnai-agent-kit). MCP-Namensraum: `io.github.fredericmagnathy-ops/alpnai`. Diese Revision ist offline geprüft; aktuelle Cloud-Ergebnisse stehen in GitHub Actions.
 
-Drei vorbereitete GitHub-Actions-Workflows prüfen Quellen alle sechs Stunden zur Minute 17 UTC, Katalog, Datenbeispiel und neun MCP-Werkzeuge täglich um 07:43 UTC sowie bestehende Zahlungsaufträge zu den Minuten 06, 16, 26, 36, 46 und 56 jeder Stunde. Der Zahlungsabgleich liest die Blockchain und kann bestehende Buchungen aktualisieren; er sendet keine Zahlung, Abwicklung oder Banküberweisung. Exportiert werden nur die Anzahlen geprüfter, bestätigter und nicht bestätigter Aufträge in Gruppen von höchstens fünf. Nach Bereitstellung sind auch manuelle Starts möglich. Die Quellenprüfung protokolliert Ergebnisse, ändert keine Tatsachenaussagen und schlägt bei Prüfbedarf oder nicht erreichbaren Quellen fehl. Die Zustandsprüfung nutzt `server/discover` und `tools/list` mit MCP `2026-07-28`, ohne Kaufwerkzeuge aufzurufen.
+Drei vorbereitete GitHub-Actions-Workflows prüfen Quellen alle sechs Stunden zur Minute 17 UTC, Katalog, Datenbeispiel und zehn MCP-Werkzeuge täglich um 07:43 UTC sowie bestehende Zahlungsaufträge zu den Minuten 06, 16, 26, 36, 46 und 56 jeder Stunde. Der Zahlungsabgleich liest die Blockchain und kann bestehende Buchungen aktualisieren; er sendet keine Zahlung, Abwicklung oder Banküberweisung. Exportiert werden nur die Anzahlen geprüfter, bestätigter und nicht bestätigter Aufträge in Gruppen von höchstens fünf. Nach Bereitstellung sind auch manuelle Starts möglich. Die Quellenprüfung protokolliert Ergebnisse, ändert keine Tatsachenaussagen und schlägt bei Prüfbedarf oder nicht erreichbaren Quellen fehl. Die Zustandsprüfung nutzt `server/discover` und `tools/list` mit MCP `2026-07-28`, ohne Kaufwerkzeuge aufzurufen.
 
 Vor Aktivierung Endpunkt und autorisierte Geheimnisse konfigurieren, API bereitstellen und Workflows im Standardbranch ablegen. Berichte enthalten nur Status und Zähler, werden sieben Tage aufbewahrt und erscheinen als GitHub-Zusammenfassung. Fehlgeschlagene Läufe können abhängig von den Kontoeinstellungen GitHub-Benachrichtigungen auslösen. Zeitpläne können sich verzögern und garantieren keinen durchgehenden Betrieb. Englische Einrichtungsanleitung: [Cloud automation](CLOUD_AUTOMATION.md).
 

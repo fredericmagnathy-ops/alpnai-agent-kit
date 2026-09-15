@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "ALPNAI Agent API",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Analyze supplied AI-agent measurements and save aggregate reports with an explicit Projects owner grant. Evidence calls default to sandbox. Live x402 requires current commercial availability, an owner-authorized mandate and an approved billing profile. Read /api/v1/catalog for current availability; live collection remains closed until commercial activation.",
     "contact": {
       "email": "frederic@alpnor.com"
@@ -3073,6 +3073,52 @@
           },
           "404": {
             "description": "Unknown product."
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{order_id}": {
+      "get": {
+        "operationId": "getOrder",
+        "summary": "Follow an existing authorized order without submitting another payment",
+        "description": "Requires the original agent key. May record finalized on-chain proof or cancel an expired never-submitted reservation, releasing its reserved budget once. No new signature or settlement is submitted. Works while new purchases are paused. MCP equivalent: get_order with order_id.",
+        "security": [
+          {
+            "AgentKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[-A-Za-z0-9]{8,80}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Quoted status, or confirmed receipt and original JSON deliverable. Only settled:true indicates paid delivery."
+          },
+          "202": {
+            "description": "Original payment remains pending. Wait for Retry-After and query this same order again."
+          },
+          "401": {
+            "description": "Active agent key required."
+          },
+          "403": {
+            "description": "Request origin rejected."
+          },
+          "404": {
+            "description": "Order absent or not owned by this agent."
+          },
+          "409": {
+            "description": "Cancelled before ALPNAI claimed submission; payment_required:false."
+          },
+          "503": {
+            "description": "Order status temporarily unavailable; keep the original order identity."
           }
         }
       }

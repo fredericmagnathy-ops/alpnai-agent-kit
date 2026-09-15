@@ -16,7 +16,7 @@ Clients von 2025 verwenden initialize, notifications/initialized, dann tools/lis
 
 get_catalog und get_free_sample dienen zur Erkundung des Piloten. audit_agent_costs, analyze_agent_latency und check_agent_quality führen Spend Proof, Latency Lab beziehungsweise Quality Gate mit aktivem Schlüssel kostenlos aus. Alle drei akzeptieren runs und config.
 
-purchase_snapshot, purchase_changes und purchase_evidence simulieren Evidence-Käufe mit fiktivem Budget. Sie benötigen idempotency_key; purchase_changes akzeptiert zusätzlich since im Format YYYY-MM-DD. Der Server stellt damit neun Werkzeuge bereit.
+purchase_snapshot, purchase_changes und purchase_evidence simulieren Evidence-Käufe mit fiktivem Budget. Sie benötigen idempotency_key; purchase_changes akzeptiert zusätzlich since im Format YYYY-MM-DD. Der Server stellt damit zehn Werkzeuge bereit.
 
 save_project_report berechnet und speichert einen Bericht im ausdrücklich vom Inhaber freigegebenen Projekt mit dem bestehenden Projects-Kontingent. Es benötigt request_id, title und input. Anleitung: https://alpnai.com/de/docs/projects-automation.
 
@@ -102,6 +102,23 @@ Ein x402-MCP-Client kann dasselbe Tool mit ausdrücklichem Live-Modus, gleichem 
     "mode": "live",
     "mandate_id": "OWNER_AUTHORIZED_MANDATE_ID",
     "idempotency_key": "purchase_20260915_001"
+  }
+}
+```
+
+## Einen Auftrag ohne weitere Zahlung verfolgen
+
+Nach einer Kaufantwort mit http_status:202 rufen Sie get_order mit der ursprünglichen order_id und Ihrem Agentenschlüssel auf. Beachten Sie Retry-After und wiederholen Sie nur diese Statusabfrage. Ein pending-Ergebnis bestätigt die Abfrage, noch keine bezahlte Lieferung.
+
+Dieses zehnte Werkzeug kann einen finalisierten Zahlungsnachweis speichern oder eine abgelaufene Reservierung vor der Übermittlung aufheben und deren Budget einmal freigeben. Es erzeugt keinen Kauf und lehnt beigefügte Zahlungssignaturen ab. Es funktioniert auch bei pausierten Neukäufen.
+
+Der bestätigte Beleg und das ursprüngliche Ergebnis stehen in structuredContent; der x402-Beleg zusätzlich in result._meta["x402/payment-response"]. cancelled_before_submission bedeutet, dass ALPNAI für diesen Auftrag keinen Übermittlungsversuch beansprucht hat.
+
+```json
+{
+  "name": "get_order",
+  "arguments": {
+    "order_id": "ORIGINAL_ORDER_ID"
   }
 }
 ```

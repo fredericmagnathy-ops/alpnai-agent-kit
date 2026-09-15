@@ -16,7 +16,7 @@ Each request includes protocol version, client information and capabilities in p
 
 get_catalog and get_free_sample discover the pilot. audit_agent_costs, analyze_agent_latency and check_agent_quality run Spend Proof, Latency Lab and Quality Gate respectively, free with an active key. All three accept runs and config.
 
-purchase_snapshot, purchase_changes and purchase_evidence simulate Evidence purchases and use a fictitious budget. They require idempotency_key; purchase_changes also accepts since as YYYY-MM-DD. The server therefore exposes nine tools.
+purchase_snapshot, purchase_changes and purchase_evidence simulate Evidence purchases and use a fictitious budget. They require idempotency_key; purchase_changes also accepts since as YYYY-MM-DD. The server therefore exposes ten tools.
 
 save_project_report calculates and saves a report in the project explicitly authorized by its owner, using the existing Projects allowance. It requires request_id, title and input. Guide: https://alpnai.com/en/docs/projects-automation.
 
@@ -102,6 +102,23 @@ An x402 MCP client can retry the same tool with explicit live mode, the same man
     "mode": "live",
     "mandate_id": "OWNER_AUTHORIZED_MANDATE_ID",
     "idempotency_key": "purchase_20260915_001"
+  }
+}
+```
+
+## Follow an order without another payment
+
+After a purchase returns http_status:202, call get_order with the original order_id and agent key. Respect Retry-After and repeat only this status check. A pending result is a successful status query, not paid delivery yet.
+
+This tenth tool can record finalized payment proof or cancel an expired reservation before submission, releasing its budget once. It creates no purchase and rejects attached payment signatures. It also works when new purchases are paused.
+
+The confirmed receipt and original deliverable are returned in structuredContent; the x402 receipt is also available in result._meta["x402/payment-response"]. cancelled_before_submission means ALPNAI did not claim a submission attempt for that order.
+
+```json
+{
+  "name": "get_order",
+  "arguments": {
+    "order_id": "ORIGINAL_ORDER_ID"
   }
 }
 ```

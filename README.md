@@ -54,7 +54,7 @@ All three tools accept the same records. Browser calculation and HTML/JSON expor
 | Latency Lab | `POST /api/v1/latency` | `analyze_agent_latency` |
 | Quality Gate | `POST /api/v1/quality-gate` | `check_agent_quality` |
 
-[Nine MCP tools](docs/en/mcp.md): `get_catalog`, `get_free_sample`, `audit_agent_costs`, `analyze_agent_latency`, `check_agent_quality`, `save_project_report`, `purchase_snapshot`, `purchase_changes`, `purchase_evidence`.
+[Ten MCP tools](docs/en/mcp.md): `get_catalog`, `get_free_sample`, `audit_agent_costs`, `analyze_agent_latency`, `check_agent_quality`, `save_project_report`, `get_order`, `purchase_snapshot`, `purchase_changes`, `purchase_evidence`.
 
 MCP purchase examples remain in sandbox mode. PayAI/x402 is under validation; this repository proves no mainnet settlement. This kit executes no subscriptions, commissions or automatic bank transfers.
 
@@ -127,7 +127,7 @@ The initial collection is dated 14 September 2026 and concerns OpenAI's confiden
 
 The public repository is [fredericmagnathy-ops/alpnai-agent-kit](https://github.com/fredericmagnathy-ops/alpnai-agent-kit), with MCP namespace `io.github.fredericmagnathy-ops/alpnai`. This revision is validated offline; inspect GitHub Actions for the latest cloud results.
 
-Three prepared GitHub Actions workflows check sources every six hours at minute 17 UTC, catalog/sample/nine MCP tools daily at 07:43 UTC, and reconcile existing payment records at minutes 06, 16, 26, 36, 46 and 56 of every hour. Reconciliation reads the chain and may update existing ledger records; it never submits a payment, settlement or bank transfer. It exports only checked/confirmed/not-confirmed counts for at most five orders. Each can also be run manually after deployment. The source check records monitoring results, preserves factual claims and fails when review is required or a source is unavailable. Health checks use MCP `server/discover` and `tools/list` with version `2026-07-28`; they never call purchase tools.
+Three prepared GitHub Actions workflows check sources every six hours at minute 17 UTC, catalog/sample/ten MCP tools daily at 07:43 UTC, and reconcile existing payment records at minutes 06, 16, 26, 36, 46 and 56 of every hour. Reconciliation reads the chain and may update existing ledger records; it never submits a payment, settlement or bank transfer. It exports only checked/confirmed/not-confirmed counts for at most five orders. Each can also be run manually after deployment. The source check records monitoring results, preserves factual claims and fails when review is required or a source is unavailable. Health checks use MCP `server/discover` and `tools/list` with version `2026-07-28`; they never call purchase tools.
 
 Configure the endpoint and authorized secrets, deploy the API and place the workflows on the repository's default branch before activation. Reports contain only statuses and counts, are retained for seven days and produce a job summary. A failed run can trigger GitHub notifications according to account settings. Schedules can be delayed and do not constitute a continuous-service guarantee. Setup, exact variables, permissions and limitations: [Cloud automation](CLOUD_AUTOMATION.md).
 

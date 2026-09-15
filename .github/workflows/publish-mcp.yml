@@ -43,9 +43,12 @@ jobs:
           import json
           with open('registry-result.json', encoding='utf-8') as handle:
               result = json.load(handle)
+          with open('server.json', encoding='utf-8') as handle:
+              expected = json.load(handle)
           matches = [item for item in result.get('servers', [])
-                     if item.get('server', {}).get('name') == 'io.github.fredericmagnathy-ops/alpnai']
+                     if item.get('server', {}).get('name') == expected['name']
+                     and item.get('server', {}).get('version') == expected['version']]
           if not matches:
               raise SystemExit('Publication response received but public record not yet visible. Check before retrying.')
-          print('ALPNAI public registry record found.')
+          print('ALPNAI public registry version verified:', expected['version'])
           PY

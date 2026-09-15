@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.4.0",
+  "schema_version": "1.5.0",
   "brand": "ALPNAI",
   "operator": "Frederic Madureira Rodrigues / SWISS International",
   "purpose": "Deterministic cost, latency and quality analysis for authorized AI agents.",
@@ -204,6 +204,15 @@
     "payment_transport": "MCP _meta x402 with optional HTTP continuation",
     "mcp_payment_metadata": "x402/payment",
     "mcp_settlement_metadata": "x402/payment-response",
+    "order_follow_up": {
+      "mcp_tool": "get_order",
+      "required": [
+        "order_id",
+        "agent_key"
+      ],
+      "creates_payment": false,
+      "works_when_commerce_paused": true
+    },
     "status": "commercial_activation_pending"
   },
   "mcp": "/api/mcp",

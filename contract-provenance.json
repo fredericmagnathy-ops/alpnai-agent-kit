@@ -1,6 +1,6 @@
 {
   "prepared_at": "2026-09-15",
-  "kit_version": "0.4.0",
+  "kit_version": "0.5.0",
   "source_type": "Local application contract snapshot; not a live API response",
   "target_origin": "https://alpnai.com",
   "hosted_public_access_confirmed": true,
@@ -9,27 +9,28 @@
     "app/api/v1/catalog/route.ts": "bbb887521ac339d6772a5e3df6797a63f5c098013f22a3446cdb5834ef6b4241",
     "lib/data.ts": "f98296e9db877359ce32fa253921e1ac795f1dbc86a60dfd65a41f46099c0c22",
     "lib/purchase.ts": "eee690a95815a73f6a852fde2ab2b7f0ffe477446996ff3e158ae1638fb0eba6",
-    "public/openapi.json": "dffbb451508e9d80ea6b1e30f79b3c5cd350fa62d008e446aea2b670e903926c",
+    "public/openapi.json": "e1d6c8d68032fc636695eeeac34b6020af03ddd0303a3471f873015c62100cfd",
     "app/api/operator/check-sources/route.ts": "a5c074a28f80df9ec55b2a34db5a75f00b8c8655e569fb7a387ae749e5563b4f",
-    "app/mcp/route.ts": "0c1c247f286189f6054444f6df163b846cd933deadecba92fd33407e48462f6c",
+    "app/mcp/route.ts": "1c3aec961301a2cd6afdcaf493961e21ca9812fb5bbfefb03a204dc9e70e4dc4",
     "app/api/operator/growth/route.ts": "46685313c08b09d5e80c9eda294ba75f813b323eda8f151ed8d49565c9c91548",
     "lib/growth-metrics.ts": "7d061591cf1d5332615ab0d7fd56fdd0db73894d395d8909b4e1ad29272e3210",
     "app/api/v1/sample/route.ts": "f38f94d9d9a4d939defee6e9509144e1e91345fa9de829aa218f83dbe03bbee2",
     "app/api/v1/spend-proof/route.ts": "184ed19343ae12ca5887f035b0fcf65df8ba264b5e23c3bc6e8933ec31f6dbb4",
     "app/api/mcp/route.ts": "41480d7857af571f595773e9a755610c5759c734f7407cadbf53cf75f3ed5743",
     "lib/roi-engine.ts": "b154a02047ba0b7400a2afba0bc1a53f33432e7a7f35c8d2a73b5590ed0eb75a",
-    "lib/agent-catalog.ts": "4e35bc07ad7d9fd377d0be0e680cb87853e18a602debc08b71fc323a3298fee6",
+    "lib/agent-catalog.ts": "c5c7fac8d86ec09b8e9a1f34479805501042a96744d4530afbf55dda6ef61670",
     "lib/performance-contract.ts": "bda711e9a68a684158ee3e961189aa9fc0ab26c6ba4b9afa7844f4973173b45a",
     "lib/performance.ts": "ebc880dcbb34f267495844261805baa1ea72fcbcb0f0d4ad52f7b4921e2f12ea",
     "app/api/v1/performance-sample/route.ts": "3d3123591610ded4993790a06781421bc884b9937ec3ee7a867dda66a32ecbf0",
     "public/examples/verify-performance-sample.mjs": "9270d1b79041cb01e2b933b63631db9fe33a3f6cb26fd6b2f5207a4d0aab78cc",
-    "lib/agent-offers.ts": "803a775274acde07a315517c5344139ad7e68f102a6662efd14d69c9a6f14ca9",
-    "app/api/v1/offers/[product]/route.ts": "a8cee509a1d4d9f7325731cd66e715cd4196f7084732d9c2623f5c917c644d17"
+    "lib/agent-offers.ts": "a83c38b1efe75d8840d70ef67237a06ce0e42f61026f884b16cafb500174dc1f",
+    "app/api/v1/offers/[product]/route.ts": "a8cee509a1d4d9f7325731cd66e715cd4196f7084732d9c2623f5c917c644d17",
+    "lib/payments/follow-up.ts": "b6a99f6a77dd34d33ebdc02a8e90693d6ce3719a1f55ad4da7ac7d2324e7f264"
   },
   "catalog_sample_prices_verified_against": "lib/data.ts",
   "mcp_example_protocol_version": "2026-07-28",
   "mcp_registry_schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "mcp_note": "Nine tools at /api/mcp. Native x402 payment metadata supported by implementation; actual commercial collection remains disabled. Free analyses need an active agent key. Projects saves need an owner grant and existing allowance.",
+  "mcp_note": "Ten tools at /api/mcp. get_order follows original orders and never submits funds. Native x402 transport is implemented; commercial USDC collection is disabled.",
   "mcp_sdk_version": "2.0.0",
   "intended_repository": "https://github.com/fredericmagnathy-ops/alpnai-agent-kit",
   "intended_mcp_namespace": "io.github.fredericmagnathy-ops/alpnai",
@@ -59,7 +60,7 @@
   "hosted_public_access_confirmation": "Parent operator verified alpnai.com custom domain active; this revision tests client behavior offline only.",
   "active_primary_origin": "https://alpnai.com",
   "mcp_endpoint": "/api/mcp",
-  "mcp_expected_tools": 9,
+  "mcp_expected_tools": 10,
   "free_audit_endpoint": "/api/v1/spend-proof",
   "sample_envelope": {
     "mode": "free_sample",
@@ -69,8 +70,8 @@
   "project_report_endpoint": "/api/v1/project-reports",
   "projects_agent_scope": "Owner-opt-in write-only fixed project; shared quota; no reading, deletion or billing.",
   "historical_validation": "38 offline synthetic mock/loopback tests passed: 10 purchase-client, 18 cloud-check and 10 audit-client tests. No live audit, purchases, wallet transactions or workflow execution performed by this revision.",
-  "validation": "v28 public offer contracts verified live using anonymous GET only. The standalone TypeScript buyer was validated with 18 offline tests, including real SDK quote construction and mocked transport. No real wallet signature, purchase or settlement.",
-  "application_preparation_target": "v28",
+  "validation": "v29: 37 MCP transport tests, 13 real SQLite recovery tests, 38 catalog/sample tests, 5 public-offer tests and 28 kit cloud tests passed. External providers and monetary calls simulated; no real payment or signing.",
+  "application_preparation_target": "v29",
   "public_evaluation": {
     "endpoint": "/api/v1/performance-sample",
     "fixture": "examples/performance.sample.json",
@@ -84,10 +85,10 @@
     "synthetic": true,
     "local_fixture_source": "Active sample route and performance algorithms; generated offline, not captured from production."
   },
-  "catalog_fixture_source": "Public GET https://alpnai.com/api/v1/catalog captured 2026-09-15T02:59:02.192Z. Anonymous operator probe; not a customer or sale. Runtime payments disabled at capture.",
+  "catalog_fixture_source": "Anonymous production catalogue capture 2026-09-15T03:20:07.204Z; payments disabled. Operator probe, not customer traffic.",
   "kit_files_sha256": {
-    "openapi.snapshot.json": "dffbb451508e9d80ea6b1e30f79b3c5cd350fa62d008e446aea2b670e903926c",
-    "examples/catalog.sample.json": "38fe89a2dc5e550d388be3aebff2a9687587a697dfa19437d78047ae782fe6c8",
+    "openapi.snapshot.json": "e1d6c8d68032fc636695eeeac34b6020af03ddd0303a3471f873015c62100cfd",
+    "examples/catalog.sample.json": "7855244eeb0948680160006bbbf08cd04d3aee6b394c42685a1100262c87775e",
     "examples/performance.sample.json": "e6e023c67542ee723a7dd962e935cbf9dd7b21afe05254dd21c9c9766f30e46b",
     "examples/verify-performance-sample.mjs": "9270d1b79041cb01e2b933b63631db9fe33a3f6cb26fd6b2f5207a4d0aab78cc",
     "tests/performance-sample.test.mjs": "96439198a92e9e10133bdf509c1cd2ee435ad06f9b02a3ee2229dd44ea15c5eb",
@@ -102,6 +103,38 @@
     "clients/x402-buyer/tsconfig.json": "67968e279086e8815889b24a71c1c0de6d9c9a34c511bbe629196321745ebe2d"
   },
   "production_validation": {
+    "checked_at": "2026-09-15T03:20:07.204Z",
+    "source_commit": "700bd20dbb5d19260e43a42738da561990197d45",
+    "site_version": 29,
+    "tool_count": 10,
+    "tools": [
+      "get_catalog",
+      "get_free_sample",
+      "audit_agent_costs",
+      "analyze_agent_latency",
+      "check_agent_quality",
+      "save_project_report",
+      "get_order",
+      "purchase_snapshot",
+      "purchase_changes",
+      "purchase_evidence"
+    ],
+    "unauthenticated_order_status": 401,
+    "catalog_schema": "1.5.0",
+    "live_payments_enabled": false,
+    "order_follow_up": {
+      "mcp_tool": "get_order",
+      "required": [
+        "order_id",
+        "agent_key"
+      ],
+      "creates_payment": false,
+      "works_when_commerce_paused": true
+    },
+    "transactions_performed": false,
+    "traffic_type": "Operator checks, not prospects or sales"
+  },
+  "previous_production_validation": {
     "checked_at": "2026-09-15T02:51:38.840Z",
     "source": "507f55d096332d69497d352b2037d7e09ab8835b",
     "catalog_schema": "1.4.0",
@@ -140,16 +173,6 @@
     "financial_actions": false,
     "requests": "Anonymous GET only; these probes are not prospects or sales"
   },
-  "previous_production_validation": {
-    "checked_at": "2026-09-14T23:43:14.021Z",
-    "site_version": 24,
-    "source_commit": "33b258ae7b4c0c69312dc5e7b6658fa1c5eefb14",
-    "public_example_recalculated": true,
-    "rest_catalog_equals_mcp": true,
-    "tools": 9,
-    "crypto_live_payments_enabled": false,
-    "purchases_performed": false
-  },
   "public_offers": {
     "endpoint": "/api/v1/offers/{product}",
     "authentication_required": false,
@@ -167,5 +190,6 @@
     "private_key_handling": false,
     "onboarding_automated": false,
     "public_bazaar_metadata": "Exact reviewed static declaration only; no buyer credential or order identity"
-  }
+  },
+  "previous_validation": "v28 public offer contracts verified live using anonymous GET only. The standalone TypeScript buyer was validated with 18 offline tests, including real SDK quote construction and mocked transport. No real wallet signature, purchase or settlement."
 }

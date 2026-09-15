@@ -118,8 +118,8 @@ class CloudTests(unittest.TestCase):
         ]
         report = cloud.run_checks("health", base=cloud.DEFAULT_BASE, token=TOKEN, client=client)
         self.assertTrue(report["ok"])
-        self.assertEqual(len(cloud.TOOLS), 9)
-        self.assertEqual(report["checks"][-1]["tool_count"], 9)
+        self.assertEqual(len(cloud.TOOLS), 10)
+        self.assertEqual(report["checks"][-1]["tool_count"], 10)
         self.assertTrue({"analyze_agent_latency", "check_agent_quality"}.issubset(cloud.TOOLS))
         self.assertNotIn(TOKEN, json.dumps(report))
         self.assertNotIn(BYPASS, json.dumps(report))

@@ -54,7 +54,7 @@ Les trois outils acceptent les mêmes traces. Le calcul et les exports HTML/JSON
 | Latency Lab | `POST /api/v1/latency` | `analyze_agent_latency` |
 | Quality Gate | `POST /api/v1/quality-gate` | `check_agent_quality` |
 
-[Neuf outils MCP](docs/fr/mcp.md): `get_catalog`, `get_free_sample`, `audit_agent_costs`, `analyze_agent_latency`, `check_agent_quality`, `save_project_report`, `purchase_snapshot`, `purchase_changes`, `purchase_evidence`.
+[Dix outils MCP](docs/fr/mcp.md): `get_catalog`, `get_free_sample`, `audit_agent_costs`, `analyze_agent_latency`, `check_agent_quality`, `save_project_report`, `get_order`, `purchase_snapshot`, `purchase_changes`, `purchase_evidence`.
 
 Les exemples MCP d’achat restent en sandbox. PayAI/x402 est en validation ; ce dépôt ne prouve aucun règlement mainnet. Aucun abonnement, commission ou virement automatique n’est exécuté par ce kit.
 
@@ -127,7 +127,7 @@ La collection initiale est datée du 14 septembre 2026 et porte sur l'annonce du
 
 Dépôt public : [fredericmagnathy-ops/alpnai-agent-kit](https://github.com/fredericmagnathy-ops/alpnai-agent-kit). Namespace MCP : `io.github.fredericmagnathy-ops/alpnai`. Cette révision est vérifiée hors ligne ; les derniers résultats cloud sont consultables dans GitHub Actions.
 
-Trois workflows GitHub Actions sont prêts : sources toutes les six heures à la minute 17 UTC, catalogue/exemple/neuf outils MCP chaque jour à 07 h 43 UTC, et réconciliation des commandes existantes aux minutes 06, 16, 26, 36, 46 et 56 de chaque heure. La réconciliation lit la blockchain et peut actualiser le registre existant ; elle ne soumet ni paiement, ni règlement, ni virement bancaire. Elle exporte seulement les nombres de commandes examinées, confirmées et non confirmées, par lot de cinq au maximum. Ils peuvent aussi être lancés manuellement après déploiement. Le premier consigne les résultats sans modifier les faits et échoue si une source demande une revue ou devient indisponible. Le second utilise `server/discover` et `tools/list` en MCP `2026-07-28`, sans appeler les outils d'achat.
+Trois workflows GitHub Actions sont prêts : sources toutes les six heures à la minute 17 UTC, catalogue/exemple/dix outils MCP chaque jour à 07 h 43 UTC, et réconciliation des commandes existantes aux minutes 06, 16, 26, 36, 46 et 56 de chaque heure. La réconciliation lit la blockchain et peut actualiser le registre existant ; elle ne soumet ni paiement, ni règlement, ni virement bancaire. Elle exporte seulement les nombres de commandes examinées, confirmées et non confirmées, par lot de cinq au maximum. Ils peuvent aussi être lancés manuellement après déploiement. Le premier consigne les résultats sans modifier les faits et échoue si une source demande une revue ou devient indisponible. Le second utilise `server/discover` et `tools/list` en MCP `2026-07-28`, sans appeler les outils d'achat.
 
 Configurer l'adresse et les secrets autorisés, déployer l'API et placer les workflows sur la branche par défaut avant activation. Rapports limités aux statuts et compteurs, conservation sept jours, résumé dans GitHub. Une exécution en échec peut déclencher les notifications GitHub selon les réglages du compte. Le planning peut subir des retards et ne garantit pas une disponibilité continue. Configuration détaillée en anglais : [Cloud automation](CLOUD_AUTOMATION.md).
 

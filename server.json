@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.fredericmagnathy-ops/alpnai",
   "title": "ALPNAI — Agent Performance Tools",
-  "description": "Free agent cost, latency and quality analysis with a key. Evidence purchases are sandbox-only.",
-  "version": "0.1.0",
+  "description": "Agent cost, latency and quality analysis, Projects delivery and order follow-up. Crypto collection paused.",
+  "version": "0.1.1",
   "websiteUrl": "https://alpnai.com/en/docs/mcp",
   "remotes": [
     {
@@ -45,7 +45,13 @@
         ],
         "cryptoPurchases": "sandbox-only",
         "liveCryptoPaymentsEnabled": false,
-        "projectsSubscription": "Separate human website subscription through Stripe; not purchased via MCP."
+        "projectsSubscription": "Separate human website subscription through Stripe; not purchased via MCP.",
+        "orderFollowUp": {
+          "tool": "get_order",
+          "input": "order_id",
+          "requires": "original active agent key",
+          "submitsPayment": false
+        }
       }
     }
   }
