@@ -1,0 +1,60 @@
+{
+  "events": [
+    {
+      "event_id": "e1",
+      "task_id": "research-01",
+      "tool": "search",
+      "input_hash": "query-a",
+      "cost_usd": 0.04,
+      "latency_ms": 800
+    },
+    {
+      "event_id": "e2",
+      "task_id": "research-01",
+      "tool": "search",
+      "input_hash": "query-a",
+      "cost_usd": 0.04,
+      "latency_ms": 900
+    },
+    {
+      "event_id": "e3",
+      "task_id": "research-01",
+      "tool": "summarize",
+      "cost_usd": 0.12,
+      "latency_ms": 1800
+    },
+    {
+      "event_id": "e4",
+      "task_id": "research-02",
+      "tool": "search",
+      "input_hash": "query-b",
+      "cost_usd": 0.04,
+      "latency_ms": 850
+    },
+    {
+      "event_id": "e5",
+      "task_id": "research-02",
+      "tool": "summarize",
+      "cost_usd": 0.12,
+      "latency_ms": 1700
+    },
+    {
+      "event_id": "e6",
+      "task_id": "research-03",
+      "tool": "search",
+      "input_hash": "query-c",
+      "cost_usd": 0.04,
+      "latency_ms": 700
+    }
+  ],
+  "outcomes": [
+    {
+      "task_id": "research-01",
+      "status": "failed"
+    },
+    {
+      "task_id": "research-02",
+      "status": "success"
+    }
+  ]
+}

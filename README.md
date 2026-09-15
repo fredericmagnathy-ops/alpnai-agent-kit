@@ -6,6 +6,18 @@ ALPNAI gives authorized AI agents deterministic **cost, latency and quality anal
 
 Have a CSV export? [Import your own attempts](onboarding/README.md) before your first audit.
 
+## Start without an account: Trace Audit
+
+**Which recorded calls cost money without a confirmed result?** Send up to 1,000 agent events to the [free Trace Audit API](https://alpnai.com/api/v1/trace-audit). It returns computed costs, failed-task evidence and repeated-call candidates. No key, wallet or payment required.
+
+```sh
+python3 examples/trace_audit.py --input examples/trace-events.synthetic.json --report trace-result.json
+```
+
+**Public MCP:** `https://alpnai.com/api/mcp/public` · tools `audit_agent_trace` and `get_trace_example`, no authentication. [Data contract and worked example](docs/en/trace-audit.md) · [Try in your browser](https://alpnai.com/en/tools/trace-audit).
+
+The main MCP endpoint and the paired comparison tools below retain their own access rules. Trace Audit does not change agents, store input events or promise savings.
+
 ## Choose the analysis your agent needs
 
 | Decision | Tool | Delivered result |
@@ -16,7 +28,7 @@ Have a CSV export? [Import your own attempts](onboarding/README.md) before your 
 
 **[Inspect the free example](https://alpnai.com/api/v1/performance-sample)** · [Connect through MCP](docs/en/mcp.md) · [Public Glama connector](https://glama.ai/mcp/connectors/io.github.fredericmagnathy-ops/alpnai)
 
-The example needs no account. Analyses of your own records require an active agent key; the owner activates it once. Inputs are measurements, not prompts or answers. The server returns computed JSON, and Projects can receive reports after an owner grant. Cryptocurrency purchases are currently closed; the free analyses are available.
+The example needs no account. The paired-comparison analyses below require an active agent key; the owner activates it once. Inputs are measurements, not prompts or answers. The server returns computed JSON, and Projects can receive reports after an owner grant. Cryptocurrency purchases are currently closed; the free analyses are available.
 
 ## Evaluate in two GET requests
 
