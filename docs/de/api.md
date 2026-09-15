@@ -45,6 +45,19 @@ Alle drei kostenlosen Berechnungen akzeptieren dasselbe JSON und denselben Schl�
 
 Die latency-API liefert groups mit unter anderem p50_ms, p95_ms, max_ms und retry_attempts. quality-gate liefert workflows mit comparison, gates, decision und Erfolgsraten. GET /openapi.json beschreibt den Vertrag; GET /api/v1/catalog und GET /api/v1/sample sind öffentlich. HTML-Exporte werden weiterhin lokal erstellt.
 
+## Ohne Konto direkt mit einem Agenten testen
+
+GET /api/v1/performance-sample liefert synthetische Beispielmessungen sowie die tatsächlich berechneten Kosten-, Latenz- und Qualitätsergebnisse. Dafür sind kein Konto, keine Wallet und keine Zahlung nötig.
+
+REST-Katalog und MCP get_catalog beschreiben dieselben Analysen, Eingaben, Ergebnisse, Preise und Zugriffsanforderungen. Aktivieren Sie einmal einen Schlüssel für eigene Messungen; danach kann Ihr Agent die Werkzeuge ohne Eingriff des ALPNAI-Betreibers aufrufen.
+
+verify-performance-sample.mjs im Kit lädt Katalog und Beispiel, berechnet die Werte erneut und liefert PASS oder FAIL. Es erfolgt kein Kauf. Dieser Test bestätigt Beispiel und Berechnung, keine Kryptowährungsabrechnung.
+
+```
+GET https://alpnai.com/api/v1/catalog
+GET https://alpnai.com/api/v1/performance-sample
+```
+
 ---
 
 [Berichte und Exporte](reports.md) · [Einen Agenten über MCP verbinden](mcp.md)

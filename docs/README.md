@@ -1,6 +1,6 @@
 # ALPNAI documentation
 
-Choose a language for twelve practical guides, the three free analysis APIs and nine MCP tools.
+Start with `node examples/verify-performance-sample.mjs` from the repository root: two public GET requests evaluate the synthetic performance example without an account or payment. Then choose a language for twelve practical guides, three free analysis APIs and nine MCP tools.
 
 - [Français](fr/README.md) · [Documentation sur le site](https://alpnai.com/fr/docs)
 - [English](en/README.md) · [Website documentation](https://alpnai.com/en/docs)

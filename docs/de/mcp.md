@@ -76,6 +76,19 @@ Prüfen Sie JSON-RPC-Fehler und result.isError, bevor Sie den Bericht lesen. Ein
 
 Trennen Sie Aktionen vom Lesen des Berichts. Ein ALPNAI-Schlüssel und eine Versuchsempfehlung erteilen dem Agenten keinen Auftrag für Ausgaben oder Bereitstellungen.
 
+## Ohne Konto direkt mit einem Agenten testen
+
+GET /api/v1/performance-sample liefert synthetische Beispielmessungen sowie die tatsächlich berechneten Kosten-, Latenz- und Qualitätsergebnisse. Dafür sind kein Konto, keine Wallet und keine Zahlung nötig.
+
+REST-Katalog und MCP get_catalog beschreiben dieselben Analysen, Eingaben, Ergebnisse, Preise und Zugriffsanforderungen. Aktivieren Sie einmal einen Schlüssel für eigene Messungen; danach kann Ihr Agent die Werkzeuge ohne Eingriff des ALPNAI-Betreibers aufrufen.
+
+verify-performance-sample.mjs im Kit lädt Katalog und Beispiel, berechnet die Werte erneut und liefert PASS oder FAIL. Es erfolgt kein Kauf. Dieser Test bestätigt Beispiel und Berechnung, keine Kryptowährungsabrechnung.
+
+```
+GET https://alpnai.com/api/v1/catalog
+GET https://alpnai.com/api/v1/performance-sample
+```
+
 ---
 
 [HTTP-API](api.md) · [Berichte automatisch zustellen](projects-automation.md)

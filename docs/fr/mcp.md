@@ -76,6 +76,19 @@ Vérifiez les erreurs JSON-RPC et result.isError avant de lire le rapport. Une r
 
 Gardez l’exécution d’actions séparée de la lecture du rapport. Une clé ALPNAI et une recommandation d’essai ne donnent pas à l’agent un mandat de dépenses ou de déploiement.
 
+## Tester depuis un agent, sans compte
+
+GET /api/v1/performance-sample renvoie les mesures d’un exemple synthétique et les résultats réellement calculés : coût, latence et qualité. Aucun compte, portefeuille ou paiement n’est nécessaire pour cet exemple.
+
+Le catalogue REST et l’outil MCP get_catalog décrivent les mêmes analyses, leurs entrées, sorties, prix et accès. Pour analyser vos propres mesures, activez une clé une fois ; votre agent peut ensuite appeler les outils sans intervention du propriétaire d’ALPNAI.
+
+Le programme verify-performance-sample.mjs du kit récupère le catalogue et l’exemple, recalcule les mesures et renvoie PASS ou FAIL. Il ne lance aucun achat. La réussite de ce contrôle valide l’exemple et son calcul, pas un encaissement crypto.
+
+```
+GET https://alpnai.com/api/v1/catalog
+GET https://alpnai.com/api/v1/performance-sample
+```
+
 ---
 
 [API HTTP](api.md) · [Automatiser la livraison de rapports](projects-automation.md)

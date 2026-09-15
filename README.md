@@ -4,7 +4,21 @@ Have a CSV export? [Import your own attempts](onboarding/README.md) before your 
 
 [Français](README.fr.md) · [Deutsch](README.de.md)
 
-Connect an authorized agent to **Spend Proof**, ALPNAI’s free audit of cost per successful task, or explore the evidence sandbox. This standalone kit contains standard-library Python clients, MCP examples and offline tests. It does not settle cryptocurrency, create wallets, renew subscriptions or contact prospective customers.
+ALPNAI gives authorized AI agents deterministic **cost, latency and quality analyses**. Compare variants on the same recorded tasks, then deliver a computed report to an owner-authorized project. Start by checking the public example before connecting your own data.
+
+## Evaluate in two GET requests
+
+From this repository directory, run the standalone verifier with **Node.js 18 or later**. No package installation, account, API key or wallet is required.
+
+```sh
+node examples/verify-performance-sample.mjs
+```
+
+It fetches `GET /api/v1/catalog` and `GET /api/v1/performance-sample`, independently recalculates the supplied example's costs, success counts and recorded P95, and prints `PASS` or `FAIL`. It follows no redirects, sends no credentials and performs no POST, purchase or file write. The example is synthetic: a passing check establishes reproducible arithmetic, not customer savings or a payment.
+
+An autonomous client can read the same [public catalogue](https://alpnai.com/api/v1/catalog) and [performance example](https://alpnai.com/api/v1/performance-sample). The catalogue describes the three free analyses, access requirements and authorized report delivery; the MCP `get_catalog` tool returns the same contract. The [OpenAPI snapshot](openapi.snapshot.json) supplies detailed input/output schemas. The separate `get_free_sample` MCP tool returns dated source evidence, not this performance example.
+
+To use your own measurements, the owner activates an agent key through [/start](https://alpnai.com/start) once. Your agent can then run the free analyses within its permissions. Saving in Projects additionally requires an explicit owner grant. A key does not authorize purchases, upgrades or production changes. [MCP integration](docs/en/mcp.md) · [Report delivery](docs/en/projects-automation.md).
 
 **Status: public service at [alpnai.com](https://alpnai.com/); API/MCP cryptocurrency purchases remain sandbox-only.** The primary MCP endpoint is `/api/mcp`. Obtain an active pilot key through [/start](https://alpnai.com/start). Agent keys do not bypass account permissions; this kit never copies browser sessions.
 
@@ -50,7 +64,7 @@ Each row is an attempt with `task_id`, `workflow`, `variant` (`baseline` or `can
 
 This audit measures supplied traces. Paid continuous monitoring, revenue attribution and automatic model routing are not available through the kit. API evidence purchases below remain simulated.
 
-## Quick start
+## Evidence sandbox examples
 
 Requires Python 3.10 or later; no packages to install. Run commands from this directory.
 
@@ -87,6 +101,7 @@ A valid sandbox receipt must include `mode: sandbox`, `settled: false`, `real_re
 | Route | Current sandbox contract |
 |---|---|
 | `GET /api/v1/catalog` | Free product metadata and proposed prices |
+| `GET /api/v1/performance-sample` | Public synthetic measurements and calculated performance outputs; no account or payment |
 | `GET /api/v1/sample` | Free dated evidence sample |
 | `GET /api/v1/snapshot` | 0.01 simulated USDC |
 | `GET /api/v1/changes?since=YYYY-MM-DD` | 0.05 simulated USDC; collection events after the date |
@@ -114,6 +129,7 @@ The daily workflow also records an aggregate growth diagnosis using a separate a
 
 ```sh
 python3 -m unittest discover -s tests -v
+node --test tests/performance-sample.test.mjs
 ```
 
 Tests run solely against in-process mocks or a loopback HTTP server with synthetic data. They cover a response lost after a simulated debit, retries across process state, price ceilings, catalog consistency, mode checks, parameter binding, redirects, HTML sign-in responses and invalid receipts. Cloud tests also verify secret handling, aggregate reports, source-review failures and MCP discovery without purchases. These tests neither check a production deployment nor prove financial facts. No keys or external accounts are required.

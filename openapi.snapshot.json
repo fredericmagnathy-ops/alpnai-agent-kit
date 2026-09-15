@@ -217,31 +217,28 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "runs"
-                ],
                 "properties": {
                   "runs": {
                     "type": "array",
-                    "minItems": 1,
-                    "maxItems": 1000,
                     "items": {
                       "type": "object",
-                      "required": [
-                        "task_id",
-                        "workflow",
-                        "variant",
-                        "cost_usd",
-                        "success"
-                      ],
                       "properties": {
                         "task_id": {
-                          "type": "string"
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "pattern": "^(?!\\s)(?![\\s\\S]*\\s$)[^\\u0000-\\u001F\\u007F]+$",
+                          "description": "Nonempty, no control characters or surrounding whitespace. The engine additionally enforces at most 128 UTF-16 code units."
                         },
                         "workflow": {
-                          "type": "string"
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 80,
+                          "pattern": "^(?!\\s)(?![\\s\\S]*\\s$)[^\\u0000-\\u001F\\u007F]+$",
+                          "description": "Nonempty, no control characters or surrounding whitespace. The engine additionally enforces at most 80 UTF-16 code units."
                         },
                         "variant": {
+                          "type": "string",
                           "enum": [
                             "baseline",
                             "candidate"
@@ -249,29 +246,656 @@
                         },
                         "cost_usd": {
                           "type": "number",
-                          "minimum": 0
+                          "minimum": 0,
+                          "maximum": 10000,
+                          "description": "USD cost of this attempt. At most six decimal places; the engine verifies whole micro-USD using floating-point tolerance. No multipleOf keyword is used, to avoid rejecting valid JSON decimals."
                         },
                         "success": {
                           "type": "boolean"
                         },
                         "latency_ms": {
                           "type": "number",
-                          "minimum": 0
+                          "minimum": 0,
+                          "maximum": 86400000,
+                          "description": "Recorded attempt duration in milliseconds; decimals are accepted. Omit if not measured."
                         }
-                      }
-                    }
+                      },
+                      "required": [
+                        "task_id",
+                        "workflow",
+                        "variant",
+                        "cost_usd",
+                        "success"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "minItems": 1,
+                    "maxItems": 1000
                   },
                   "config": {
-                    "type": "object"
+                    "type": "object",
+                    "properties": {
+                      "minSamples": {
+                        "type": "integer",
+                        "minimum": 2,
+                        "maximum": 500,
+                        "default": 30
+                      },
+                      "minSuccessRate": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1,
+                        "default": 0.95
+                      },
+                      "maxSuccessRateDrop": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1,
+                        "default": 0.02
+                      },
+                      "maxP95LatencyMs": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 86400000000
+                      },
+                      "monthlyTasks": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 1000000,
+                        "description": "Baseline logical tasks launched per month; the engine requires exactly one workflow if supplied."
+                      }
+                    },
+                    "required": [],
+                    "additionalProperties": false
                   }
-                }
+                },
+                "required": [
+                  "runs"
+                ],
+                "additionalProperties": false,
+                "title": "ALPNAI recorded agent attempts",
+                "description": "Recorded attempts, not prompts or secrets. Identical rows count as separate attempts. All three analysis tools accept this same input. The runtime validator additionally enforces six-decimal micro-USD precision, the same task_id belonging to one workflow, one workflow when monthlyTasks is given, and UTF-16 length limits. HTTP body limit: 512000 UTF-8 bytes."
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Conditional analysis, no realized-savings or deployment claim."
+            "description": "Conditional analysis, no realized-savings or deployment claim.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "type": "string",
+                      "const": "free_audit"
+                    },
+                    "payment_required": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "persisted": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "schema_version": {
+                          "type": "string",
+                          "const": "1.0.0"
+                        },
+                        "purpose": {
+                          "type": "string",
+                          "const": "cost_per_successful_agent_task_audit"
+                        },
+                        "data_provenance": {
+                          "type": "string",
+                          "const": "user_supplied_not_verified"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {
+                            "minSamples": {
+                              "type": "integer",
+                              "minimum": 2,
+                              "maximum": 500,
+                              "default": 30
+                            },
+                            "minSuccessRate": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1,
+                              "default": 0.95
+                            },
+                            "maxSuccessRateDrop": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1,
+                              "default": 0.02
+                            },
+                            "maxP95LatencyMs": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 86400000000
+                            },
+                            "monthlyTasks": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 1000000,
+                              "description": "Baseline logical tasks launched per month; the engine requires exactly one workflow if supplied."
+                            }
+                          },
+                          "required": [
+                            "minSamples",
+                            "minSuccessRate",
+                            "maxSuccessRateDrop"
+                          ],
+                          "additionalProperties": true
+                        },
+                        "input_attempt_records": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 1000
+                        },
+                        "experimental_bias_control": {
+                          "type": "string",
+                          "const": "unknown"
+                        },
+                        "automatic_deployment_authorized": {
+                          "type": "boolean",
+                          "const": false
+                        },
+                        "methodology": {
+                          "type": "object",
+                          "properties": {
+                            "logical_task_key": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "minItems": 3,
+                              "maxItems": 3
+                            },
+                            "success": {
+                              "type": "string"
+                            },
+                            "duplicates": {
+                              "type": "string"
+                            },
+                            "latency": {
+                              "type": "string"
+                            },
+                            "quality": {
+                              "type": "string"
+                            },
+                            "uncertainty": {
+                              "type": "string"
+                            },
+                            "missing_costs": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "logical_task_key",
+                            "success",
+                            "duplicates",
+                            "latency",
+                            "quality",
+                            "uncertainty",
+                            "missing_costs"
+                          ],
+                          "additionalProperties": true
+                        },
+                        "workflows": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "workflow": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80,
+                                "pattern": "^(?!\\s)(?![\\s\\S]*\\s$)[^\\u0000-\\u001F\\u007F]+$",
+                                "description": "Nonempty, no control characters or surrounding whitespace. The engine additionally enforces at most 80 UTF-16 code units."
+                              },
+                              "baseline": {
+                                "anyOf": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "tasks": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 1000
+                                      },
+                                      "attempts": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 1000
+                                      },
+                                      "retry_attempts": {
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 999
+                                      },
+                                      "successful_tasks": {
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 1000
+                                      },
+                                      "total_cost_usd": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "cost_per_task_usd": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "cost_per_successful_task_usd": {
+                                        "anyOf": [
+                                          {
+                                            "type": "number",
+                                            "minimum": 0
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "success_rate": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                      },
+                                      "success_rate_interval_95_wilson": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "maximum": 1
+                                        },
+                                        "minItems": 2,
+                                        "maxItems": 2
+                                      },
+                                      "p95_recorded_attempt_latency_per_task_ms": {
+                                        "anyOf": [
+                                          {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 86400000000
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "latency_complete": {
+                                        "type": "boolean"
+                                      }
+                                    },
+                                    "required": [
+                                      "tasks",
+                                      "attempts",
+                                      "retry_attempts",
+                                      "successful_tasks",
+                                      "total_cost_usd",
+                                      "cost_per_task_usd",
+                                      "cost_per_successful_task_usd",
+                                      "success_rate",
+                                      "success_rate_interval_95_wilson",
+                                      "p95_recorded_attempt_latency_per_task_ms",
+                                      "latency_complete"
+                                    ],
+                                    "additionalProperties": true
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "candidate": {
+                                "anyOf": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "tasks": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 1000
+                                      },
+                                      "attempts": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 1000
+                                      },
+                                      "retry_attempts": {
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 999
+                                      },
+                                      "successful_tasks": {
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 1000
+                                      },
+                                      "total_cost_usd": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "cost_per_task_usd": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "cost_per_successful_task_usd": {
+                                        "anyOf": [
+                                          {
+                                            "type": "number",
+                                            "minimum": 0
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "success_rate": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                      },
+                                      "success_rate_interval_95_wilson": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "maximum": 1
+                                        },
+                                        "minItems": 2,
+                                        "maxItems": 2
+                                      },
+                                      "p95_recorded_attempt_latency_per_task_ms": {
+                                        "anyOf": [
+                                          {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 86400000000
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "latency_complete": {
+                                        "type": "boolean"
+                                      }
+                                    },
+                                    "required": [
+                                      "tasks",
+                                      "attempts",
+                                      "retry_attempts",
+                                      "successful_tasks",
+                                      "total_cost_usd",
+                                      "cost_per_task_usd",
+                                      "cost_per_successful_task_usd",
+                                      "success_rate",
+                                      "success_rate_interval_95_wilson",
+                                      "p95_recorded_attempt_latency_per_task_ms",
+                                      "latency_complete"
+                                    ],
+                                    "additionalProperties": true
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "comparison": {
+                                "type": "object",
+                                "properties": {
+                                  "matched_task_ids": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 1000
+                                  },
+                                  "baseline_only_tasks": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 1000
+                                  },
+                                  "candidate_only_tasks": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 1000
+                                  },
+                                  "same_task_set": {
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "matched_task_ids",
+                                  "baseline_only_tasks",
+                                  "candidate_only_tasks",
+                                  "same_task_set"
+                                ],
+                                "additionalProperties": true
+                              },
+                              "gates": {
+                                "type": "object",
+                                "properties": {
+                                  "both_variants": {
+                                    "type": "string",
+                                    "enum": [
+                                      "pass",
+                                      "fail",
+                                      "unknown",
+                                      "not_requested"
+                                    ]
+                                  },
+                                  "minimum_distinct_tasks_per_variant": {
+                                    "type": "string",
+                                    "enum": [
+                                      "pass",
+                                      "fail",
+                                      "unknown",
+                                      "not_requested"
+                                    ]
+                                  },
+                                  "same_task_set": {
+                                    "type": "string",
+                                    "enum": [
+                                      "pass",
+                                      "fail",
+                                      "unknown",
+                                      "not_requested"
+                                    ]
+                                  },
+                                  "observed_success_rate": {
+                                    "type": "string",
+                                    "enum": [
+                                      "pass",
+                                      "fail",
+                                      "unknown",
+                                      "not_requested"
+                                    ]
+                                  },
+                                  "recorded_latency": {
+                                    "type": "string",
+                                    "enum": [
+                                      "pass",
+                                      "fail",
+                                      "unknown",
+                                      "not_requested"
+                                    ]
+                                  },
+                                  "lower_cost_per_successful_task": {
+                                    "type": "string",
+                                    "enum": [
+                                      "pass",
+                                      "fail",
+                                      "unknown",
+                                      "not_requested"
+                                    ]
+                                  },
+                                  "experimental_bias_control": {
+                                    "type": "string",
+                                    "const": "unknown"
+                                  }
+                                },
+                                "required": [
+                                  "both_variants",
+                                  "minimum_distinct_tasks_per_variant",
+                                  "same_task_set",
+                                  "observed_success_rate",
+                                  "recorded_latency",
+                                  "lower_cost_per_successful_task",
+                                  "experimental_bias_control"
+                                ],
+                                "additionalProperties": true
+                              },
+                              "decision": {
+                                "type": "string",
+                                "enum": [
+                                  "missing_comparison",
+                                  "collect_more_data",
+                                  "quality_regression",
+                                  "latency_data_required",
+                                  "latency_regression",
+                                  "no_economic_advantage",
+                                  "candidate_for_controlled_trial"
+                                ]
+                              },
+                              "automatic_deployment_authorized": {
+                                "type": "boolean",
+                                "const": false
+                              },
+                              "realized_savings_usd": {
+                                "type": "null"
+                              },
+                              "opportunity_monthly": {
+                                "anyOf": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "status": {
+                                        "type": "string",
+                                        "const": "conditional_projection_not_realized"
+                                      },
+                                      "basis": {
+                                        "type": "string",
+                                        "const": "same_expected_successful_task_volume"
+                                      },
+                                      "currency": {
+                                        "type": "string",
+                                        "const": "USD"
+                                      },
+                                      "period": {
+                                        "type": "string",
+                                        "const": "month"
+                                      },
+                                      "baseline_launched_tasks_per_month": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 1000000
+                                      },
+                                      "expected_successful_tasks_per_month": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "candidate_expected_launched_tasks_per_month": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "baseline_expected_cost_usd": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "candidate_expected_cost_usd": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "potential_cost_difference_usd": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "excludes": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string"
+                                        },
+                                        "minItems": 1
+                                      },
+                                      "conditions": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string"
+                                        },
+                                        "minItems": 1
+                                      }
+                                    },
+                                    "required": [
+                                      "status",
+                                      "basis",
+                                      "currency",
+                                      "period",
+                                      "baseline_launched_tasks_per_month",
+                                      "expected_successful_tasks_per_month",
+                                      "candidate_expected_launched_tasks_per_month",
+                                      "baseline_expected_cost_usd",
+                                      "candidate_expected_cost_usd",
+                                      "potential_cost_difference_usd",
+                                      "excludes",
+                                      "conditions"
+                                    ],
+                                    "additionalProperties": true
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "workflow",
+                              "baseline",
+                              "candidate",
+                              "comparison",
+                              "gates",
+                              "decision",
+                              "automatic_deployment_authorized",
+                              "realized_savings_usd",
+                              "opportunity_monthly"
+                            ],
+                            "additionalProperties": true
+                          },
+                          "minItems": 1,
+                          "maxItems": 1000
+                        }
+                      },
+                      "required": [
+                        "schema_version",
+                        "purpose",
+                        "data_provenance",
+                        "config",
+                        "input_attempt_records",
+                        "experimental_bias_control",
+                        "automatic_deployment_authorized",
+                        "methodology",
+                        "workflows"
+                      ],
+                      "additionalProperties": true
+                    }
+                  },
+                  "required": [
+                    "mode",
+                    "payment_required",
+                    "persisted",
+                    "data"
+                  ],
+                  "additionalProperties": true
+                }
+              }
+            }
           },
           "400": {
             "description": "Invalid input"
@@ -299,31 +923,28 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "runs"
-                ],
                 "properties": {
                   "runs": {
                     "type": "array",
-                    "minItems": 1,
-                    "maxItems": 1000,
                     "items": {
                       "type": "object",
-                      "required": [
-                        "task_id",
-                        "workflow",
-                        "variant",
-                        "cost_usd",
-                        "success"
-                      ],
                       "properties": {
                         "task_id": {
-                          "type": "string"
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "pattern": "^(?!\\s)(?![\\s\\S]*\\s$)[^\\u0000-\\u001F\\u007F]+$",
+                          "description": "Nonempty, no control characters or surrounding whitespace. The engine additionally enforces at most 128 UTF-16 code units."
                         },
                         "workflow": {
-                          "type": "string"
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 80,
+                          "pattern": "^(?!\\s)(?![\\s\\S]*\\s$)[^\\u0000-\\u001F\\u007F]+$",
+                          "description": "Nonempty, no control characters or surrounding whitespace. The engine additionally enforces at most 80 UTF-16 code units."
                         },
                         "variant": {
+                          "type": "string",
                           "enum": [
                             "baseline",
                             "candidate"
@@ -331,22 +952,75 @@
                         },
                         "cost_usd": {
                           "type": "number",
-                          "minimum": 0
+                          "minimum": 0,
+                          "maximum": 10000,
+                          "description": "USD cost of this attempt. At most six decimal places; the engine verifies whole micro-USD using floating-point tolerance. No multipleOf keyword is used, to avoid rejecting valid JSON decimals."
                         },
                         "success": {
                           "type": "boolean"
                         },
                         "latency_ms": {
                           "type": "number",
-                          "minimum": 0
+                          "minimum": 0,
+                          "maximum": 86400000,
+                          "description": "Recorded attempt duration in milliseconds; decimals are accepted. Omit if not measured."
                         }
-                      }
-                    }
+                      },
+                      "required": [
+                        "task_id",
+                        "workflow",
+                        "variant",
+                        "cost_usd",
+                        "success"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "minItems": 1,
+                    "maxItems": 1000
                   },
                   "config": {
-                    "type": "object"
+                    "type": "object",
+                    "properties": {
+                      "minSamples": {
+                        "type": "integer",
+                        "minimum": 2,
+                        "maximum": 500,
+                        "default": 30
+                      },
+                      "minSuccessRate": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1,
+                        "default": 0.95
+                      },
+                      "maxSuccessRateDrop": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1,
+                        "default": 0.02
+                      },
+                      "maxP95LatencyMs": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 86400000000
+                      },
+                      "monthlyTasks": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 1000000,
+                        "description": "Baseline logical tasks launched per month; the engine requires exactly one workflow if supplied."
+                      }
+                    },
+                    "required": [],
+                    "additionalProperties": false
                   }
-                }
+                },
+                "required": [
+                  "runs"
+                ],
+                "additionalProperties": false,
+                "title": "ALPNAI recorded agent attempts",
+                "description": "Recorded attempts, not prompts or secrets. Identical rows count as separate attempts. All three analysis tools accept this same input. The runtime validator additionally enforces six-decimal micro-USD precision, the same task_id belonging to one workflow, one workflow when monthlyTasks is given, and UTF-16 length limits. HTTP body limit: 512000 UTF-8 bytes."
               }
             }
           }
@@ -357,7 +1031,168 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "type": "string",
+                      "const": "free_audit"
+                    },
+                    "payment_required": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "persisted": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "schema_version": {
+                          "type": "string",
+                          "const": "1.0.0"
+                        },
+                        "measurement": {
+                          "type": "string",
+                          "const": "summed_recorded_attempt_durations_per_task"
+                        },
+                        "percentile_method": {
+                          "type": "string",
+                          "const": "nearest_rank"
+                        },
+                        "groups": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "workflow": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80,
+                                "pattern": "^(?!\\s)(?![\\s\\S]*\\s$)[^\\u0000-\\u001F\\u007F]+$",
+                                "description": "Nonempty, no control characters or surrounding whitespace. The engine additionally enforces at most 80 UTF-16 code units."
+                              },
+                              "variant": {
+                                "type": "string",
+                                "enum": [
+                                  "baseline",
+                                  "candidate"
+                                ]
+                              },
+                              "tasks": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 1000
+                              },
+                              "recorded_attempts": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 1000
+                              },
+                              "retry_attempts": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 999
+                              },
+                              "duration_coverage": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1
+                              },
+                              "p50_ms": {
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 86400000000
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "p95_ms": {
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 86400000000
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "max_ms": {
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 86400000000
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "threshold_ms": {
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 86400000000
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "within_p95_threshold": {
+                                "anyOf": [
+                                  {
+                                    "type": "boolean"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "workflow",
+                              "variant",
+                              "tasks",
+                              "recorded_attempts",
+                              "retry_attempts",
+                              "duration_coverage",
+                              "p50_ms",
+                              "p95_ms",
+                              "max_ms",
+                              "threshold_ms",
+                              "within_p95_threshold"
+                            ],
+                            "additionalProperties": true
+                          },
+                          "minItems": 1,
+                          "maxItems": 1000
+                        }
+                      },
+                      "required": [
+                        "schema_version",
+                        "measurement",
+                        "percentile_method",
+                        "groups"
+                      ],
+                      "additionalProperties": true
+                    }
+                  },
+                  "required": [
+                    "mode",
+                    "payment_required",
+                    "persisted",
+                    "data"
+                  ],
+                  "additionalProperties": true
                 }
               }
             }
@@ -389,31 +1224,28 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "runs"
-                ],
                 "properties": {
                   "runs": {
                     "type": "array",
-                    "minItems": 1,
-                    "maxItems": 1000,
                     "items": {
                       "type": "object",
-                      "required": [
-                        "task_id",
-                        "workflow",
-                        "variant",
-                        "cost_usd",
-                        "success"
-                      ],
                       "properties": {
                         "task_id": {
-                          "type": "string"
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "pattern": "^(?!\\s)(?![\\s\\S]*\\s$)[^\\u0000-\\u001F\\u007F]+$",
+                          "description": "Nonempty, no control characters or surrounding whitespace. The engine additionally enforces at most 128 UTF-16 code units."
                         },
                         "workflow": {
-                          "type": "string"
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 80,
+                          "pattern": "^(?!\\s)(?![\\s\\S]*\\s$)[^\\u0000-\\u001F\\u007F]+$",
+                          "description": "Nonempty, no control characters or surrounding whitespace. The engine additionally enforces at most 80 UTF-16 code units."
                         },
                         "variant": {
+                          "type": "string",
                           "enum": [
                             "baseline",
                             "candidate"
@@ -421,22 +1253,75 @@
                         },
                         "cost_usd": {
                           "type": "number",
-                          "minimum": 0
+                          "minimum": 0,
+                          "maximum": 10000,
+                          "description": "USD cost of this attempt. At most six decimal places; the engine verifies whole micro-USD using floating-point tolerance. No multipleOf keyword is used, to avoid rejecting valid JSON decimals."
                         },
                         "success": {
                           "type": "boolean"
                         },
                         "latency_ms": {
                           "type": "number",
-                          "minimum": 0
+                          "minimum": 0,
+                          "maximum": 86400000,
+                          "description": "Recorded attempt duration in milliseconds; decimals are accepted. Omit if not measured."
                         }
-                      }
-                    }
+                      },
+                      "required": [
+                        "task_id",
+                        "workflow",
+                        "variant",
+                        "cost_usd",
+                        "success"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "minItems": 1,
+                    "maxItems": 1000
                   },
                   "config": {
-                    "type": "object"
+                    "type": "object",
+                    "properties": {
+                      "minSamples": {
+                        "type": "integer",
+                        "minimum": 2,
+                        "maximum": 500,
+                        "default": 30
+                      },
+                      "minSuccessRate": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1,
+                        "default": 0.95
+                      },
+                      "maxSuccessRateDrop": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1,
+                        "default": 0.02
+                      },
+                      "maxP95LatencyMs": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 86400000000
+                      },
+                      "monthlyTasks": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 1000000,
+                        "description": "Baseline logical tasks launched per month; the engine requires exactly one workflow if supplied."
+                      }
+                    },
+                    "required": [],
+                    "additionalProperties": false
                   }
-                }
+                },
+                "required": [
+                  "runs"
+                ],
+                "additionalProperties": false,
+                "title": "ALPNAI recorded agent attempts",
+                "description": "Recorded attempts, not prompts or secrets. Identical rows count as separate attempts. All three analysis tools accept this same input. The runtime validator additionally enforces six-decimal micro-USD precision, the same task_id belonging to one workflow, one workflow when monthlyTasks is given, and UTF-16 length limits. HTTP body limit: 512000 UTF-8 bytes."
               }
             }
           }
@@ -447,7 +1332,253 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "type": "string",
+                      "const": "free_audit"
+                    },
+                    "payment_required": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "persisted": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "schema_version": {
+                          "type": "string",
+                          "const": "1.0.0"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {
+                            "minSamples": {
+                              "type": "integer",
+                              "minimum": 2,
+                              "maximum": 500,
+                              "default": 30
+                            },
+                            "minSuccessRate": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1,
+                              "default": 0.95
+                            },
+                            "maxSuccessRateDrop": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1,
+                              "default": 0.02
+                            },
+                            "maxP95LatencyMs": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 86400000000
+                            },
+                            "monthlyTasks": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 1000000,
+                              "description": "Baseline logical tasks launched per month; the engine requires exactly one workflow if supplied."
+                            }
+                          },
+                          "required": [
+                            "minSamples",
+                            "minSuccessRate",
+                            "maxSuccessRateDrop"
+                          ],
+                          "additionalProperties": true
+                        },
+                        "workflows": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "workflow": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80,
+                                "pattern": "^(?!\\s)(?![\\s\\S]*\\s$)[^\\u0000-\\u001F\\u007F]+$",
+                                "description": "Nonempty, no control characters or surrounding whitespace. The engine additionally enforces at most 80 UTF-16 code units."
+                              },
+                              "comparison": {
+                                "type": "object",
+                                "properties": {
+                                  "matched_task_ids": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 1000
+                                  },
+                                  "baseline_only_tasks": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 1000
+                                  },
+                                  "candidate_only_tasks": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 1000
+                                  },
+                                  "same_task_set": {
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "matched_task_ids",
+                                  "baseline_only_tasks",
+                                  "candidate_only_tasks",
+                                  "same_task_set"
+                                ],
+                                "additionalProperties": true
+                              },
+                              "gates": {
+                                "type": "object",
+                                "properties": {
+                                  "both_variants": {
+                                    "type": "string",
+                                    "enum": [
+                                      "pass",
+                                      "fail",
+                                      "unknown",
+                                      "not_requested"
+                                    ]
+                                  },
+                                  "minimum_distinct_tasks_per_variant": {
+                                    "type": "string",
+                                    "enum": [
+                                      "pass",
+                                      "fail",
+                                      "unknown",
+                                      "not_requested"
+                                    ]
+                                  },
+                                  "same_task_set": {
+                                    "type": "string",
+                                    "enum": [
+                                      "pass",
+                                      "fail",
+                                      "unknown",
+                                      "not_requested"
+                                    ]
+                                  },
+                                  "observed_success_rate": {
+                                    "type": "string",
+                                    "enum": [
+                                      "pass",
+                                      "fail",
+                                      "unknown",
+                                      "not_requested"
+                                    ]
+                                  },
+                                  "recorded_latency": {
+                                    "type": "string",
+                                    "enum": [
+                                      "pass",
+                                      "fail",
+                                      "unknown",
+                                      "not_requested"
+                                    ]
+                                  },
+                                  "lower_cost_per_successful_task": {
+                                    "type": "string",
+                                    "enum": [
+                                      "pass",
+                                      "fail",
+                                      "unknown",
+                                      "not_requested"
+                                    ]
+                                  },
+                                  "experimental_bias_control": {
+                                    "type": "string",
+                                    "const": "unknown"
+                                  }
+                                },
+                                "required": [
+                                  "both_variants",
+                                  "minimum_distinct_tasks_per_variant",
+                                  "same_task_set",
+                                  "observed_success_rate",
+                                  "recorded_latency",
+                                  "lower_cost_per_successful_task",
+                                  "experimental_bias_control"
+                                ],
+                                "additionalProperties": true
+                              },
+                              "decision": {
+                                "type": "string",
+                                "enum": [
+                                  "missing_comparison",
+                                  "collect_more_data",
+                                  "quality_regression",
+                                  "latency_data_required",
+                                  "latency_regression",
+                                  "no_economic_advantage",
+                                  "candidate_for_controlled_trial"
+                                ]
+                              },
+                              "baseline_success": {
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "candidate_success": {
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "automatic_deployment_authorized": {
+                                "type": "boolean",
+                                "const": false
+                              }
+                            },
+                            "required": [
+                              "workflow",
+                              "comparison",
+                              "gates",
+                              "decision",
+                              "baseline_success",
+                              "candidate_success",
+                              "automatic_deployment_authorized"
+                            ],
+                            "additionalProperties": true
+                          },
+                          "minItems": 1,
+                          "maxItems": 1000
+                        }
+                      },
+                      "required": [
+                        "schema_version",
+                        "config",
+                        "workflows"
+                      ],
+                      "additionalProperties": true
+                    }
+                  },
+                  "required": [
+                    "mode",
+                    "payment_required",
+                    "persisted",
+                    "data"
+                  ],
+                  "additionalProperties": true
                 }
               }
             }
@@ -496,20 +1627,101 @@
                     "properties": {
                       "runs": {
                         "type": "array",
-                        "minItems": 1,
-                        "maxItems": 1000,
                         "items": {
-                          "type": "object"
-                        }
+                          "type": "object",
+                          "properties": {
+                            "task_id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 128,
+                              "pattern": "^(?!\\s)(?![\\s\\S]*\\s$)[^\\u0000-\\u001F\\u007F]+$",
+                              "description": "Nonempty, no control characters or surrounding whitespace. The engine additionally enforces at most 128 UTF-16 code units."
+                            },
+                            "workflow": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80,
+                              "pattern": "^(?!\\s)(?![\\s\\S]*\\s$)[^\\u0000-\\u001F\\u007F]+$",
+                              "description": "Nonempty, no control characters or surrounding whitespace. The engine additionally enforces at most 80 UTF-16 code units."
+                            },
+                            "variant": {
+                              "type": "string",
+                              "enum": [
+                                "baseline",
+                                "candidate"
+                              ]
+                            },
+                            "cost_usd": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 10000,
+                              "description": "USD cost of this attempt. At most six decimal places; the engine verifies whole micro-USD using floating-point tolerance. No multipleOf keyword is used, to avoid rejecting valid JSON decimals."
+                            },
+                            "success": {
+                              "type": "boolean"
+                            },
+                            "latency_ms": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 86400000,
+                              "description": "Recorded attempt duration in milliseconds; decimals are accepted. Omit if not measured."
+                            }
+                          },
+                          "required": [
+                            "task_id",
+                            "workflow",
+                            "variant",
+                            "cost_usd",
+                            "success"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "minItems": 1,
+                        "maxItems": 1000
                       },
                       "config": {
-                        "type": "object"
+                        "type": "object",
+                        "properties": {
+                          "minSamples": {
+                            "type": "integer",
+                            "minimum": 2,
+                            "maximum": 500,
+                            "default": 30
+                          },
+                          "minSuccessRate": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1,
+                            "default": 0.95
+                          },
+                          "maxSuccessRateDrop": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1,
+                            "default": 0.02
+                          },
+                          "maxP95LatencyMs": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 86400000000
+                          },
+                          "monthlyTasks": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000000,
+                            "description": "Baseline logical tasks launched per month; the engine requires exactly one workflow if supplied."
+                          }
+                        },
+                        "required": [],
+                        "additionalProperties": false
                       }
                     },
                     "required": [
                       "runs"
                     ],
-                    "additionalProperties": false
+                    "additionalProperties": false,
+                    "title": "ALPNAI recorded agent attempts",
+                    "description": "Recorded attempts, not prompts or secrets. Identical rows count as separate attempts. All three analysis tools accept this same input. The runtime validator additionally enforces six-decimal micro-USD precision, the same task_id belonging to one workflow, one workflow when monthlyTasks is given, and UTF-16 length limits. HTTP body limit: 512000 UTF-8 bytes."
                   }
                 },
                 "required": [
@@ -574,6 +1786,1075 @@
           },
           "503": {
             "description": "Service temporarily unavailable; retry with the same request ID and content"
+          }
+        }
+      }
+    },
+    "/api/v1/performance-sample": {
+      "get": {
+        "operationId": "getPerformanceSample",
+        "summary": "Evaluate the performance contract without an account or payment",
+        "description": "Returns fixed, explicitly synthetic input and actual computed cost, latency and quality results. No request body, authentication, storage or external model call. Recalculate before using authenticated analyses.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Synthetic demonstration, not measured customer savings or a paid-flow test.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "contract",
+                    "contract_version",
+                    "synthetic",
+                    "authentication_required",
+                    "payment_required",
+                    "input",
+                    "results"
+                  ],
+                  "properties": {
+                    "contract": {
+                      "const": "alpnai.performance-sample"
+                    },
+                    "contract_version": {
+                      "const": "1.0.0"
+                    },
+                    "synthetic": {
+                      "const": true
+                    },
+                    "authentication_required": {
+                      "const": false
+                    },
+                    "payment_required": {
+                      "const": false
+                    },
+                    "input": {
+                      "type": "object",
+                      "properties": {
+                        "runs": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "task_id": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 128,
+                                "pattern": "^(?!\\s)(?![\\s\\S]*\\s$)[^\\u0000-\\u001F\\u007F]+$",
+                                "description": "Nonempty, no control characters or surrounding whitespace. The engine additionally enforces at most 128 UTF-16 code units."
+                              },
+                              "workflow": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80,
+                                "pattern": "^(?!\\s)(?![\\s\\S]*\\s$)[^\\u0000-\\u001F\\u007F]+$",
+                                "description": "Nonempty, no control characters or surrounding whitespace. The engine additionally enforces at most 80 UTF-16 code units."
+                              },
+                              "variant": {
+                                "type": "string",
+                                "enum": [
+                                  "baseline",
+                                  "candidate"
+                                ]
+                              },
+                              "cost_usd": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10000,
+                                "description": "USD cost of this attempt. At most six decimal places; the engine verifies whole micro-USD using floating-point tolerance. No multipleOf keyword is used, to avoid rejecting valid JSON decimals."
+                              },
+                              "success": {
+                                "type": "boolean"
+                              },
+                              "latency_ms": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 86400000,
+                                "description": "Recorded attempt duration in milliseconds; decimals are accepted. Omit if not measured."
+                              }
+                            },
+                            "required": [
+                              "task_id",
+                              "workflow",
+                              "variant",
+                              "cost_usd",
+                              "success"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "minItems": 1,
+                          "maxItems": 1000
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {
+                            "minSamples": {
+                              "type": "integer",
+                              "minimum": 2,
+                              "maximum": 500,
+                              "default": 30
+                            },
+                            "minSuccessRate": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1,
+                              "default": 0.95
+                            },
+                            "maxSuccessRateDrop": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1,
+                              "default": 0.02
+                            },
+                            "maxP95LatencyMs": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 86400000000
+                            },
+                            "monthlyTasks": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 1000000,
+                              "description": "Baseline logical tasks launched per month; the engine requires exactly one workflow if supplied."
+                            }
+                          },
+                          "required": [],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "runs"
+                      ],
+                      "additionalProperties": false,
+                      "title": "ALPNAI recorded agent attempts",
+                      "description": "Recorded attempts, not prompts or secrets. Identical rows count as separate attempts. All three analysis tools accept this same input. The runtime validator additionally enforces six-decimal micro-USD precision, the same task_id belonging to one workflow, one workflow when monthlyTasks is given, and UTF-16 length limits. HTTP body limit: 512000 UTF-8 bytes."
+                    },
+                    "results": {
+                      "type": "object",
+                      "properties": {
+                        "cost": {
+                          "type": "object",
+                          "properties": {
+                            "schema_version": {
+                              "type": "string",
+                              "const": "1.0.0"
+                            },
+                            "purpose": {
+                              "type": "string",
+                              "const": "cost_per_successful_agent_task_audit"
+                            },
+                            "data_provenance": {
+                              "type": "string",
+                              "const": "user_supplied_not_verified"
+                            },
+                            "config": {
+                              "type": "object",
+                              "properties": {
+                                "minSamples": {
+                                  "type": "integer",
+                                  "minimum": 2,
+                                  "maximum": 500,
+                                  "default": 30
+                                },
+                                "minSuccessRate": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1,
+                                  "default": 0.95
+                                },
+                                "maxSuccessRateDrop": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1,
+                                  "default": 0.02
+                                },
+                                "maxP95LatencyMs": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 86400000000
+                                },
+                                "monthlyTasks": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 1000000,
+                                  "description": "Baseline logical tasks launched per month; the engine requires exactly one workflow if supplied."
+                                }
+                              },
+                              "required": [
+                                "minSamples",
+                                "minSuccessRate",
+                                "maxSuccessRateDrop"
+                              ],
+                              "additionalProperties": true
+                            },
+                            "input_attempt_records": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 1000
+                            },
+                            "experimental_bias_control": {
+                              "type": "string",
+                              "const": "unknown"
+                            },
+                            "automatic_deployment_authorized": {
+                              "type": "boolean",
+                              "const": false
+                            },
+                            "methodology": {
+                              "type": "object",
+                              "properties": {
+                                "logical_task_key": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  },
+                                  "minItems": 3,
+                                  "maxItems": 3
+                                },
+                                "success": {
+                                  "type": "string"
+                                },
+                                "duplicates": {
+                                  "type": "string"
+                                },
+                                "latency": {
+                                  "type": "string"
+                                },
+                                "quality": {
+                                  "type": "string"
+                                },
+                                "uncertainty": {
+                                  "type": "string"
+                                },
+                                "missing_costs": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "logical_task_key",
+                                "success",
+                                "duplicates",
+                                "latency",
+                                "quality",
+                                "uncertainty",
+                                "missing_costs"
+                              ],
+                              "additionalProperties": true
+                            },
+                            "workflows": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "workflow": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 80,
+                                    "pattern": "^(?!\\s)(?![\\s\\S]*\\s$)[^\\u0000-\\u001F\\u007F]+$",
+                                    "description": "Nonempty, no control characters or surrounding whitespace. The engine additionally enforces at most 80 UTF-16 code units."
+                                  },
+                                  "baseline": {
+                                    "anyOf": [
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "tasks": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 1000
+                                          },
+                                          "attempts": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 1000
+                                          },
+                                          "retry_attempts": {
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "maximum": 999
+                                          },
+                                          "successful_tasks": {
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "maximum": 1000
+                                          },
+                                          "total_cost_usd": {
+                                            "type": "number",
+                                            "minimum": 0
+                                          },
+                                          "cost_per_task_usd": {
+                                            "type": "number",
+                                            "minimum": 0
+                                          },
+                                          "cost_per_successful_task_usd": {
+                                            "anyOf": [
+                                              {
+                                                "type": "number",
+                                                "minimum": 0
+                                              },
+                                              {
+                                                "type": "null"
+                                              }
+                                            ]
+                                          },
+                                          "success_rate": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 1
+                                          },
+                                          "success_rate_interval_95_wilson": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "number",
+                                              "minimum": 0,
+                                              "maximum": 1
+                                            },
+                                            "minItems": 2,
+                                            "maxItems": 2
+                                          },
+                                          "p95_recorded_attempt_latency_per_task_ms": {
+                                            "anyOf": [
+                                              {
+                                                "type": "number",
+                                                "minimum": 0,
+                                                "maximum": 86400000000
+                                              },
+                                              {
+                                                "type": "null"
+                                              }
+                                            ]
+                                          },
+                                          "latency_complete": {
+                                            "type": "boolean"
+                                          }
+                                        },
+                                        "required": [
+                                          "tasks",
+                                          "attempts",
+                                          "retry_attempts",
+                                          "successful_tasks",
+                                          "total_cost_usd",
+                                          "cost_per_task_usd",
+                                          "cost_per_successful_task_usd",
+                                          "success_rate",
+                                          "success_rate_interval_95_wilson",
+                                          "p95_recorded_attempt_latency_per_task_ms",
+                                          "latency_complete"
+                                        ],
+                                        "additionalProperties": true
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "candidate": {
+                                    "anyOf": [
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "tasks": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 1000
+                                          },
+                                          "attempts": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 1000
+                                          },
+                                          "retry_attempts": {
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "maximum": 999
+                                          },
+                                          "successful_tasks": {
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "maximum": 1000
+                                          },
+                                          "total_cost_usd": {
+                                            "type": "number",
+                                            "minimum": 0
+                                          },
+                                          "cost_per_task_usd": {
+                                            "type": "number",
+                                            "minimum": 0
+                                          },
+                                          "cost_per_successful_task_usd": {
+                                            "anyOf": [
+                                              {
+                                                "type": "number",
+                                                "minimum": 0
+                                              },
+                                              {
+                                                "type": "null"
+                                              }
+                                            ]
+                                          },
+                                          "success_rate": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 1
+                                          },
+                                          "success_rate_interval_95_wilson": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "number",
+                                              "minimum": 0,
+                                              "maximum": 1
+                                            },
+                                            "minItems": 2,
+                                            "maxItems": 2
+                                          },
+                                          "p95_recorded_attempt_latency_per_task_ms": {
+                                            "anyOf": [
+                                              {
+                                                "type": "number",
+                                                "minimum": 0,
+                                                "maximum": 86400000000
+                                              },
+                                              {
+                                                "type": "null"
+                                              }
+                                            ]
+                                          },
+                                          "latency_complete": {
+                                            "type": "boolean"
+                                          }
+                                        },
+                                        "required": [
+                                          "tasks",
+                                          "attempts",
+                                          "retry_attempts",
+                                          "successful_tasks",
+                                          "total_cost_usd",
+                                          "cost_per_task_usd",
+                                          "cost_per_successful_task_usd",
+                                          "success_rate",
+                                          "success_rate_interval_95_wilson",
+                                          "p95_recorded_attempt_latency_per_task_ms",
+                                          "latency_complete"
+                                        ],
+                                        "additionalProperties": true
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "comparison": {
+                                    "type": "object",
+                                    "properties": {
+                                      "matched_task_ids": {
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 1000
+                                      },
+                                      "baseline_only_tasks": {
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 1000
+                                      },
+                                      "candidate_only_tasks": {
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 1000
+                                      },
+                                      "same_task_set": {
+                                        "type": "boolean"
+                                      }
+                                    },
+                                    "required": [
+                                      "matched_task_ids",
+                                      "baseline_only_tasks",
+                                      "candidate_only_tasks",
+                                      "same_task_set"
+                                    ],
+                                    "additionalProperties": true
+                                  },
+                                  "gates": {
+                                    "type": "object",
+                                    "properties": {
+                                      "both_variants": {
+                                        "type": "string",
+                                        "enum": [
+                                          "pass",
+                                          "fail",
+                                          "unknown",
+                                          "not_requested"
+                                        ]
+                                      },
+                                      "minimum_distinct_tasks_per_variant": {
+                                        "type": "string",
+                                        "enum": [
+                                          "pass",
+                                          "fail",
+                                          "unknown",
+                                          "not_requested"
+                                        ]
+                                      },
+                                      "same_task_set": {
+                                        "type": "string",
+                                        "enum": [
+                                          "pass",
+                                          "fail",
+                                          "unknown",
+                                          "not_requested"
+                                        ]
+                                      },
+                                      "observed_success_rate": {
+                                        "type": "string",
+                                        "enum": [
+                                          "pass",
+                                          "fail",
+                                          "unknown",
+                                          "not_requested"
+                                        ]
+                                      },
+                                      "recorded_latency": {
+                                        "type": "string",
+                                        "enum": [
+                                          "pass",
+                                          "fail",
+                                          "unknown",
+                                          "not_requested"
+                                        ]
+                                      },
+                                      "lower_cost_per_successful_task": {
+                                        "type": "string",
+                                        "enum": [
+                                          "pass",
+                                          "fail",
+                                          "unknown",
+                                          "not_requested"
+                                        ]
+                                      },
+                                      "experimental_bias_control": {
+                                        "type": "string",
+                                        "const": "unknown"
+                                      }
+                                    },
+                                    "required": [
+                                      "both_variants",
+                                      "minimum_distinct_tasks_per_variant",
+                                      "same_task_set",
+                                      "observed_success_rate",
+                                      "recorded_latency",
+                                      "lower_cost_per_successful_task",
+                                      "experimental_bias_control"
+                                    ],
+                                    "additionalProperties": true
+                                  },
+                                  "decision": {
+                                    "type": "string",
+                                    "enum": [
+                                      "missing_comparison",
+                                      "collect_more_data",
+                                      "quality_regression",
+                                      "latency_data_required",
+                                      "latency_regression",
+                                      "no_economic_advantage",
+                                      "candidate_for_controlled_trial"
+                                    ]
+                                  },
+                                  "automatic_deployment_authorized": {
+                                    "type": "boolean",
+                                    "const": false
+                                  },
+                                  "realized_savings_usd": {
+                                    "type": "null"
+                                  },
+                                  "opportunity_monthly": {
+                                    "anyOf": [
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "status": {
+                                            "type": "string",
+                                            "const": "conditional_projection_not_realized"
+                                          },
+                                          "basis": {
+                                            "type": "string",
+                                            "const": "same_expected_successful_task_volume"
+                                          },
+                                          "currency": {
+                                            "type": "string",
+                                            "const": "USD"
+                                          },
+                                          "period": {
+                                            "type": "string",
+                                            "const": "month"
+                                          },
+                                          "baseline_launched_tasks_per_month": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 1000000
+                                          },
+                                          "expected_successful_tasks_per_month": {
+                                            "type": "number",
+                                            "minimum": 0
+                                          },
+                                          "candidate_expected_launched_tasks_per_month": {
+                                            "type": "number",
+                                            "minimum": 0
+                                          },
+                                          "baseline_expected_cost_usd": {
+                                            "type": "number",
+                                            "minimum": 0
+                                          },
+                                          "candidate_expected_cost_usd": {
+                                            "type": "number",
+                                            "minimum": 0
+                                          },
+                                          "potential_cost_difference_usd": {
+                                            "type": "number",
+                                            "minimum": 0
+                                          },
+                                          "excludes": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string"
+                                            },
+                                            "minItems": 1
+                                          },
+                                          "conditions": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string"
+                                            },
+                                            "minItems": 1
+                                          }
+                                        },
+                                        "required": [
+                                          "status",
+                                          "basis",
+                                          "currency",
+                                          "period",
+                                          "baseline_launched_tasks_per_month",
+                                          "expected_successful_tasks_per_month",
+                                          "candidate_expected_launched_tasks_per_month",
+                                          "baseline_expected_cost_usd",
+                                          "candidate_expected_cost_usd",
+                                          "potential_cost_difference_usd",
+                                          "excludes",
+                                          "conditions"
+                                        ],
+                                        "additionalProperties": true
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "workflow",
+                                  "baseline",
+                                  "candidate",
+                                  "comparison",
+                                  "gates",
+                                  "decision",
+                                  "automatic_deployment_authorized",
+                                  "realized_savings_usd",
+                                  "opportunity_monthly"
+                                ],
+                                "additionalProperties": true
+                              },
+                              "minItems": 1,
+                              "maxItems": 1000
+                            }
+                          },
+                          "required": [
+                            "schema_version",
+                            "purpose",
+                            "data_provenance",
+                            "config",
+                            "input_attempt_records",
+                            "experimental_bias_control",
+                            "automatic_deployment_authorized",
+                            "methodology",
+                            "workflows"
+                          ],
+                          "additionalProperties": true
+                        },
+                        "latency": {
+                          "type": "object",
+                          "properties": {
+                            "schema_version": {
+                              "type": "string",
+                              "const": "1.0.0"
+                            },
+                            "measurement": {
+                              "type": "string",
+                              "const": "summed_recorded_attempt_durations_per_task"
+                            },
+                            "percentile_method": {
+                              "type": "string",
+                              "const": "nearest_rank"
+                            },
+                            "groups": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "workflow": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 80,
+                                    "pattern": "^(?!\\s)(?![\\s\\S]*\\s$)[^\\u0000-\\u001F\\u007F]+$",
+                                    "description": "Nonempty, no control characters or surrounding whitespace. The engine additionally enforces at most 80 UTF-16 code units."
+                                  },
+                                  "variant": {
+                                    "type": "string",
+                                    "enum": [
+                                      "baseline",
+                                      "candidate"
+                                    ]
+                                  },
+                                  "tasks": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 1000
+                                  },
+                                  "recorded_attempts": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 1000
+                                  },
+                                  "retry_attempts": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 999
+                                  },
+                                  "duration_coverage": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                  },
+                                  "p50_ms": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 86400000000
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "p95_ms": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 86400000000
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "max_ms": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 86400000000
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "threshold_ms": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 86400000000
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "within_p95_threshold": {
+                                    "anyOf": [
+                                      {
+                                        "type": "boolean"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "workflow",
+                                  "variant",
+                                  "tasks",
+                                  "recorded_attempts",
+                                  "retry_attempts",
+                                  "duration_coverage",
+                                  "p50_ms",
+                                  "p95_ms",
+                                  "max_ms",
+                                  "threshold_ms",
+                                  "within_p95_threshold"
+                                ],
+                                "additionalProperties": true
+                              },
+                              "minItems": 1,
+                              "maxItems": 1000
+                            }
+                          },
+                          "required": [
+                            "schema_version",
+                            "measurement",
+                            "percentile_method",
+                            "groups"
+                          ],
+                          "additionalProperties": true
+                        },
+                        "quality": {
+                          "type": "object",
+                          "properties": {
+                            "schema_version": {
+                              "type": "string",
+                              "const": "1.0.0"
+                            },
+                            "config": {
+                              "type": "object",
+                              "properties": {
+                                "minSamples": {
+                                  "type": "integer",
+                                  "minimum": 2,
+                                  "maximum": 500,
+                                  "default": 30
+                                },
+                                "minSuccessRate": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1,
+                                  "default": 0.95
+                                },
+                                "maxSuccessRateDrop": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1,
+                                  "default": 0.02
+                                },
+                                "maxP95LatencyMs": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 86400000000
+                                },
+                                "monthlyTasks": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 1000000,
+                                  "description": "Baseline logical tasks launched per month; the engine requires exactly one workflow if supplied."
+                                }
+                              },
+                              "required": [
+                                "minSamples",
+                                "minSuccessRate",
+                                "maxSuccessRateDrop"
+                              ],
+                              "additionalProperties": true
+                            },
+                            "workflows": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "workflow": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 80,
+                                    "pattern": "^(?!\\s)(?![\\s\\S]*\\s$)[^\\u0000-\\u001F\\u007F]+$",
+                                    "description": "Nonempty, no control characters or surrounding whitespace. The engine additionally enforces at most 80 UTF-16 code units."
+                                  },
+                                  "comparison": {
+                                    "type": "object",
+                                    "properties": {
+                                      "matched_task_ids": {
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 1000
+                                      },
+                                      "baseline_only_tasks": {
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 1000
+                                      },
+                                      "candidate_only_tasks": {
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 1000
+                                      },
+                                      "same_task_set": {
+                                        "type": "boolean"
+                                      }
+                                    },
+                                    "required": [
+                                      "matched_task_ids",
+                                      "baseline_only_tasks",
+                                      "candidate_only_tasks",
+                                      "same_task_set"
+                                    ],
+                                    "additionalProperties": true
+                                  },
+                                  "gates": {
+                                    "type": "object",
+                                    "properties": {
+                                      "both_variants": {
+                                        "type": "string",
+                                        "enum": [
+                                          "pass",
+                                          "fail",
+                                          "unknown",
+                                          "not_requested"
+                                        ]
+                                      },
+                                      "minimum_distinct_tasks_per_variant": {
+                                        "type": "string",
+                                        "enum": [
+                                          "pass",
+                                          "fail",
+                                          "unknown",
+                                          "not_requested"
+                                        ]
+                                      },
+                                      "same_task_set": {
+                                        "type": "string",
+                                        "enum": [
+                                          "pass",
+                                          "fail",
+                                          "unknown",
+                                          "not_requested"
+                                        ]
+                                      },
+                                      "observed_success_rate": {
+                                        "type": "string",
+                                        "enum": [
+                                          "pass",
+                                          "fail",
+                                          "unknown",
+                                          "not_requested"
+                                        ]
+                                      },
+                                      "recorded_latency": {
+                                        "type": "string",
+                                        "enum": [
+                                          "pass",
+                                          "fail",
+                                          "unknown",
+                                          "not_requested"
+                                        ]
+                                      },
+                                      "lower_cost_per_successful_task": {
+                                        "type": "string",
+                                        "enum": [
+                                          "pass",
+                                          "fail",
+                                          "unknown",
+                                          "not_requested"
+                                        ]
+                                      },
+                                      "experimental_bias_control": {
+                                        "type": "string",
+                                        "const": "unknown"
+                                      }
+                                    },
+                                    "required": [
+                                      "both_variants",
+                                      "minimum_distinct_tasks_per_variant",
+                                      "same_task_set",
+                                      "observed_success_rate",
+                                      "recorded_latency",
+                                      "lower_cost_per_successful_task",
+                                      "experimental_bias_control"
+                                    ],
+                                    "additionalProperties": true
+                                  },
+                                  "decision": {
+                                    "type": "string",
+                                    "enum": [
+                                      "missing_comparison",
+                                      "collect_more_data",
+                                      "quality_regression",
+                                      "latency_data_required",
+                                      "latency_regression",
+                                      "no_economic_advantage",
+                                      "candidate_for_controlled_trial"
+                                    ]
+                                  },
+                                  "baseline_success": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "candidate_success": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "automatic_deployment_authorized": {
+                                    "type": "boolean",
+                                    "const": false
+                                  }
+                                },
+                                "required": [
+                                  "workflow",
+                                  "comparison",
+                                  "gates",
+                                  "decision",
+                                  "baseline_success",
+                                  "candidate_success",
+                                  "automatic_deployment_authorized"
+                                ],
+                                "additionalProperties": true
+                              },
+                              "minItems": 1,
+                              "maxItems": 1000
+                            }
+                          },
+                          "required": [
+                            "schema_version",
+                            "config",
+                            "workflows"
+                          ],
+                          "additionalProperties": true
+                        }
+                      },
+                      "required": [
+                        "cost",
+                        "latency",
+                        "quality"
+                      ],
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

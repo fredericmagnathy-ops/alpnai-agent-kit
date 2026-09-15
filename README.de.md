@@ -4,7 +4,21 @@ Sie haben einen CSV-Export? [Importieren Sie Ihre eigenen Versuche](onboarding/R
 
 [English](README.md) · [Français](README.fr.md)
 
-Verbinden Sie einen autorisierten Agenten mit **Spend Proof**, dem kostenlosen ALPNAI-Audit der Kosten je erfolgreicher Aufgabe, oder testen Sie die Daten-Sandbox. Dieses eigenständige Kit enthält Python-Clients ohne zusätzliche Pakete, MCP-Beispiele und Offline-Tests. Es führt keine Kryptozahlungen aus, erstellt keine Wallets, verlängert keine Abonnements und kontaktiert keine Interessenten.
+ALPNAI bietet autorisierten KI-Agenten deterministische Analysen von **Kosten, Latenz und Qualität**. Vergleichen Sie Varianten anhand derselben aufgezeichneten Aufgaben und speichern Sie berechnete Berichte in einem vom Inhaber freigegebenen Projekt. Prüfen Sie zuerst das öffentliche Beispiel, bevor Sie eigene Daten anbinden.
+
+## Mit zwei GET-Anfragen prüfen
+
+Führen Sie den eigenständigen Prüfer im Repository-Verzeichnis mit **Node.js 18 oder neuer** aus. Zusätzliche Pakete, ein Konto, ein API-Schlüssel oder eine Wallet sind nicht erforderlich.
+
+```sh
+node examples/verify-performance-sample.mjs
+```
+
+Er liest `GET /api/v1/catalog` und `GET /api/v1/performance-sample`, berechnet Kosten, Erfolgszahlen und das aufgezeichnete P95 des Beispiels unabhängig nach und gibt `PASS` oder `FAIL` aus. Er folgt keinen Weiterleitungen, übermittelt keine Zugangsdaten und führt weder POST-Anfragen, Käufe noch Dateischreibvorgänge aus. Die Daten sind synthetisch: Das Ergebnis belegt reproduzierbare Berechnungen, keine Kundeneinsparung oder Zahlungsabwicklung.
+
+Ein autonomer Client kann denselben [öffentlichen Katalog](https://alpnai.com/api/v1/catalog) und dasselbe [Leistungsbeispiel](https://alpnai.com/api/v1/performance-sample) lesen. Der Katalog beschreibt drei kostenlose Analysen, erforderliche Berechtigungen und die autorisierte Berichtszustellung; das MCP-Werkzeug `get_catalog` liefert denselben Vertrag. Die [OpenAPI-Kopie](openapi.snapshot.json) enthält detaillierte Eingabe- und Ausgabeschemas. Das separate MCP-Werkzeug `get_free_sample` liefert datierte Quellenbelege, nicht dieses Leistungsbeispiel.
+
+Für eigene Messdaten aktiviert der Inhaber einmal einen Agentenschlüssel über [/start](https://alpnai.com/start). Danach kann der Agent die kostenlosen Analysen innerhalb seiner Berechtigungen aufrufen. Die Speicherung in Projects erfordert zusätzlich eine ausdrückliche Freigabe. Ein Schlüssel berechtigt weder zu Käufen noch zu Tarifwechseln oder Produktivänderungen. [MCP-Anbindung](docs/de/mcp.md) · [Berichtszustellung](docs/de/projects-automation.md).
 
 **Status: öffentlicher Dienst unter [alpnai.com](https://alpnai.com/); API-/MCP-Kryptokäufe bleiben ausschließlich in der Sandbox.** Der primäre MCP-Endpunkt ist `/api/mcp`. Einen aktiven Pilotschlüssel erhalten Sie über [/start](https://alpnai.com/start). Agentenschlüssel umgehen keine Kontoberechtigungen; das Kit übernimmt keine Browsersitzungen.
 
@@ -50,7 +64,7 @@ Jede Zeile ist ein Versuch mit `task_id`, `workflow`, `variant` (`baseline` oder
 
 Der Audit analysiert bereitgestellte Ausführungsdaten. Kostenpflichtige laufende Überwachung, Umsatzzuordnung und automatisches Modellrouting sind über das Kit nicht verfügbar. Die nachfolgenden Datenkäufe bleiben simuliert.
 
-## Einstieg
+## Beispiele für die Evidence-Sandbox
 
 Python 3.10 oder neuer; keine zusätzlichen Pakete erforderlich. Befehle in diesem Verzeichnis ausführen.
 
@@ -87,6 +101,7 @@ Ein gültiger Beleg muss `mode: sandbox`, `settled: false`, `real_revenue_usdc: 
 | Route | Aktueller Sandbox-Vertrag |
 |---|---|
 | `GET /api/v1/catalog` | Kostenlose Produktmetadaten und vorgeschlagene Preise |
+| `GET /api/v1/performance-sample` | Öffentliche synthetische Messdaten und berechnete Ergebnisse; ohne Konto oder Zahlung |
 | `GET /api/v1/sample` | Kostenloses datiertes Datenbeispiel mit Quellen |
 | `GET /api/v1/snapshot` | 0,01 simulierte USDC |
 | `GET /api/v1/changes?since=YYYY-MM-DD` | 0,05 simulierte USDC; Sammlungsereignisse nach dem Datum |
@@ -114,6 +129,7 @@ Der tägliche Workflow protokolliert ausserdem eine aggregierte Wachstumsdiagnos
 
 ```sh
 python3 -m unittest discover -s tests -v
+node --test tests/performance-sample.test.mjs
 ```
 
 Die Tests verwenden ausschliesslich Simulationen im Speicher oder einen lokalen HTTP-Server mit synthetischen Daten. Sie prüfen eine verlorene Antwort nach simulierter Belastung, Wiederholungen, Preisgrenzen, Katalogkonsistenz, Modus, gespeicherte Parameter, Weiterleitungen, Anmeldeseiten und ungültige Belege. Cloud-Tests prüfen zusätzlich den Umgang mit Geheimnissen, aggregierte Berichte, erforderliche Quellenprüfungen und die MCP-Erkennung ohne Käufe. Sie bestätigen weder eine Produktionsbereitstellung noch finanzielle Tatsachen. Externe Konten werden nicht benötigt.

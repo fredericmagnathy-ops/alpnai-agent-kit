@@ -1,6 +1,8 @@
 {
+  "schema_version": "1.1.0",
   "brand": "ALPNAI",
-  "operator": "SWISS International (project)",
+  "operator": "Frederic Madureira Rodrigues / SWISS International",
+  "purpose": "Deterministic cost, latency and quality analysis for authorized AI agents.",
   "currency": "USDC",
   "network": "eip155:8453",
   "mode": "sandbox",
@@ -12,7 +14,12 @@
       "amount": 10000,
       "price": 0.01,
       "description": "Versioned facts and source references for the OpenAI IPO.",
-      "path": "/api/v1/snapshot"
+      "path": "/api/v1/snapshot",
+      "method": "GET",
+      "category": "curated_source_evidence",
+      "availability": "sandbox_only",
+      "result_format": "application/json",
+      "freshness": "Dated curated collection; not a real-time feed."
     },
     {
       "id": "changes",
@@ -20,7 +27,12 @@
       "amount": 50000,
       "price": 0.05,
       "description": "Dated events after a supplied date within the maintained collection.",
-      "path": "/api/v1/changes"
+      "path": "/api/v1/changes",
+      "method": "GET",
+      "category": "curated_source_evidence",
+      "availability": "sandbox_only",
+      "result_format": "application/json",
+      "freshness": "Dated curated collection; not a real-time feed."
     },
     {
       "id": "evidence",
@@ -28,10 +40,158 @@
       "amount": 250000,
       "price": 0.25,
       "description": "Facts, chronology, unknown fields and evidence provenance.",
-      "path": "/api/v1/evidence"
+      "path": "/api/v1/evidence",
+      "method": "GET",
+      "category": "curated_source_evidence",
+      "availability": "sandbox_only",
+      "result_format": "application/json",
+      "freshness": "Dated curated collection; not a real-time feed."
     }
   ],
+  "free_tools": [
+    {
+      "id": "spend-proof",
+      "name": "Spend Proof",
+      "endpoint": "/api/v1/spend-proof",
+      "mcp_tool": "audit_agent_costs",
+      "problem": "A lower price per model call can hide retries and failed tasks.",
+      "result": "Recorded cost per successful task, paired comparison and quality gates.",
+      "method": "POST",
+      "price": 0,
+      "authentication": "agent_key",
+      "result_format": "application/json",
+      "input": {
+        "required": [
+          "runs"
+        ],
+        "optional": [
+          "config"
+        ],
+        "max_runs": 1000,
+        "max_request_bytes": 512000,
+        "description": "Paired task measurements: task_id, workflow, variant, cost_usd, success and optional latency_ms."
+      },
+      "data_handling": {
+        "trace_persistence": false,
+        "external_model_calls": false
+      },
+      "contract": "https://alpnai.com/openapi.json#/paths/~1api~1v1~1spend-proof/post",
+      "sample": "/api/v1/performance-sample",
+      "automatic_deployment_authorized": false
+    },
+    {
+      "id": "latency",
+      "name": "Latency Lab",
+      "endpoint": "/api/v1/latency",
+      "mcp_tool": "analyze_agent_latency",
+      "problem": "Retries can make an apparently fast agent exceed a task latency limit.",
+      "result": "P50/P95 summed recorded attempt durations, retry counts and missing-data coverage.",
+      "method": "POST",
+      "price": 0,
+      "authentication": "agent_key",
+      "result_format": "application/json",
+      "input": {
+        "required": [
+          "runs"
+        ],
+        "optional": [
+          "config"
+        ],
+        "max_runs": 1000,
+        "max_request_bytes": 512000,
+        "description": "Paired task measurements: task_id, workflow, variant, cost_usd, success and optional latency_ms."
+      },
+      "data_handling": {
+        "trace_persistence": false,
+        "external_model_calls": false
+      },
+      "contract": "https://alpnai.com/openapi.json#/paths/~1api~1v1~1latency/post",
+      "sample": "/api/v1/performance-sample",
+      "automatic_deployment_authorized": false
+    },
+    {
+      "id": "quality-gate",
+      "name": "Quality Gate",
+      "endpoint": "/api/v1/quality-gate",
+      "mcp_tool": "check_agent_quality",
+      "problem": "A cheaper configuration can fail the required quality or sample thresholds.",
+      "result": "Structured pass/fail gates for the supplied success labels, paired tasks and thresholds.",
+      "method": "POST",
+      "price": 0,
+      "authentication": "agent_key",
+      "result_format": "application/json",
+      "input": {
+        "required": [
+          "runs"
+        ],
+        "optional": [
+          "config"
+        ],
+        "max_runs": 1000,
+        "max_request_bytes": 512000,
+        "description": "Paired task measurements: task_id, workflow, variant, cost_usd, success and optional latency_ms."
+      },
+      "data_handling": {
+        "trace_persistence": false,
+        "external_model_calls": false
+      },
+      "contract": "https://alpnai.com/openapi.json#/paths/~1api~1v1~1quality-gate/post",
+      "sample": "/api/v1/performance-sample",
+      "automatic_deployment_authorized": false
+    }
+  ],
+  "evaluation": {
+    "endpoint": "/api/v1/performance-sample",
+    "method": "GET",
+    "authentication_required": false,
+    "payment_required": false,
+    "synthetic": true,
+    "description": "Fetch the exact example input and computed outputs before connecting an agent."
+  },
+  "report_delivery": {
+    "id": "projects",
+    "mcp_tool": "save_project_report",
+    "endpoint": "/api/v1/project-reports",
+    "method": "POST",
+    "result": "Compute and save an aggregate report in the one project authorized by its owner.",
+    "availability": "owner_grant_and_existing_allowance",
+    "authentication": "agent_key",
+    "owner_grant_required": true,
+    "billing": "Uses existing Projects allowance; no automatic purchase, upgrade or overage.",
+    "input_contract": "https://alpnai.com/openapi.json#/paths/~1api~1v1~1project-reports/post",
+    "idempotency": "Reuse the same request_id and identical input within the same owner grant.",
+    "permissions": [
+      "write_report_to_authorized_project"
+    ],
+    "reads_private_history": false,
+    "payment_authorized": false
+  },
+  "onboarding": {
+    "start": "/start",
+    "agent_key_required_for_own_measurements": true,
+    "owner_authorization_once": true,
+    "report_delivery_grant": "/fr/docs/projects-automation",
+    "automatic_purchasing_from_mcp": false
+  },
+  "commerce": {
+    "routes_enabled": false,
+    "mainnet_enabled": false,
+    "mandate_preparation_enabled": false,
+    "required_before_payment": [
+      "active_agent_key",
+      "owner_signed_budget_mandate",
+      "billing_profile",
+      "approved_billing_review",
+      "exact_payment_authorization"
+    ],
+    "automatic_billing_qualification": false,
+    "billing_review": "operator_required",
+    "mcp_purchase_mode": "sandbox",
+    "status": "commercial_activation_pending"
+  },
   "mcp": "/api/mcp",
-  "docs": "/docs",
-  "terms": "/legal"
+  "docs": "/en/docs/introduction",
+  "openapi": "/openapi.json",
+  "terms": "/en/legal/terms",
+  "integration_kit": "https://github.com/fredericmagnathy-ops/alpnai-agent-kit"
 }

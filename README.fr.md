@@ -4,7 +4,21 @@ Vous avez un export CSV ? [Convertissez vos propres tentatives](onboarding/READM
 
 [English](README.md) · [Deutsch](README.de.md)
 
-Connectez un agent autorisé à **Spend Proof**, l’audit gratuit ALPNAI du coût par tâche réussie, ou explorez le sandbox de preuves. Ce kit autonome comprend des clients Python sans dépendances, des exemples MCP et des tests hors ligne. Il ne règle aucune cryptomonnaie, ne crée pas de portefeuille, ne renouvelle pas d’abonnement et ne contacte aucun prospect.
+ALPNAI fournit aux agents IA autorisés des analyses déterministes de **coûts, latence et qualité**. Comparez des variantes sur les mêmes tâches enregistrées, puis déposez un rapport calculé dans le projet autorisé par son titulaire. Commencez par vérifier l’exemple public avant de connecter vos données.
+
+## Évaluer avec deux requêtes GET
+
+Depuis le dossier du dépôt, lancez le vérificateur autonome avec **Node.js 18 ou plus récent**. Aucun paquet à installer, compte, clé API ou portefeuille n’est nécessaire.
+
+```sh
+node examples/verify-performance-sample.mjs
+```
+
+Il lit `GET /api/v1/catalog` et `GET /api/v1/performance-sample`, recalcule indépendamment les coûts, les réussites et le P95 enregistré de l’exemple, puis affiche `PASS` ou `FAIL`. Il ne suit aucune redirection, n’envoie aucun identifiant et n’effectue ni POST, ni achat, ni écriture de fichier. Les mesures sont synthétiques : ce contrôle prouve la reproductibilité du calcul, pas une économie client ni un encaissement.
+
+Un client autonome peut lire le même [catalogue public](https://alpnai.com/api/v1/catalog) et le même [exemple de performance](https://alpnai.com/api/v1/performance-sample). Le catalogue décrit les trois analyses gratuites, les accès requis et la livraison autorisée de rapports ; l’outil MCP `get_catalog` retourne le même contrat. La [copie OpenAPI](openapi.snapshot.json) détaille les schémas d’entrée et de sortie. L’outil MCP distinct `get_free_sample` retourne des preuves documentaires datées, pas cet exemple de performance.
+
+Pour analyser vos mesures, le titulaire active une clé d’agent via [/start](https://alpnai.com/start) une fois. L’agent peut ensuite appeler les analyses gratuites dans ses permissions. L’enregistrement dans Projects exige aussi une autorisation explicite du titulaire. Une clé n’autorise ni achat, ni changement d’offre, ni déploiement. [Intégration MCP](docs/fr/mcp.md) · [Livraison des rapports](docs/fr/projects-automation.md).
 
 **État : service public sur [alpnai.com](https://alpnai.com/) ; les achats crypto API/MCP restent exclusivement en sandbox.** L’endpoint MCP principal est `/api/mcp`. Une clé pilote active est disponible via [/start](https://alpnai.com/start). La clé ne contourne pas les permissions de compte ; le kit ne copie aucune session de navigateur.
 
@@ -87,6 +101,7 @@ Le reçu doit contenir `mode: sandbox`, `settled: false`, `real_revenue_usdc: 0`
 | Route | Contrat sandbox actuel |
 |---|---|
 | `GET /api/v1/catalog` | Métadonnées et propositions de prix gratuites |
+| `GET /api/v1/performance-sample` | Mesures synthétiques et résultats calculés publics ; aucun compte ni paiement |
 | `GET /api/v1/sample` | Exemple de preuves daté gratuit |
 | `GET /api/v1/snapshot` | 0,01 USDC fictif |
 | `GET /api/v1/changes?since=YYYY-MM-DD` | 0,05 USDC fictif ; événements de la collection après la date |
@@ -114,6 +129,7 @@ Le workflow quotidien consigne aussi un diagnostic de croissance agrégé dans u
 
 ```sh
 python3 -m unittest discover -s tests -v
+node --test tests/performance-sample.test.mjs
 ```
 
 Les tests utilisent uniquement des simulations en mémoire ou un serveur HTTP local, avec des données fictives. Ils couvrent une réponse perdue après débit simulé, les réessais, les plafonds, le catalogue, le mode, les paramètres persistants, les redirections, les pages de connexion et les reçus invalides. Les tests cloud vérifient aussi les secrets, les rapports agrégés, les erreurs de revue et la découverte MCP sans achat. Ils ne valident ni un déploiement de production ni des faits financiers. Aucun compte externe n'est requis.

@@ -32,6 +32,19 @@ Results describe the data supplied. ALPNAI does not replace your definition of a
 
 OpenAI IPO Evidence services are a separate pilot. Their test purchases and simulated budgets are not sales or investments.
 
+## Evaluate from an agent, without an account
+
+GET /api/v1/performance-sample returns a synthetic example’s measurements and the actual computed cost, latency and quality results. No account, wallet or payment is needed for this example.
+
+The REST catalog and MCP get_catalog describe the same analyses, inputs, outputs, prices and access requirements. Activate a key once to analyze your own measurements; your agent can then call the tools without intervention from the ALPNAI operator.
+
+The kit’s verify-performance-sample.mjs fetches the catalog and sample, recalculates the metrics and returns PASS or FAIL. It makes no purchase. A passing check validates the example and arithmetic, not cryptocurrency settlement.
+
+```
+GET https://alpnai.com/api/v1/catalog
+GET https://alpnai.com/api/v1/performance-sample
+```
+
 ---
 
 [Your first audit](quickstart.md)

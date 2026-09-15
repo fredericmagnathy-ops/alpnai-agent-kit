@@ -2,9 +2,11 @@
 
 Prepared on 14 September 2026. Endpoint: `https://alpnai.com/api/mcp`.
 
-Use an MCP host with Streamable HTTP support. `server.template.json` is a **Registry publication template**, not a universal host configuration file. Its intended namespace is `io.github.fredericmagnathy-ops/alpnai`, with repository `https://github.com/fredericmagnathy-ops/alpnai-agent-kit`. Authenticate as that verified publisher and verify public endpoint access before publication. These assets are prepared, not published by this kit. A private Site's ChatGPT access gate is separate from an ALPNAI test key.
+The published manifest is [`server.json`](../server.json), mirrored by `server.template.json`. The official namespace is `io.github.fredericmagnathy-ops/alpnai`; its version 0.1.0 was observed active on 14 September 2026. [Registry record](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.fredericmagnathy-ops%2Falpnai/versions/latest). Registry presence is not automatic installation or recommendation in an MCP host. Use a host supporting Streamable HTTP and the required Bearer header for authorized tools.
 
-`requests.example.json` shows messages **in order**, not a JSON-RPC batch to send as one body. The prepared ALPNAI server uses the strict `2026-07-28` contract and rejects legacy initialization. This is based on the local application and installed SDK, not a remote availability test. Begin with `server/discover` and confirm that `supportedVersions` contains `2026-07-28`. Do not send `initialize` or `notifications/initialized` to this server.
+`requests.example.json` contains messages in order, not a JSON-RPC batch. It illustrates the `2026-07-28` flow: begin with `server/discover` and inspect `supportedVersions`. The active server also accepts `2025-11-25`, `2025-06-18` and `2025-03-26` through `initialize`, `notifications/initialized`, then tool discovery. The messages below describe the 2026 contract. [Current integration guide](../docs/en/mcp.md).
+
+Before configuring any key, run `node examples/verify-performance-sample.mjs` from the repository root. It evaluates the public synthetic performance example through two GET requests. `get_free_sample` is the distinct dated source-evidence sample; it is not the performance fixture.
 
 Send each message as its own HTTP POST with `Content-Type: application/json`, `Accept: application/json, text/event-stream`, `MCP-Protocol-Version: 2026-07-28` and `Mcp-Method` equal to the JSON-RPC method. For `tools/call`, also send `Mcp-Name` equal to the tool name. Every request includes the `_meta` protocol version, client information and client capabilities shown in the file. A full host must support the chosen version and transport; the bounded cloud health check only performs discovery and tool listing.
 
@@ -28,6 +30,6 @@ A recorded task duration is the sum of its attempt durations, not wall time for 
 
 Guides: [English](../docs/en/mcp.md) · [Français](../docs/fr/mcp.md) · [Deutsch](../docs/de/mcp.md). The existing request fixture still illustrates discovery, a sandbox purchase and a cost audit; selecting either new analysis tool uses the same audit arguments.
 
-These notes document the application contract. Registry assets remain templates, and PayAI/x402 mainnet settlement is under validation. They are not evidence of a Registry listing or a real payment.
+These notes document the application contract. Mainnet crypto purchases remain disabled; neither the registry listing nor a passing example proves a paid transaction. The website Projects subscription is separate and is selected by the account holder.
 
 Report delivery uses an explicit owner grant and the existing Projects quota. It cannot read previous private reports or access billing. See [automatic delivery](../docs/en/projects-automation.md).
